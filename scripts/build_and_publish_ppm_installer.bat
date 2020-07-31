@@ -19,4 +19,4 @@ signtool.exe sign ^
 	/f "%PPM_PFX_PATH%"^
 	/t http://timestamp.verisign.com/scripts/timstamp.dll^
 	/p "%PPM_PFX_PASSWORD%"^
-	"%SOLUTON_DIR%\PpmWixInstaller\bin\Release\Paratext Plugin Manager Installer.msi"
+	"%SOLUTON_DIR%\PpmWixInstaller\bin\Release\Paratext Plugin Manager Installer 1.0.0.0.msi"

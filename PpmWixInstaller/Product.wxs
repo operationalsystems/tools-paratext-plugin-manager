@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- These variables define the Windows Installer product version, product code and upgrade code. They   -->
+<?define Property_ProductVersion = "1.0.0" ?>
+
+<!-- * means auto-generate a new guid each time. This is "a unique identifier for the particular product release" -->
+<?define Property_ProductCode = "*" ?>
+
+<!--Don't even think of EVER changing this, despite the counter-intuitive name. What it is: "a shared identifier that represents multiple versions of an application" -->
+<?define Property_UpgradeCode = "{7C939A05-5FE4-48CD-B6C9-B7111F97DF0E}" ?>
+
+<?define Property_Manufacturer = "Biblica" ?>
+<?define Property_ProductName = "Paratext Plugin Manager" ?>
+
+<!-- good intro to the component vs. file thing, and why each file here is a separate component:
+http://blogs.msdn.com/robmen/archive/2003/10/04/56479.aspx -->
+
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+
+	<Product 
+    Id="$(var.Property_ProductCode)" Name="$(var.Property_ProductName) $(var.Property_ProductVersion)" Language="1033" Version="$(var.Property_ProductVersion)" Manufacturer="$(var.Property_Manufacturer)" UpgradeCode="cbbbc849-b94e-4663-9a94-88462c5ad22b">
+
+		<Package InstallerVersion="200" Compressed="yes" />
+
+    <MajorUpgrade Schedule="afterInstallInitialize"
+              DowngradeErrorMessage="A later version of [ProductName] is already installed. If you really want to downgrade, first uninstall [ProductName], then do this install again." />
+
+    <!-- 
+    "from the list: Don't use Advertise="yes" Advertised shortcuts are designed to allow
+    users to install just the shortcut for your app, then demand-install the
+    rest of the app the first time the icon is run.  If this is not behavior you
+    are trying to support, you're better off using non-advertised shortcuts. "-->
+
+    <Property Id="PARATEXT8" Secure="yes">
+      <RegistrySearch 
+        Id="Paratext8"
+        Root="HKLM"
+        Key="SOFTWARE\Paratext\8"
+        Name="Program_Files_Directory_Ptw8"
+        Type="directory" />
+    </Property>
+    
+    <Property Id="PARATEXT9" Secure="yes">
+      <RegistrySearch 
+        Id="Paratext9"
+        Root="HKLM"
+        Key="SOFTWARE\Paratext\8"
+        Name="Program_Files_Directory_Ptw9"
+        Type="directory" />
+    </Property>
+    <Condition Message="Before [ProductName] can install, you need to install Paratext 8 or later.">
+      <![CDATA[Installed OR PARATEXT8 OR PARATEXT9]]>
+    </Condition>
+
+    <Property Id="UPDATEP8PLUGINCACHE" Secure="yes">
+      <DirectorySearch Id="Paratext8PluginCacheExeExists" Path="[PARATEXT8]">
+        <FileSearch Name="UpdateParatextPluginCache.exe"/>
+      </DirectorySearch>
+    </Property>
+
+    <Property Id="UPDATEP9PLUGINCACHE" Secure="yes">
+      <DirectorySearch Id="Paratext9PluginCacheExeExists" Path="[PARATEXT9]">
+        <FileSearch Name="UpdateParatextPluginCache.exe"/>
+      </DirectorySearch>
+    </Property>
+
+    <!-- This is extremely unlikely... -->
+    <Condition Message="Paratext is not installed properly. Missing required file: UpdateParatextPluginCache.exe. Re-run the Paratext Installer to repair the installation. Then re-run the [ProductName] Installer.">
+      <![CDATA[Installed OR
+			(PARATEXT8 AND UPDATEP8PLUGINCACHE) OR
+			(PARATEXT9 AND UPDATEP9PLUGINCACHE)]]>
+    </Condition>
+
+    <!--because of bug, this needs to be 1 -->
+    <Property Id="ALLUSERS">1</Property>
+
+    <Directory Id="TARGETDIR" Name="SourceDir">
+      <Directory Id="ProgramFilesFolder">
+        <Directory Id="PARATEXT8" Name="ParatextDir8">
+          <Directory Id="PLUGINDIR8" Name="plugins">
+            <Directory Id="INSTALLDIR8" Name="ParatextPluginManagerPlugin" />
+          </Directory>
+        </Directory>
+        <Directory Id="PARATEXT9" Name="ParatextDir9">
+          <Directory Id="PLUGINDIR9" Name="plugins">
+            <Directory Id="INSTALLDIR9" Name="ParatextPluginManagerPlugin" />
+          </Directory>
+        </Directory>
+      </Directory>
+    </Directory>
+
+    <ComponentGroup Id="COMPONENTSFORP8PLUGIN" Directory="INSTALLDIR8" Source="..\bin\x86\Release">
+      <Component Guid="{3026ABAA-7B09-4145-99F8-132C2CA989DB}">
+        <File Id="ParatextPluginManagerPlugin.dll_P8" KeyPath="yes" Name="ParatextPluginManagerPlugin.dll" />
+      </Component>
+    </ComponentGroup>
+
+    <ComponentGroup Id="COMPONENTSFORP9PLUGIN" Directory="INSTALLDIR9" Source="..\bin\x86\Release">
+      <Component Guid="{4304700E-A81D-4685-B43C-1F230A2104A1}">
+        <File Id="ParatextPluginManagerPlugin.dll_P9" KeyPath="yes" Name="ParatextPluginManagerPlugin.dll" />
+      </Component>
+    </ComponentGroup>
+
+    <Feature Id="PluginFeature_P8" Level="0" Title="Plugin for Paratext 8" AllowAdvertise="no">
+      <Condition Level="1"><![CDATA[PARATEXT8 AND UPDATEP8PLUGINCACHE]]></Condition>
+      <ComponentGroupRef Id="COMPONENTSFORP8PLUGIN" />
+    </Feature>
+
+    <Feature Id="PluginFeature_P9" Level="0" Title="Plugin for Paratext 9" AllowAdvertise="no">
+      <Condition Level="1"><![CDATA[PARATEXT9 AND UPDATEP9PLUGINCACHE]]></Condition>
+      <ComponentGroupRef Id="COMPONENTSFORP9PLUGIN" />
+    </Feature>
+
+    <UI Id="UserInterface">
+      <Property Id="WIXUI_INSTALLDIR" Value="TARGETDIR" />
+      <Property Id="WixUI_Mode" Value="Custom" />
+
+      <TextStyle Id="WixUI_Font_Normal" FaceName="Tahoma" Size="8" />
+      <TextStyle Id="WixUI_Font_Bigger" FaceName="Tahoma" Size="9" Bold="yes" />
+      <TextStyle Id="WixUI_Font_Title"  FaceName="Tahoma" Size="9" Bold="yes" />
+
+      <Property Id="DefaultUIFont" Value="WixUI_Font_Normal" />
+
+      <DialogRef Id="ProgressDlg" />
+      <DialogRef Id="ErrorDlg" />
+      <DialogRef Id="FilesInUse" />
+      <DialogRef Id="FatalError" />
+      <DialogRef Id="UserExit" />
+
+      <Publish Dialog="ExitDialog" Control="Finish" Event="EndDialog" Value="Return" Order="999">1</Publish>
+      <Publish Dialog="WelcomeDlg" Control="Next" Event="EndDialog" Value="Return" Order="2"></Publish>
+
+    </UI>
+    <UIRef Id="WixUI_Common" />
+
+    <Media Id="1" Cabinet="product.cab" EmbedCab="yes" />
+
+    <!-- Icon you see in add/remove programs control panel -->
+    <Icon Id="PluginManager.ico" SourceFile="..\Resources\biblica-96x96.ico" />
+    <Property Id="ARPPRODUCTICON" Value="PluginManager.ico" />
+	</Product>
+</Wix>

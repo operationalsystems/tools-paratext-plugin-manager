@@ -49,7 +49,8 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="LocalInstallerServiceTests.cs" />
+    <Compile Include="PpmMainTests.cs" />
+    <Compile Include="LocalInstallerService\LocalInstallerServiceTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

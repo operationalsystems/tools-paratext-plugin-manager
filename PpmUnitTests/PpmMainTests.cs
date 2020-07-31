@@ -2,15 +2,15 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using PpmMain.LocalInstallerService;
 
-namespace PpmUnitTests
+namespace PpmMain.Tests
 {
     [TestClass]
-    public class LocalInstallerServiceTests
+    public class TestClass
     {
         [TestMethod]
-        public void TestMethod1()
+        public void TestMethod()
         {
-            Assert.IsTrue(LocalInstallerService.SimpleTest);
+            Assert.IsTrue(true);
         }
     }
 }

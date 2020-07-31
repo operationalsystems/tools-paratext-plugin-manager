@@ -6,6 +6,8 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Newtonsoft.Json;
+using Microsoft.Win32;
+using System.CodeDom;
 
 namespace PpmMain.LocalInstallerService
 {
@@ -14,6 +16,11 @@ namespace PpmMain.LocalInstallerService
     /// </summary>
     public class LocalInstallerService
     {
+        public string pluginPath;
+        public LocalInstallerService()
+        {
+            this.pluginPath = GetPluginPath();
+        }
         /// <summary>
         /// Gets descriptions of the currently installed plugins
         /// </summary>
@@ -23,6 +30,20 @@ namespace PpmMain.LocalInstallerService
             PluginDescription somePlugin = new PluginDescription("Some Plugin", "sp", "1.2.3.4", "", "", new List<string> { "8", "9" }, "");
 
             return new List<PluginDescription> { somePlugin };
+        }
+
+        public static string GetPluginPath()
+        {
+            string sixtyFourBitPath = "WOW6432Node\\";
+            string ptVersion = "8";
+            string subKey = $"SOFTWARE\\{sixtyFourBitPath}Paratext\\{ptVersion}";
+            string name = $"Program_Files_Directory_Ptw{ptVersion}";
+            string relativePath = "plugins\\ParatextPluginManagerPlugin";
+
+            RegistryService registryService = new RegistryService();
+            RegistryKey key = registryService.ReadLocalMachineSubKey(subKey);
+            string installationPath = (string)registryService.ReadKeyValue(key, name);
+            return $"{installationPath}{relativePath}";
         }
     }
 
@@ -50,6 +71,27 @@ namespace PpmMain.LocalInstallerService
             this.license = license;
         }
 
-        
+
+    }
+    /// <summary>
+    /// Fetches data from the registry
+    /// </summary>
+    public class RegistryService
+    {
+        private readonly RegistryKey localMachine;
+
+        public RegistryService()
+        {
+          this.localMachine = Registry.LocalMachine;
+        }
+        public RegistryKey ReadLocalMachineSubKey(string subKey)
+        {
+            return localMachine.OpenSubKey(subKey);
+        }
+
+        public object ReadKeyValue(RegistryKey key, string name)
+        {
+            return key.GetValue(name);
+        }
     }
 }

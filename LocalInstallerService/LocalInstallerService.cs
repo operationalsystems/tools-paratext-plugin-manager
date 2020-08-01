@@ -1,13 +1,9 @@
 ﻿using System;
+using System.IO;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
-using System.Windows.Forms;
 using Newtonsoft.Json;
 using Microsoft.Win32;
-using System.CodeDom;
 
 namespace PpmMain.LocalInstallerService
 {
@@ -16,29 +12,40 @@ namespace PpmMain.LocalInstallerService
     /// </summary>
     public class LocalInstallerService
     {
-        public string pluginPath;
-        public LocalInstallerService()
-        {
-            this.pluginPath = GetPluginPath();
-        }
         /// <summary>
         /// Gets descriptions of the currently installed plugins
         /// </summary>
         /// <returns></returns>
         public static List<PluginDescription> GetInstalledPlugins()
         {
-            PluginDescription somePlugin = new PluginDescription("Some Plugin", "sp", "1.2.3.4", "", "", new List<string> { "8", "9" }, "");
+            List<PluginDescription> pluginDescriptions = new List<PluginDescription>();
 
-            return new List<PluginDescription> { somePlugin };
+            try
+            {
+                string[] pluginDescriptionFiles = Directory.GetFiles(GetInstalledPluginDirectory(), "*.json");
+                IEnumerable<string> rawPluginDescriptions = pluginDescriptionFiles.Select(filePath => System.IO.File.ReadAllText(filePath));
+                foreach(string description in rawPluginDescriptions)
+                    pluginDescriptions.Add(JsonConvert.DeserializeObject<PluginDescription>(description));
+            } catch (Exception ex)
+            {
+                // Variables for tracking error information.
+                IDictionary<string, string> errorDetails = new Dictionary<string, string>();
+                string message = ex.Message;
+
+                // Report the error
+                PpmMain.ParatextPluginManagerPlugin.ReportErrorWithDetails(message, errorDetails);
+            }
+            
+            return pluginDescriptions;
         }
 
-        public static string GetPluginPath()
+        public static string GetInstalledPluginDirectory()
         {
             string sixtyFourBitPath = "WOW6432Node\\";
             string ptVersion = "8";
             string subKey = $"SOFTWARE\\{sixtyFourBitPath}Paratext\\{ptVersion}";
             string name = $"Program_Files_Directory_Ptw{ptVersion}";
-            string relativePath = "plugins\\ParatextPluginManagerPlugin";
+            string relativePath = "plugins\\ParatextPluginManagerPlugin\\plugins";
 
             RegistryService registryService = new RegistryService();
             RegistryKey key = registryService.ReadLocalMachineSubKey(subKey);

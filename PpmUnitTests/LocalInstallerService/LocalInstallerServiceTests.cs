@@ -16,13 +16,13 @@ namespace PpmMain.LocalInstallerService.Tests
         public void GetInstalledPluginsTest()
         {
             List<PluginDescription> plugins = LocalInstallerService.GetInstalledPlugins();
-            Assert.IsTrue("Some Plugin".Equals(plugins[0].name));
+            Assert.IsTrue("Translation Validation Plugin".Equals(plugins[0].name));
         }
 
         [TestMethod()]
         public void GetPluginPath_works_for_Paratext8_on_a_64bit_system()
         {
-            Assert.IsTrue("C:\\Program Files (x86)\\Paratext 8\\plugins\\ParatextPluginManagerPlugin".Equals(LocalInstallerService.GetPluginPath()));
+            Assert.IsTrue("C:\\Program Files (x86)\\Paratext 8\\plugins\\ParatextPluginManagerPlugin\\plugins".Equals(LocalInstallerService.GetInstalledPluginDirectory()));
         }
     }
 }

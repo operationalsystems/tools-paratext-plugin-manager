@@ -1,8 +1,10 @@
 ﻿using System;
 using System.IO;
+using System.IO.Compression;
 using System.Collections.Generic;
 using Newtonsoft.Json;
 using Microsoft.Win32;
+using System.Diagnostics;
 
 namespace PpmMain.LocalInstallerService
 {
@@ -40,7 +42,26 @@ namespace PpmMain.LocalInstallerService
         }
         public void InstallPlugin(PluginDescription plugin)
         {
+            if (NeedsElevatedPermissions())
+                ElevatePermissions();
 
+            try
+            {
+                string downloadedPluginPath = Path.Combine(ppmPath, ppmDownloadedPluginsDirectory);
+                string installedPluginDataPath = Path.Combine(ppmPath, ppmInstalledPluginDataDirectory);
+                string pluginInstallPath = Path.Combine(ptInstallationPath, ptInstalledPluginsDirectory, plugin.shortName.ToUpper());
+                string zipFileName = Path.ChangeExtension(plugin.filename, "zip");
+                string zipFilePath = Path.Combine(downloadedPluginPath, zipFileName);
+                /// If this is an upgrade, or a re-install, uninstall the plugin before extracting
+                if (Directory.Exists(pluginInstallPath))
+                    UninstallPlugin(plugin);
+                ZipFile.ExtractToDirectory(zipFilePath, pluginInstallPath);
+                File.Move(Path.Combine(downloadedPluginPath, plugin.filename), Path.Combine(installedPluginDataPath, plugin.filename));
+            }
+            catch (Exception ex)
+            {
+                ReportException(ex);
+            }
         }
         public void UninstallPlugin(PluginDescription plugin)
         {
@@ -64,9 +85,13 @@ namespace PpmMain.LocalInstallerService
             try
             {
                 string[] pluginDescriptionFiles = Directory.GetFiles(directory, "*.json");
-                IEnumerable<string> rawPluginDescriptions = pluginDescriptionFiles.Select(filePath => System.IO.File.ReadAllText(filePath));
-                foreach (string description in rawPluginDescriptions)
-                    pluginDescriptions.Add(JsonConvert.DeserializeObject<PluginDescription>(description));
+                foreach (string filePath in pluginDescriptionFiles)
+                {
+                    string rawPluginDescription = System.IO.File.ReadAllText(filePath);
+                    PluginDescription pluginDescription = JsonConvert.DeserializeObject<PluginDescription>(rawPluginDescription);
+                    pluginDescription.filename = Path.GetFileName(filePath);
+                    pluginDescriptions.Add(pluginDescription);
+                }
             }
             catch (Exception ex)
             {
@@ -115,9 +140,13 @@ namespace PpmMain.LocalInstallerService
         public readonly string versionDescription;
         public readonly List<string> ptVersions;
         public readonly string license;
+        public string filename;
 
         public PluginDescription(string name, string shortName, string version, string description, string versionDescription, List<string> ptVersions, string license)
         {
+            if (String.IsNullOrEmpty(name) || String.IsNullOrEmpty(shortName) || String.IsNullOrEmpty(version) || ptVersions.Count == 0)
+                throw new ArgumentException("Expected 'name', 'shortName', 'version', and 'ptVersions' to not be null or empty.");
+
             this.name = name;
             this.shortName = shortName;
             this.version = version;

@@ -46,6 +46,17 @@ namespace PpmMain.LocalInstallerService
         {
 
         }
+        private bool NeedsElevatedPermissions()
+        {
+            return false;
+        }
+        private void ElevatePermissions()
+        {
+            ProcessStartInfo info = new ProcessStartInfo(System.Diagnostics.Process.GetCurrentProcess().MainModule.FileName);
+            info.Verb = "runas";
+            Process.Start(info);
+            System.Diagnostics.Process.Start(info);
+        }
         public static List<PluginDescription> GetPluginDescriptions(string directory)
         {
             List<PluginDescription> pluginDescriptions = new List<PluginDescription>();

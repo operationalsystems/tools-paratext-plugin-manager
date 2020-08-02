@@ -99,6 +99,8 @@
     <Compile Include="Forms\PluginManagerMainForm.Designer.cs">
       <DependentUpon>PluginManagerMainForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="PluginRepository\IPluginRepository.cs" />
+    <Compile Include="PluginRepository\PluginRepositoryService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Util\HostUtil.cs" />
   </ItemGroup>

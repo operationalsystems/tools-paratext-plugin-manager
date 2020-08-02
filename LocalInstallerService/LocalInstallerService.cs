@@ -59,12 +59,7 @@ namespace PpmMain.LocalInstallerService
             }
             catch (Exception ex)
             {
-                // Variables for tracking error information.
-                IDictionary<string, string> errorDetails = new Dictionary<string, string>();
-                string message = ex.Message;
-
-                // Report the error
-                /// PpmMain.ParatextPluginManagerPlugin.ReportErrorWithDetails(message, errorDetails);
+                ReportException(ex);
             }
 
             return pluginDescriptions;
@@ -84,6 +79,16 @@ namespace PpmMain.LocalInstallerService
             RegistryKey key = registryService.ReadLocalMachineSubKey(subKey);
             char[] toTrim = {'\\'};
             return registryService.ReadKeyValue(key, name).ToString().TrimEnd(toTrim);
+        }
+
+        public static void ReportException(Exception ex)
+        {
+            // Variables for tracking error information.
+            IDictionary<string, string> errorDetails = new Dictionary<string, string>();
+            string message = ex.Message;
+
+            // Report the error
+            /// PpmMain.ParatextPluginManagerPlugin.ReportErrorWithDetails(message, errorDetails);
         }
     }
 

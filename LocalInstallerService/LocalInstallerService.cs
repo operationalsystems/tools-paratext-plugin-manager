@@ -7,10 +7,17 @@ using Microsoft.Win32;
 
 namespace PpmMain.LocalInstallerService
 {
+    public interface ILocalInstallerService
+    {
+        List<PluginDescription> GetInstalledPlugins();
+        void InstallPlugin(PluginDescription plugin);
+        void UninstallPlugin(PluginDescription plugin);
+    }
+
     /// <summary>
     /// Handles management and installation of local plugins
     /// </summary>
-    public class LocalInstallerService
+    public class LocalInstallerService : ILocalInstallerService
     {
         /// <summary>
         /// Gets descriptions of the currently installed plugins
@@ -25,17 +32,20 @@ namespace PpmMain.LocalInstallerService
         /// Gets descriptions of the currently downloaded plugins
         /// </summary>
         /// <returns></returns>
-        public static List<PluginDescription> GetDownloadedPlugins()
+        public List<PluginDescription> GetInstalledPlugins()
         {
             string directory = $"{GetInstallationDirectory()}\\download";
             return GetPluginDescriptions(directory);
         }
 
-        public static void InstallDownloadedPlugins()
+        public void InstallPlugin(PluginDescription plugin)
         {
 
         }
+        public void UninstallPlugin(PluginDescription plugin)
+        {
 
+        }
         public static List<PluginDescription> GetPluginDescriptions(string directory)
         {
             List<PluginDescription> pluginDescriptions = new List<PluginDescription>();

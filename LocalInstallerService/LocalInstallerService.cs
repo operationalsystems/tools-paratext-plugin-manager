@@ -114,9 +114,18 @@ namespace PpmMain.LocalInstallerService
 
     }
     /// <summary>
+    /// Interface for a service that fetches the data we need from the registry
+    /// </summary>
+    interface IRegistryService
+    {
+        RegistryKey ReadLocalMachineSubKey(string subKey);
+
+        object ReadKeyValue(RegistryKey key, string name);
+    }
+    /// <summary>
     /// Fetches data from the registry
     /// </summary>
-    public class RegistryService
+    public class RegistryService: IRegistryService
     {
         private readonly RegistryKey localMachine;
 

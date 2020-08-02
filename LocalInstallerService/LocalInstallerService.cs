@@ -1,7 +1,6 @@
 ﻿using System;
 using System.IO;
 using System.Collections.Generic;
-using System.Linq;
 using Newtonsoft.Json;
 using Microsoft.Win32;
 
@@ -19,25 +18,26 @@ namespace PpmMain.LocalInstallerService
     /// </summary>
     public class LocalInstallerService : ILocalInstallerService
     {
+        private readonly string ptInstalledPluginsDirectory = "plugins";
+        private readonly string ppmDirectory = "ParatextPluginManagerPlugin";
+        private readonly string ppmInstalledPluginDataDirectory = "plugins";
+        private readonly string ppmDownloadedPluginsDirectory = "downloads";
+        private string ptInstallationPath;
+        private string ppmPath;
+
+        public LocalInstallerService()
+        {
+            this.ptInstallationPath = GetPTInstallationPath();
+            this.ppmPath = $"{ptInstallationPath}\\{ptInstalledPluginsDirectory}\\{ppmDirectory}";
+        }
         /// <summary>
         /// Gets descriptions of the currently installed plugins
         /// </summary>
         /// <returns></returns>
-        public static List<PluginDescription> GetInstalledPlugins()
-        {
-            string directory = $"{GetInstallationDirectory()}\\plugins";
-            return GetPluginDescriptions(directory);
-        }
-        /// <summary>
-        /// Gets descriptions of the currently downloaded plugins
-        /// </summary>
-        /// <returns></returns>
         public List<PluginDescription> GetInstalledPlugins()
         {
-            string directory = $"{GetInstallationDirectory()}\\download";
-            return GetPluginDescriptions(directory);
+            return GetPluginDescriptions($"{ppmPath}\\{ppmInstalledPluginDataDirectory}");
         }
-
         public void InstallPlugin(PluginDescription plugin)
         {
 
@@ -69,19 +69,21 @@ namespace PpmMain.LocalInstallerService
 
             return pluginDescriptions;
         }
-
-        public static string GetInstallationDirectory()
+        /// <summary>
+        /// Returns the ParaText installation directory
+        /// </summary>
+        /// <returns>The directory where ParaText is installed</returns>
+        public static string GetPTInstallationPath()
         {
             string sixtyFourBitPath = "WOW6432Node\\";
             string ptVersion = "8";
             string subKey = $"SOFTWARE\\{sixtyFourBitPath}Paratext\\{ptVersion}";
             string name = $"Program_Files_Directory_Ptw{ptVersion}";
-            string relativePath = "plugins\\ParatextPluginManagerPlugin";
 
             RegistryService registryService = new RegistryService();
             RegistryKey key = registryService.ReadLocalMachineSubKey(subKey);
-            string installationPath = (string)registryService.ReadKeyValue(key, name);
-            return $"{installationPath}{relativePath}";
+            char[] toTrim = {'\\'};
+            return registryService.ReadKeyValue(key, name).ToString().TrimEnd(toTrim);
         }
     }
 

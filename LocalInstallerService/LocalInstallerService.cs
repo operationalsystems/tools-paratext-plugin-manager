@@ -65,7 +65,19 @@ namespace PpmMain.LocalInstallerService
         }
         public void UninstallPlugin(PluginDescription plugin)
         {
+            if (NeedsElevatedPermissions())
+                ElevatePermissions();
 
+            try
+            {
+                string pluginInstallPath = $"{ptInstallationPath}\\{ptInstalledPluginsDirectory}\\{plugin.shortName.ToUpper()}";
+                if (Directory.Exists(pluginInstallPath))
+                    Directory.Delete(pluginInstallPath);
+            }
+            catch (Exception ex)
+            {
+                ReportException(ex);
+            }
         }
         private bool NeedsElevatedPermissions()
         {

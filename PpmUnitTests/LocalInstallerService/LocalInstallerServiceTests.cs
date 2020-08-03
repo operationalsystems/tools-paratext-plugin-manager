@@ -6,8 +6,9 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Win32;
 using PpmMain.LocalInstaller;
+using PpmMain.Models;
 
-namespace PpmMain.LocalInstallerService.Tests
+namespace PpmUnitTests
 {
     [TestClass()]
     public class LocalInstallerServiceTests

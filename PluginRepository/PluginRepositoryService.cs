@@ -143,23 +143,23 @@ namespace PpmMain.PluginRepository
                 //return jsonObjects.Select(s3obj => s3obj.Key).ToList();
             }
 
-            var responseBody = "";
-                GetObjectRequest request = new GetObjectRequest
-                {
-                    BucketName = bucketName,
-                    Key = filename
-                };
-                using (GetObjectResponse response = await GetS3Client().GetObjectAsync(request))
-                using (Stream responseStream = response.ResponseStream)
-                using (StreamReader reader = new StreamReader(responseStream))
-                {
-                    string title = response.Metadata["x-amz-meta-title"]; // Assume you have "title" as medata added to the object.
-                    string contentType = response.Headers["Content-Type"];
-                    Console.WriteLine("Object metadata, Title: {0}", title);
-                    Console.WriteLine("Content type: {0}", contentType);
+            //var responseBody = "";
+            //    GetObjectRequest request = new GetObjectRequest
+            //    {
+            //        BucketName = bucketName,
+            //        Key = filename
+            //    };
+            //    using (GetObjectResponse response = await GetS3Client().GetObjectAsync(request))
+            //    using (Stream responseStream = response.ResponseStream)
+            //    using (StreamReader reader = new StreamReader(responseStream))
+            //    {
+            //        string title = response.Metadata["x-amz-meta-title"]; // Assume you have "title" as medata added to the object.
+            //        string contentType = response.Headers["Content-Type"];
+            //        Console.WriteLine("Object metadata, Title: {0}", title);
+            //        Console.WriteLine("Content type: {0}", contentType);
 
-                    responseBody = reader.ReadToEnd(); // Now you process the response body.
-                }
+            //        responseBody = reader.ReadToEnd(); // Now you process the response body.
+            //    }
         }
     }
 }

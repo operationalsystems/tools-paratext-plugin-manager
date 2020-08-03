@@ -25,14 +25,7 @@ namespace PpmUnitTests
         public void InstallPluginTest()
         {
             ILocalInstallerService localInstaller = new LocalInstallerService();
-            PluginDescription plugin = new PluginDescription()
-            {
-                Name = "Some Plugin",
-                ShortName = "sp",
-                Version = "1.2.3.4",
-                PtVersions = new List<string>() { "8", "9" },
-            };
-            localInstaller.InstallPlugin(plugin); /// for now, just invoke it so we can debug
+            localInstaller.InstallPlugin(new System.IO.FileInfo(@"C:\Program Files (x86)\Paratext 8\plugins\ParatextPluginManagerPlugin\download\TranslationValidationPlugin-1.2.0.0.zip")); /// for now, just invoke it so we can debug
         }
     }
 }

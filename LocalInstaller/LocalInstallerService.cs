@@ -13,7 +13,7 @@ namespace PpmMain.LocalInstaller
     public interface ILocalInstallerService
     {
         List<PluginDescription> GetInstalledPlugins();
-        void InstallPlugin(PluginDescription plugin);
+        void InstallPlugin(FileInfo pluginArchive);
         void UninstallPlugin(PluginDescription plugin);
     }
 
@@ -42,23 +42,28 @@ namespace PpmMain.LocalInstaller
         {
             return GetPluginDescriptions($"{ppmPath}\\{ppmInstalledPluginDataDirectory}");
         }
-        public void InstallPlugin(PluginDescription plugin)
+        /// <summary>
+        /// Installs a ParaText plugin
+        /// </summary>
+        /// <param name="plugin"></param>
+        /// <param name="pluginArchive"></param>
+        public void InstallPlugin(FileInfo pluginArchive)
         {
             if (NeedsElevatedPermissions())
                 ElevatePermissions();
 
             try
             {
-                string downloadedPluginPath = Path.Combine(ppmPath, ppmDownloadedPluginsDirectory);
-                string installedPluginDataPath = Path.Combine(ppmPath, ppmInstalledPluginDataDirectory);
-                string pluginInstallPath = Path.Combine(ptInstallationPath, ptInstalledPluginsDirectory, plugin.ShortName.ToUpper());
-                string zipFileName = Path.ChangeExtension(plugin.Filename, "zip");
-                string zipFilePath = Path.Combine(downloadedPluginPath, zipFileName);
+                string zipFilePath = pluginArchive.FullName;
+                string jsonFilePath = Path.ChangeExtension(zipFilePath, "json");
+                PluginDescription plugin = GetPluginDescription(jsonFilePath);
+                string pluginDirectory = plugin.ShortName;
+                string pluginInstallPath = Path.Combine(ptInstallationPath, ptInstalledPluginsDirectory, pluginDirectory);
                 /// If this is an upgrade, or a re-install, uninstall the plugin before extracting
                 if (Directory.Exists(pluginInstallPath))
                     UninstallPlugin(plugin);
-                ZipFile.ExtractToDirectory(zipFilePath, pluginInstallPath);
-                File.Move(Path.Combine(downloadedPluginPath, plugin.Filename), Path.Combine(installedPluginDataPath, plugin.Filename));
+                ZipFile.ExtractToDirectory(pluginArchive.FullName, pluginInstallPath);
+                File.Move(jsonFilePath, pluginInstallPath);
             }
             catch (Exception ex)
             {
@@ -98,14 +103,9 @@ namespace PpmMain.LocalInstaller
 
             try
             {
-                string[] pluginDescriptionFiles = Directory.GetFiles(directory, "*.json");
-                foreach (string filePath in pluginDescriptionFiles)
-                {
-                    string rawPluginDescription = File.ReadAllText(filePath);
-                    PluginDescription pluginDescription = JsonConvert.DeserializeObject<PluginDescription>(rawPluginDescription);
-                    pluginDescription.Filename = Path.GetFileName(filePath);
-                    pluginDescriptions.Add(pluginDescription);
-                }
+                string[] pluginDescriptionFilePaths = Directory.GetFiles(directory, "*.json");
+                foreach (string filePath in pluginDescriptionFilePaths)
+                    pluginDescriptions.Add(GetPluginDescription(filePath));
             }
             catch (Exception ex)
             {
@@ -139,6 +139,14 @@ namespace PpmMain.LocalInstaller
 
             // Report the error
             /// PpmMain.ParatextPluginManagerPlugin.ReportErrorWithDetails(message, errorDetails);
+        }
+
+        public static PluginDescription GetPluginDescription(string filePath)
+        {
+            string rawPluginDescription = File.ReadAllText(filePath);
+            PluginDescription pluginDescription = JsonConvert.DeserializeObject<PluginDescription>(rawPluginDescription);
+
+            return pluginDescription;
         }
     }
 }

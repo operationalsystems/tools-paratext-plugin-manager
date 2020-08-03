@@ -12,7 +12,7 @@ namespace PpmMain.Models
         /// The plugin name.
         /// </summary>
         public string Name { get; set; }
-        
+
         /// <summary>
         /// A unique shortname representing the plugin.
         /// </summary>
@@ -32,20 +32,15 @@ namespace PpmMain.Models
         /// A description of what has changed in this version of the plugin.
         /// </summary>
         public string VersionDescription { get; set; }
-        
+
         /// <summary>
         /// The versions of ParaText that this plugin version is compatible with.
         /// </summary>
         public List<string> PtVersions { get; set; }
-        
+
         /// <summary>
         /// The license for this plugin.
         /// </summary>
         public string License { get; set; }
-
-        /// <summary>
-        /// DO NOT USE. Filename is being deprecated.
-        /// </summary>
-        public string Filename;
     }
 }

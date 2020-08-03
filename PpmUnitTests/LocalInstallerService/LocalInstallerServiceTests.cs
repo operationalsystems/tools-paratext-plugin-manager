@@ -25,8 +25,13 @@ namespace PpmUnitTests
         public void InstallPluginTest()
         {
             ILocalInstallerService localInstaller = new LocalInstallerService();
-            PluginDescription plugin = new PluginDescription("Some Plugin", "sp", "1.2.3.4", new List<string>() { "8", "9" });
-            plugin.Filename = "somePlugin-1.2.3.4.json";
+            PluginDescription plugin = new PluginDescription()
+            {
+                Name = "Some Plugin",
+                ShortName = "sp",
+                Version = "1.2.3.4",
+                PtVersions = new List<string>() { "8", "9" },
+            };
             localInstaller.InstallPlugin(plugin); /// for now, just invoke it so we can debug
         }
     }

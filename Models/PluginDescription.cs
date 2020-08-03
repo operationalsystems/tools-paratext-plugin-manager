@@ -47,18 +47,5 @@ namespace PpmMain.Models
         /// DO NOT USE. Filename is being deprecated.
         /// </summary>
         public string Filename;
-
-        public PluginDescription(string name, string shortName, string version, List<string> ptVersions, string license = null, string versionDescription = null, string description = null)
-        {
-            Name = name ?? throw new ArgumentNullException(nameof(name));
-            ShortName = shortName ?? throw new ArgumentNullException(nameof(shortName));
-            Version = version ?? throw new ArgumentNullException(nameof(version));
-            PtVersions = ptVersions ?? throw new ArgumentNullException(nameof(ptVersions));
-            License = license;
-            Description = description;
-            VersionDescription = versionDescription;
-        }
-
-
     }
 }

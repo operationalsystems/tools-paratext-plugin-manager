@@ -105,8 +105,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="LocalInstallerService\LocalInstallerService.cs" />
+    <Compile Include="Util\IRegistryService.cs" />
+    <Compile Include="LocalInstaller\LocalInstallerService.cs" />
     <Compile Include="Models\PluginDescription.cs" />
+    <Compile Include="Util\RegistryService.cs" />
     <Compile Include="ParatextPluginManagerPlugin.cs" />
     <Compile Include="Forms\PluginManagerMainForm.cs">
       <SubType>Form</SubType>

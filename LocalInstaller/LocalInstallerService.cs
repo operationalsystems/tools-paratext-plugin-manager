@@ -5,8 +5,10 @@ using System.Collections.Generic;
 using Newtonsoft.Json;
 using Microsoft.Win32;
 using System.Diagnostics;
+using PpmMain.Models;
+using PpmMain.Util;
 
-namespace PpmMain.LocalInstallerService
+namespace PpmMain.LocalInstaller
 {
     public interface ILocalInstallerService
     {
@@ -29,8 +31,8 @@ namespace PpmMain.LocalInstallerService
 
         public LocalInstallerService()
         {
-            this.ptInstallationPath = GetPTInstallationPath();
-            this.ppmPath = $"{ptInstallationPath}\\{ptInstalledPluginsDirectory}\\{ppmDirectory}";
+            ptInstallationPath = GetPTInstallationPath();
+            ppmPath = $"{ptInstallationPath}\\{ptInstalledPluginsDirectory}\\{ppmDirectory}";
         }
         /// <summary>
         /// Gets descriptions of the currently installed plugins
@@ -85,10 +87,10 @@ namespace PpmMain.LocalInstallerService
         }
         private void ElevatePermissions()
         {
-            ProcessStartInfo info = new ProcessStartInfo(System.Diagnostics.Process.GetCurrentProcess().MainModule.FileName);
+            ProcessStartInfo info = new ProcessStartInfo(Process.GetCurrentProcess().MainModule.FileName);
             info.Verb = "runas";
             Process.Start(info);
-            System.Diagnostics.Process.Start(info);
+            Process.Start(info);
         }
         public static List<PluginDescription> GetPluginDescriptions(string directory)
         {
@@ -99,7 +101,7 @@ namespace PpmMain.LocalInstallerService
                 string[] pluginDescriptionFiles = Directory.GetFiles(directory, "*.json");
                 foreach (string filePath in pluginDescriptionFiles)
                 {
-                    string rawPluginDescription = System.IO.File.ReadAllText(filePath);
+                    string rawPluginDescription = File.ReadAllText(filePath);
                     PluginDescription pluginDescription = JsonConvert.DeserializeObject<PluginDescription>(rawPluginDescription);
                     pluginDescription.filename = Path.GetFileName(filePath);
                     pluginDescriptions.Add(pluginDescription);
@@ -125,7 +127,7 @@ namespace PpmMain.LocalInstallerService
 
             RegistryService registryService = new RegistryService();
             RegistryKey key = registryService.ReadLocalMachineSubKey(subKey);
-            char[] toTrim = {'\\'};
+            char[] toTrim = { '\\' };
             return registryService.ReadKeyValue(key, name).ToString().TrimEnd(toTrim);
         }
 
@@ -137,37 +139,6 @@ namespace PpmMain.LocalInstallerService
 
             // Report the error
             /// PpmMain.ParatextPluginManagerPlugin.ReportErrorWithDetails(message, errorDetails);
-        }
-    }
-    }
-    /// <summary>
-    /// Interface for a service that fetches the data we need from the registry
-    /// </summary>
-    interface IRegistryService
-    {
-        RegistryKey ReadLocalMachineSubKey(string subKey);
-
-        object ReadKeyValue(RegistryKey key, string name);
-    }
-    /// <summary>
-    /// Fetches data from the registry
-    /// </summary>
-    public class RegistryService: IRegistryService
-    {
-        private readonly RegistryKey localMachine;
-
-        public RegistryService()
-        {
-            this.localMachine = Registry.LocalMachine;
-        }
-        public RegistryKey ReadLocalMachineSubKey(string subKey)
-        {
-            return localMachine.OpenSubKey(subKey);
-        }
-
-        public object ReadKeyValue(RegistryKey key, string name)
-        {
-            return key.GetValue(name);
         }
     }
 }

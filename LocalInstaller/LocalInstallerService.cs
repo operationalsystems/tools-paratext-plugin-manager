@@ -51,14 +51,14 @@ namespace PpmMain.LocalInstaller
             {
                 string downloadedPluginPath = Path.Combine(ppmPath, ppmDownloadedPluginsDirectory);
                 string installedPluginDataPath = Path.Combine(ppmPath, ppmInstalledPluginDataDirectory);
-                string pluginInstallPath = Path.Combine(ptInstallationPath, ptInstalledPluginsDirectory, plugin.shortName.ToUpper());
-                string zipFileName = Path.ChangeExtension(plugin.filename, "zip");
+                string pluginInstallPath = Path.Combine(ptInstallationPath, ptInstalledPluginsDirectory, plugin.ShortName.ToUpper());
+                string zipFileName = Path.ChangeExtension(plugin.Filename, "zip");
                 string zipFilePath = Path.Combine(downloadedPluginPath, zipFileName);
                 /// If this is an upgrade, or a re-install, uninstall the plugin before extracting
                 if (Directory.Exists(pluginInstallPath))
                     UninstallPlugin(plugin);
                 ZipFile.ExtractToDirectory(zipFilePath, pluginInstallPath);
-                File.Move(Path.Combine(downloadedPluginPath, plugin.filename), Path.Combine(installedPluginDataPath, plugin.filename));
+                File.Move(Path.Combine(downloadedPluginPath, plugin.Filename), Path.Combine(installedPluginDataPath, plugin.Filename));
             }
             catch (Exception ex)
             {
@@ -72,7 +72,7 @@ namespace PpmMain.LocalInstaller
 
             try
             {
-                string pluginInstallPath = $"{ptInstallationPath}\\{ptInstalledPluginsDirectory}\\{plugin.shortName.ToUpper()}";
+                string pluginInstallPath = $"{ptInstallationPath}\\{ptInstalledPluginsDirectory}\\{plugin.ShortName.ToUpper()}";
                 if (Directory.Exists(pluginInstallPath))
                     Directory.Delete(pluginInstallPath);
             }
@@ -103,7 +103,7 @@ namespace PpmMain.LocalInstaller
                 {
                     string rawPluginDescription = File.ReadAllText(filePath);
                     PluginDescription pluginDescription = JsonConvert.DeserializeObject<PluginDescription>(rawPluginDescription);
-                    pluginDescription.filename = Path.GetFileName(filePath);
+                    pluginDescription.Filename = Path.GetFileName(filePath);
                     pluginDescriptions.Add(pluginDescription);
                 }
             }

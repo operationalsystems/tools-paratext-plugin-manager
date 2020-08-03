@@ -18,15 +18,15 @@ namespace PpmUnitTests
         {
             ILocalInstallerService localInstaller = new LocalInstallerService();
             List<PluginDescription> plugins = localInstaller.GetInstalledPlugins();
-            Assert.IsTrue("Translation Validation Plugin".Equals(plugins[0].name)); /// this is dependent on the filesystem and needs to be replaced with a test that validates the logic appropriately
+            Assert.IsTrue("Translation Validation Plugin".Equals(plugins[0].Name)); /// this is dependent on the filesystem and needs to be replaced with a test that validates the logic appropriately
         }
 
         [TestMethod()]
         public void InstallPluginTest()
         {
             ILocalInstallerService localInstaller = new LocalInstallerService();
-            PluginDescription plugin = new PluginDescription("Some Plugin", "sp", "1.2.3.4", null, null, new List<string>() { "8", "9" }, null);
-            plugin.filename = "somePlugin-1.2.3.4.json";
+            PluginDescription plugin = new PluginDescription("Some Plugin", "sp", "1.2.3.4", new List<string>() { "8", "9" });
+            plugin.Filename = "somePlugin-1.2.3.4.json";
             localInstaller.InstallPlugin(plugin); /// for now, just invoke it so we can debug
         }
     }

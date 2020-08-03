@@ -27,11 +27,15 @@ namespace PpmUnitTests
         }
 
         [TestMethod]
-        public void TestGetAvailablePlugins(bool latestOnly = true)
+        public void TestGetAvailablePlugins()
         {
             // test that the latestOnly flag works as expected, and results in only the latest plugins are returned.
             var latestPlugins = pluginRepositoryService.GetAvailablePlugins(true);
 
+            foreach (var plugin in latestPlugins)
+            {
+                Console.WriteLine(plugin);
+            }
             // Test that we're able to return all of the plugins when latestOnly is false.
         }
 

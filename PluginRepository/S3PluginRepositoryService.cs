@@ -16,6 +16,9 @@ using System.Threading.Tasks;
 
 namespace PpmMain.PluginRepository
 {
+    /// <summary>
+    /// This service class implments an S3 plugin repostory for PPM.
+    /// </summary>
     public class S3PluginRepositoryService : IPluginRepository
     {
         // Read-only PPM user credentials and bucket name.
@@ -82,6 +85,14 @@ namespace PpmMain.PluginRepository
             return DownloadS3File($"{result.Value}.zip");
         }
 
+        public FileInfo DownloadPlugin(PluginDescription pluginDescription, DirectoryInfo downloadDirectory = null)
+        {
+            // validate input
+            _ = pluginDescription ?? throw new ArgumentNullException(nameof(pluginDescription));
+
+            return DownloadPlugin(pluginDescription.ShortName, pluginDescription.Version, downloadDirectory);
+        }
+
         public List<PluginDescription> GetAvailablePlugins(bool latestOnly = true)
         {
             // grab all the available JSON files, as they're the plugin descriptions.
@@ -131,6 +142,9 @@ namespace PpmMain.PluginRepository
             return PluginDescriptionStore.Select(d => d.Key).ToList();
         }
 
+        /// <summary>
+        /// This functions sets up the STS AWS session credentials.
+        /// </summary>
         private void SetUpAwsCredentials()
         {
 
@@ -153,18 +167,30 @@ namespace PpmMain.PluginRepository
                    awsCredentialss.SessionToken);
             }
         }
+
+        /// <summary>
+        /// This functions sets up the <c>TransferUtility</c> used to download files from S3.
+        /// </summary>
         private void SetUpS3TransferClient()
         {
             S3TransferUtility = new TransferUtility(GetS3Client());
         }
 
-
+        /// <summary>
+        /// This function is for assisting in creating a logged-in S3 client.
+        /// </summary>
+        /// <returns>The logged-in S3 client</returns>
         private AmazonS3Client GetS3Client()
         {
             // Use the single-user credentials to interact with the various AWS services
             return new AmazonS3Client(AwsSessionCredentials, region);
         }
 
+        /// <summary>
+        /// This function will return the filenames of all files that have a specified extension from the plugin repository.
+        /// </summary>
+        /// <param name="extension">A case-insensitive extension. If a leading '.' isn't provided, it will be added. Eg: "JSON" or ".json" will work. (required)</param>
+        /// <returns>A list of filenames with the specified extension.</returns>
         private List<String> GetRepoFilenamesByExtension(string extension)
         {
             // validate input
@@ -184,34 +210,46 @@ namespace PpmMain.PluginRepository
             );
         }
 
+        /// <summary>
+        /// This function will retrieve a list of filenames, and whitelist them by a provided filter. If no filter is provided, all filenames are returned.
+        /// </summary>
+        /// <param name="filenameFilter">A lambda used to whitelist files by their filename. (optional)</param>
+        /// <returns>A list of filenames available on the repo.</returns>
         private List<String> GetS3RepoFilenames(Func<string, bool> filenameFilter = null)
         {
-            using (var s3Client = GetS3Client())
+            using var s3Client = GetS3Client();
+            // Request a list of the available S3 objects
+            var request = s3Client.ListObjectsAsync(new ListObjectsRequest()
             {
-                // Request a list of the available S3 objects
-                var request = s3Client.ListObjectsAsync(new ListObjectsRequest()
+                BucketName = bucketName
+            });
+            Task.WaitAll(request);
+
+            // filter objects on filename
+            List<S3Object> jsonObjects;
+            if (filenameFilter != null)
+            {
+                jsonObjects = request.Result.S3Objects.FindAll(s3Obj =>
                 {
-                    BucketName = bucketName
+                    return filenameFilter(s3Obj.Key);
                 });
-                Task.WaitAll(request);
-
-                // filter objects on filename
-                List<S3Object> jsonObjects;
-                if (filenameFilter != null)
-                {
-                    jsonObjects = request.Result.S3Objects.FindAll(s3Obj => {
-                        return filenameFilter(s3Obj.Key);
-                    });
-                } else
-                {
-                    jsonObjects = request.Result.S3Objects;
-                }
-
-                // return list of object filenames
-                return jsonObjects.Select(s3obj => s3obj.Key).ToList();
             }
+            else
+            {
+                jsonObjects = request.Result.S3Objects;
+            }
+
+            // return list of object filenames
+            return jsonObjects.Select(s3obj => s3obj.Key).ToList();
         }
 
+        /// <summary>
+        /// This function will download a file from the S3 plugin repository and return file information about the downloaded file. 
+        /// An optional output directory can be specified; Otherwise the downloaded files will be placed in a temporary directory.
+        /// </summary>
+        /// <param name="filename">The filename of the files to download. (required)</param>
+        /// <param name="outDownloadDirectory">The download save directory. (optional)</param>
+        /// <returns>The file information about the downloaded file.</returns>
         private FileInfo DownloadS3File(string filename, DirectoryInfo outDownloadDirectory = null)
         {
             // validate input
@@ -234,6 +272,13 @@ namespace PpmMain.PluginRepository
             return new FileInfo(saveFilePath);
         }
 
+        /// <summary>
+        /// This is a utility function will download multiple files based on a list of filenames. The function will also map all of the filenames on the 
+        /// server to the downloaded filenames.
+        /// </summary>
+        /// <param name="filenames">The list of filenames for files to download. (required)</param>
+        /// <param name="outputToInputMap">The dictionary used to map filenames on the repository to the filenames of the files downloaded locally. (optional)</param>
+        /// <returns></returns>
         private List<string> DownloadS3Files(List<string> filenames, Dictionary<string, string> outputToInputMap = null)
         {
             // validate input
@@ -262,6 +307,12 @@ namespace PpmMain.PluginRepository
             return pluginInfoFilenames;
         }
 
+        /// <summary>
+        /// This function will generate a temporary absolute filepath based on the original filename that is used for saving files such that it won't conflict 
+        /// with other files.
+        /// </summary>
+        /// <param name="initialFilePath">The initial filename to base the temporary fully qualified filename off of. (required)</param>
+        /// <returns>The fully qualified temporary file path.</returns>
         private string GetTemporaryAbsoluteFilePath(string initialFilePath)
         {
             return Path.Combine(TemporaryDownloadDirectory.FullName, $"{Path.GetRandomFileName()}_{initialFilePath}");

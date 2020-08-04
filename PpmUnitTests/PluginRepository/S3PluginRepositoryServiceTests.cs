@@ -22,7 +22,7 @@ namespace PpmUnitTests
         [TestMethod]
         public void TestDownloadPlugin()
         {
-            pluginRepositoryService.DownloadPlugin("TranslationValidationPlugin", "1.2.0.0", new DirectoryInfo(Directory.GetCurrentDirectory()));
+            pluginRepositoryService.DownloadPlugin("TPT", "1.3.0.0", new DirectoryInfo(Directory.GetCurrentDirectory()));
         }
 
         [TestMethod]

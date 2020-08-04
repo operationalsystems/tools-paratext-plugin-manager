@@ -5,11 +5,13 @@ using Amazon.S3.Model;
 using Amazon.S3.Transfer;
 using Amazon.SecurityToken;
 using Amazon.SecurityToken.Model;
+using Newtonsoft.Json;
+using PpmMain.Models;
 using System;
 using System.Collections.Generic;
+using System.Dynamic;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace PpmMain.PluginRepository
@@ -29,35 +31,104 @@ namespace PpmMain.PluginRepository
         public DirectoryInfo TemporaryDownloadDirectory { get; }  = new DirectoryInfo(Path.Combine(Path.GetTempPath(), "PPM"));
 
         // Setup needed objects
-        TransferUtility S3TransferUtility { get; }
+        public  TransferUtility S3TransferUtility { get; set; }
+
+        // Plugin description dictionary with the associated filename
+        public Dictionary<PluginDescription, string> PluginDescriptionStore { get; private set; }
 
         public S3PluginRepositoryService()
         {
-            // Set up AWS S3 Client for PPM repository requests
+            // Set up the AWS credentials the S3 client will need for PPM repository requests
             SetUpAwsCredentials();
 
-            S3TransferUtility = new TransferUtility(GetS3Client());
+            // The transfer utility for downloading S3 files.
+            SetUpS3TransferClient();
         }
 
-        public FileInfo DownloadPlugin(string pluginName, string pluginVersion, DirectoryInfo downloadDirectory)
+        public FileInfo DownloadPlugin(string pluginShortname, string pluginVersion, DirectoryInfo downloadDirectory = null)
         {
-            return DownloadS3File($"{pluginName}-{pluginVersion}.zip");
+            // validate input
+            _ = pluginShortname ?? throw new ArgumentNullException(nameof(pluginShortname));
+            _ = pluginVersion ?? throw new ArgumentNullException(nameof(pluginVersion));
+
+            // if no download directory is specified, use the default temporary directory
+            if (downloadDirectory == null)
+            {
+                downloadDirectory = TemporaryDownloadDirectory;
+            }
+
+            // Download the available plugins if we haven't already
+            if (PluginDescriptionStore == null)
+            {
+                GetAvailablePlugins();
+            }
+
+            // Grab the actual filename of the plugin, based on the plugin description's filename
+            var results = PluginDescriptionStore
+                .Select(i => i)
+                .Where(d => 
+                    d.Key.ShortName.Equals(pluginShortname, StringComparison.InvariantCultureIgnoreCase) 
+                    && d.Key.Version.Equals(pluginVersion, StringComparison.InvariantCultureIgnoreCase)
+                );
+
+            // make sure the return value isn't empty first
+            if (results.Count() <= 0)
+            {
+                throw new ArgumentException($"Unable to find a plugin with '{nameof(pluginShortname)}' of '{pluginShortname}', and '{nameof(pluginVersion)}' of '{pluginVersion}'");
+            }
+
+            var result = results.First<KeyValuePair<PluginDescription, string>>();
+
+            return DownloadS3File($"{result.Value}.zip");
         }
 
-        public List<string> GetAvailablePlugins(bool latestOnly = true)
+        public List<PluginDescription> GetAvailablePlugins(bool latestOnly = true)
         {
+            // grab all the available JSON files, as they're the plugin descriptions.
             var pluginInformationFilenames = GetRepoFilenamesByExtension(".json");
 
-            //var pluginInfoDownloadTasks = new List<Task>(pluginInformationFilenames.Count);
-            //pluginInformationFilenames.ForEach(filename =>
-            //{
-            //    pluginInfoDownloadTasks.Add(S3TransferUtility.DownloadAsync(GetTemporaryAbsoluteFilePath(filename), bucketName, filename));
-            //});
+            // A temporary dictionary we use to map downloaded filename (the key) to the original filenames (the value).
+            // This allows us to recall what the filename pattern is for the JSON file in S3, so that we can download the plugin Zip file.
+            var outputToInputMap = new Dictionary<string, string>(pluginInformationFilenames.Count);
 
-            var s3Files = DownloadS3Files(pluginInformationFilenames);
-            //Task.WaitAll(pluginInfoDownloadTasks.ToArray());
+            /// Download all of the plugin descriptions.
+            var jsonFilepaths = DownloadS3Files(pluginInformationFilenames, outputToInputMap);
+            PluginDescriptionStore = new Dictionary<PluginDescription, string>();
+            jsonFilepaths.ForEach(jsonFilepath =>
+            {
+                PluginDescription pluginDescription = JsonConvert.DeserializeObject<PluginDescription>(File.ReadAllText(jsonFilepath));
+                PluginDescriptionStore.Add(pluginDescription, outputToInputMap[jsonFilepath]);
+            });
 
-            return s3Files;
+            if (latestOnly)
+            {
+                // filter out the latest version of each unique plugin
+                var latestPlugins = new Dictionary<string, PluginDescription>();
+                foreach (KeyValuePair<PluginDescription, string> currentPluginKvp in PluginDescriptionStore)
+                {
+                    if (!latestPlugins.ContainsKey(currentPluginKvp.Key.ShortName))
+                    {
+                        latestPlugins[currentPluginKvp.Key.ShortName] = currentPluginKvp.Key;
+                        continue;
+                    }
+
+                    var lastPlugin = latestPlugins[currentPluginKvp.Key.ShortName];
+
+                    var previousVersion = new Version(lastPlugin.Version);
+                    var currentVersion = new Version(currentPluginKvp.Key.Version);
+
+                    if (currentVersion > previousVersion)
+                    {
+                        latestPlugins[currentPluginKvp.Key.ShortName] = currentPluginKvp.Key;
+                    }
+                }
+
+                // return the latest only plugins
+                return latestPlugins.Select(d => d.Value).ToList();
+            }
+
+            // return the unfiltered plugins
+            return PluginDescriptionStore.Select(d => d.Key).ToList();
         }
 
         private void SetUpAwsCredentials()
@@ -82,6 +153,11 @@ namespace PpmMain.PluginRepository
                    awsCredentialss.SessionToken);
             }
         }
+        private void SetUpS3TransferClient()
+        {
+            S3TransferUtility = new TransferUtility(GetS3Client());
+        }
+
 
         private AmazonS3Client GetS3Client()
         {
@@ -136,7 +212,7 @@ namespace PpmMain.PluginRepository
             }
         }
 
-        private FileInfo DownloadS3File(string filename)
+        private FileInfo DownloadS3File(string filename, DirectoryInfo outDownloadDirectory = null)
         {
             // validate input
             if (String.IsNullOrEmpty(filename))
@@ -146,12 +222,19 @@ namespace PpmMain.PluginRepository
 
             // download the file and return the final path
             var saveFilePath = GetTemporaryAbsoluteFilePath(filename);
-            S3TransferUtility.DownloadAsync(saveFilePath, bucketName, filename);
 
+            // if a download directory is specified, use it.
+            if (outDownloadDirectory != null)
+            {
+                saveFilePath = Path.Combine(outDownloadDirectory.FullName, filename);
+            }
+
+            // Download the file and return the save path.
+            S3TransferUtility.DownloadAsync(saveFilePath, bucketName, filename);
             return new FileInfo(saveFilePath);
         }
 
-        private List<string> DownloadS3Files(List<string> filenames)
+        private List<string> DownloadS3Files(List<string> filenames, Dictionary<string, string> outputToInputMap = null)
         {
             // validate input
             _ = filenames ?? throw new ArgumentNullException(nameof(filenames));
@@ -164,6 +247,12 @@ namespace PpmMain.PluginRepository
                 var tempFilename = GetTemporaryAbsoluteFilePath(filename);
                 pluginInfoDownloadTasks.Add(S3TransferUtility.DownloadAsync(tempFilename, bucketName, filename));
                 pluginInfoFilenames.Add(tempFilename);
+
+                // map the input filename to the downloaded filename if the dictionary is provided
+                if (outputToInputMap != null)
+                {
+                    outputToInputMap[tempFilename] = Path.GetFileNameWithoutExtension(filename);
+                }
             });
 
             // wait for all of the files to stop downloading

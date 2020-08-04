@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 
 namespace PpmMain.Models
@@ -42,5 +43,10 @@ namespace PpmMain.Models
         /// The license for this plugin.
         /// </summary>
         public string License { get; set; }
+
+        public override string ToString()
+        {
+            return JsonConvert.SerializeObject(this);
+        }
     }
 }

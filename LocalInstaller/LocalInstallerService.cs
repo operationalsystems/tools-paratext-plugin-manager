@@ -92,13 +92,5 @@ namespace PpmMain.LocalInstaller
 
             return pluginDescription;
         }
-
-        public static PluginDescription GetPluginDescription(string filePath)
-        {
-            string rawPluginDescription = File.ReadAllText(filePath);
-            PluginDescription pluginDescription = JsonConvert.DeserializeObject<PluginDescription>(rawPluginDescription);
-
-            return pluginDescription;
-        }
     }
 }

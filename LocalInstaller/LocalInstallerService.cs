@@ -1,24 +1,18 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using PpmMain.Models;
+using PpmMain.Util;
+using System;
+using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
-using System.Collections.Generic;
-using Newtonsoft.Json;
-using PpmMain.Models;
 using System.Linq;
 
 namespace PpmMain.LocalInstaller
 {
-    public interface ILocalInstallerService
-    {
-        List<PluginDescription> GetInstalledPlugins();
-        void InstallPlugin(FileInfo pluginArchive);
-        void UninstallPlugin(PluginDescription plugin);
-    }
-
     /// <summary>
-    /// Handles management and installation of local plugins.
+    /// Handles management and installation of local ParaText plugins.
     /// </summary>
-    public class LocalInstallerService : ILocalInstallerService
+    public class LocalInstallerService : IInstallerService
     {
         /// <summary>
         /// The directory name where ParaText plugins are installed.
@@ -31,7 +25,7 @@ namespace PpmMain.LocalInstaller
         }
 
         /// <summary>
-        /// Gets descriptions of the currently installed plugins.
+        /// Gets descriptions of the currently installed ParaText plugins.
         /// </summary>
         /// <returns>The currently installed plugins.</returns>
         public List<PluginDescription> GetInstalledPlugins()

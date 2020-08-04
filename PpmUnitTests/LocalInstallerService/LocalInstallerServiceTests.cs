@@ -4,7 +4,7 @@ using System.IO;
 using System.IO.Compression;
 using PpmMain.LocalInstaller;
 using PpmMain.Models;
-using System.CodeDom;
+using PpmMain.Util;
 
 namespace PpmUnitTests
 {
@@ -36,7 +36,7 @@ namespace PpmUnitTests
             File.WriteAllText(Path.Combine(directoryPath2, "file.json"), json2);
 
             // Assert expectations
-            ILocalInstallerService localInstaller = new LocalInstallerService(testDirectoryPath);
+            IInstallerService localInstaller = new LocalInstallerService(testDirectoryPath);
             List<PluginDescription> plugins = localInstaller.GetInstalledPlugins();
             Assert.IsTrue(plugins.Exists(plugin => plugin.ShortName == shortName1));
             Assert.IsTrue(plugins.Exists(plugin => plugin.ShortName == shortName2));
@@ -82,7 +82,7 @@ namespace PpmUnitTests
             File.WriteAllText(jsonPath, json);
 
             /// Run the installer
-            ILocalInstallerService localInstaller = new LocalInstallerService(basePath);
+            IInstallerService localInstaller = new LocalInstallerService(basePath);
             localInstaller.InstallPlugin(new FileInfo(archivePath));
 
             /// Assert expectations
@@ -116,7 +116,7 @@ namespace PpmUnitTests
             File.WriteAllText(Path.Combine(directoryPath, "file.txt"), "text");
 
             /// Run the uninstaller
-            ILocalInstallerService localInstaller = new LocalInstallerService(System.IO.Path.GetTempPath());
+            IInstallerService localInstaller = new LocalInstallerService(System.IO.Path.GetTempPath());
             localInstaller.UninstallPlugin(plugin);
 
             /// Assert expectations

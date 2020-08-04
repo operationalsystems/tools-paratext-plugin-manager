@@ -8,7 +8,7 @@ namespace PpmUnitTests
     [TestClass]
     public class PluginRepositoryServiceTests
     {
-        PluginRepositoryService pluginRepositoryService;
+        S3PluginRepositoryService pluginRepositoryService;
 
         /// <summary>
         /// Test setup.
@@ -16,14 +16,13 @@ namespace PpmUnitTests
         [TestInitialize]
         public void TestSetup()
         {
-            pluginRepositoryService = new PluginRepositoryService();
+            pluginRepositoryService = new S3PluginRepositoryService();
         }
 
         [TestMethod]
         public void TestDownloadPlugin()
         {
-            // FileInfo DownloadPlugin(string pluginName, string pluginVersion, DirectoryInfo downloadDirectory)
-            throw new NotImplementedException();
+            pluginRepositoryService.DownloadPlugin("TranslationValidationPlugin", "1.2.0.0", new DirectoryInfo(Directory.GetCurrentDirectory()));
         }
 
         [TestMethod]

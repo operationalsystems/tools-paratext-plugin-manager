@@ -58,8 +58,7 @@
     <Reference Include="System.IO.Compression.FileSystem" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="LocalInstallerServiceTests.cs" />
-    <Compile Include="PluginRepository\PluginRepositoryServiceTests.cs" />
+    <Compile Include="PluginRepository\S3PluginRepositoryServiceTests.cs" />
     <Compile Include="LocalInstallerService\LocalInstallerServiceTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

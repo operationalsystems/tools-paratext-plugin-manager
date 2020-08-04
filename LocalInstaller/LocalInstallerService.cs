@@ -4,6 +4,7 @@ using System.IO.Compression;
 using System.Collections.Generic;
 using Newtonsoft.Json;
 using PpmMain.Models;
+using System.Linq;
 
 namespace PpmMain.LocalInstaller
 {
@@ -32,10 +33,29 @@ namespace PpmMain.LocalInstaller
         /// <summary>
         /// Gets descriptions of the currently installed plugins.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>The currently installed plugins.</returns>
         public List<PluginDescription> GetInstalledPlugins()
         {
-            return GetPluginDescriptions(PtInstalledPluginsPath);
+            List<PluginDescription> pluginDescriptions = new List<PluginDescription>();
+
+            string[] pluginDirectoryPaths = Directory.GetDirectories(PtInstalledPluginsPath);
+            foreach (string directoryPath in pluginDirectoryPaths)
+            {
+                string[] pluginDescriptionFilePaths = Directory.GetFiles(directoryPath, "*.json");
+                foreach (string filePath in pluginDescriptionFilePaths)
+                {
+                    PluginDescription plugin = GetPluginDescription(filePath);
+                    _ = plugin.Name ?? throw new ArgumentNullException(nameof(plugin.Name));
+                    _ = plugin.ShortName ?? throw new ArgumentNullException(nameof(plugin.ShortName));
+                    if (plugin.PtVersions is null || plugin.PtVersions.Count() == 0)
+                        throw new ArgumentNullException(nameof(plugin.PtVersions));
+
+                    pluginDescriptions.Add(plugin);
+                }
+
+            }
+
+            return pluginDescriptions;
         }
 
         /// <summary>
@@ -70,21 +90,10 @@ namespace PpmMain.LocalInstaller
         }
 
         /// <summary>
-        /// Gets plugin descriptions in a directory.
+        /// Gets a plugin description.
         /// </summary>
-        /// <param name="directory">The directory to search for plugin descriptions.</param>
-        /// <returns>A list of plugin descriptions.</returns>
-        public static List<PluginDescription> GetPluginDescriptions(string directory)
-        {
-            List<PluginDescription> pluginDescriptions = new List<PluginDescription>();
-
-            string[] pluginDescriptionFilePaths = Directory.GetFiles(directory, "*.json");
-            foreach (string filePath in pluginDescriptionFilePaths)
-                pluginDescriptions.Add(GetPluginDescription(filePath));
-
-            return pluginDescriptions;
-        }
-
+        /// <param name="filePath">A file which describes the plugin.</param>
+        /// <returns>A plugin description.</returns>
         public static PluginDescription GetPluginDescription(string filePath)
         {
             string rawPluginDescription = File.ReadAllText(filePath);

@@ -1,7 +1,7 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using PpmMain.PluginRepository;
 using System;
 using System.IO;
-using PpmMain.PluginRepository;
 
 namespace PpmUnitTests
 {

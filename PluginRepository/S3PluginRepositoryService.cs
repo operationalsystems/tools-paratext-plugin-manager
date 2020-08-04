@@ -9,7 +9,6 @@ using Newtonsoft.Json;
 using PpmMain.Models;
 using System;
 using System.Collections.Generic;
-using System.Dynamic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -17,26 +16,34 @@ using System.Threading.Tasks;
 namespace PpmMain.PluginRepository
 {
     /// <summary>
-    /// This service class implments an S3 plugin repostory for PPM.
+    /// This service class implements an S3 plugin repostory for PPM.
     /// </summary>
     public class S3PluginRepositoryService : IPluginRepository
     {
-        // Read-only PPM user credentials and bucket name.
-        RegionEndpoint region { get; }  = RegionEndpoint.USEast1;
+        // Read-only PPM repository and CLI AWS configuration parameters.
+        RegionEndpoint region { get; } = RegionEndpoint.USEast1;
         const String accessKey = "AKIAQDRNRZSYWRWXIHWN";
         const String secretKey = "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";
         const String bucketName = "biblica-ppm-plugin-repo";
 
-        // The temporary AWS credentials we use for S3 requests.
+        /// <summary>
+        /// The temporary AWS credentials we use for S3 requests.
+        /// </summary>
         SessionAWSCredentials AwsSessionCredentials { get; set; }
 
-        // Temporary storage location
-        public DirectoryInfo TemporaryDownloadDirectory { get; }  = new DirectoryInfo(Path.Combine(Path.GetTempPath(), "PPM"));
+        /// <summary>
+        /// The directory used by default to download files from the plugin repository.
+        /// </summary>
+        public DirectoryInfo TemporaryDownloadDirectory { get; } = new DirectoryInfo(Path.Combine(Path.GetTempPath(), "PPM"));
 
-        // Setup needed objects
-        public  TransferUtility S3TransferUtility { get; set; }
+        /// <summary>
+        /// The S3 Transfer Utility used to download files from S3 to the local disk.
+        /// </summary>
+        public TransferUtility S3TransferUtility { get; set; }
 
-        // Plugin description dictionary with the associated filename
+        /// <summary>
+        /// The plugin description dictionary used to map the associated filenames on the repository.
+        /// </summary>
         public Dictionary<PluginDescription, string> PluginDescriptionStore { get; private set; }
 
         public S3PluginRepositoryService()
@@ -69,8 +76,8 @@ namespace PpmMain.PluginRepository
             // Grab the actual filename of the plugin, based on the plugin description's filename
             var results = PluginDescriptionStore
                 .Select(i => i)
-                .Where(d => 
-                    d.Key.ShortName.Equals(pluginShortname, StringComparison.InvariantCultureIgnoreCase) 
+                .Where(d =>
+                    d.Key.ShortName.Equals(pluginShortname, StringComparison.InvariantCultureIgnoreCase)
                     && d.Key.Version.Equals(pluginVersion, StringComparison.InvariantCultureIgnoreCase)
                 );
 
@@ -159,7 +166,7 @@ namespace PpmMain.PluginRepository
 
                 Task.WaitAll(sessionTokenResponse);
 
-                var awsCredentialss= sessionTokenResponse.Result.Credentials;
+                var awsCredentialss = sessionTokenResponse.Result.Credentials;
 
                 AwsSessionCredentials = new SessionAWSCredentials(
                    awsCredentialss.AccessKeyId,
@@ -205,7 +212,7 @@ namespace PpmMain.PluginRepository
             }
 
             // Get files from the repo by the extension filter. 
-            return GetS3RepoFilenames((filename) => 
+            return GetS3RepoFilenames((filename) =>
                 filename.Trim().ToLower().EndsWith(normalizedExtension)
             );
         }

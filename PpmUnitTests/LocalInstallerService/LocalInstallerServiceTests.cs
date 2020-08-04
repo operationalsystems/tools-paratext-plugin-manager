@@ -1,8 +1,8 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System.IO;
-using System.IO.Compression;
 using PpmMain.LocalInstaller;
 using PpmMain.Models;
+using System.IO;
+using System.IO.Compression;
 
 namespace PpmUnitTests
 {
@@ -81,7 +81,7 @@ namespace PpmUnitTests
             };
             string basePath = System.IO.Path.GetTempPath();
             string directoryPath = Path.Combine(basePath, plugin.ShortName.ToUpper());
-            
+
             /// Create assets
             if (!Directory.Exists(directoryPath))
                 Directory.CreateDirectory(directoryPath);

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 
-namespace PpmMain.Util
+namespace PpmMain.LocalInstaller
 {
     /// <summary>
     /// Handles management and installation of ParaText plugins.

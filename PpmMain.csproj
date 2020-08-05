@@ -105,7 +105,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Util\IInstallerService.cs" />
+    <Compile Include="LocalInstaller\IInstallerService.cs" />
     <Compile Include="LocalInstaller\LocalInstallerService.cs" />
     <Compile Include="Models\PluginDescription.cs" />
     <Compile Include="ParatextPluginManagerPlugin.cs" />

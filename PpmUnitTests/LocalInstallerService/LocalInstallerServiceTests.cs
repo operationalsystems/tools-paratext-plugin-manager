@@ -1,7 +1,6 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using PpmMain.LocalInstaller;
 using PpmMain.Models;
-using PpmMain.Util;
 using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;

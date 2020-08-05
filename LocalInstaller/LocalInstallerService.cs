@@ -9,7 +9,7 @@ using System.Linq;
 namespace PpmMain.LocalInstaller
 {
     /// <summary>
-    /// Handles management and installation of local ParaText plugins.
+    /// This service handles management and installation of local ParaText plugins.
     /// </summary>
     public class LocalInstallerService : IInstallerService
     {
@@ -24,7 +24,7 @@ namespace PpmMain.LocalInstaller
         }
 
         /// <summary>
-        /// Gets descriptions of the currently installed ParaText plugins.
+        /// This function gets descriptions of the currently installed ParaText plugins.
         /// </summary>
         /// <returns>The currently installed plugins.</returns>
         public List<PluginDescription> GetInstalledPlugins()
@@ -52,7 +52,7 @@ namespace PpmMain.LocalInstaller
         }
 
         /// <summary>
-        /// Installs a ParaText plugin.
+        /// This function installs a ParaText plugin.
         /// </summary>
         /// <param name="pluginArchive">The zip file containing the plugin data.</param>
         public void InstallPlugin(FileInfo pluginArchive)
@@ -72,7 +72,7 @@ namespace PpmMain.LocalInstaller
         }
 
         /// <summary>
-        /// Uninstalls a ParaText plugin.
+        /// This function uninstalls a ParaText plugin.
         /// </summary>
         /// <param name="plugin">The plugin to uninstall.</param>
         public void UninstallPlugin(PluginDescription plugin)
@@ -83,7 +83,7 @@ namespace PpmMain.LocalInstaller
         }
 
         /// <summary>
-        /// Gets a plugin description.
+        /// This function gets a plugin description.
         /// </summary>
         /// <param name="filePath">A file which describes the plugin.</param>
         /// <returns>A plugin description.</returns>

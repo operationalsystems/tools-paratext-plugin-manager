@@ -1,0 +1,12 @@
+{
+  "name": "Test Plugin",
+  "shortName": "temp",
+  "version": "1.0",
+  "description": "This is a pretend plugin v1.0 for pretend purposes.",
+  "versionDescription": "",
+  "ptVersions": [
+    "8",
+    "9"
+  ],
+  "license": ""
+}

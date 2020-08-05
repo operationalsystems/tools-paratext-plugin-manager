@@ -4,7 +4,7 @@
 <?define Property_ProductVersion = "1.0.0" ?>
 
 <!-- * means auto-generate a new guid each time. This is "a unique identifier for the particular product release" -->
-<?define Property_ProductCode = "*" ?>
+<?define Property_ProductCode = "{100FF197-E798-43F3-93BA-C9FA3EE491A8}" ?>
 
 <!--Don't even think of EVER changing this, despite the counter-intuitive name. What it is: "a shared identifier that represents multiple versions of an application" -->
 <?define Property_UpgradeCode = "{7C939A05-5FE4-48CD-B6C9-B7111F97DF0E}" ?>
@@ -90,13 +90,13 @@ http://blogs.msdn.com/robmen/archive/2003/10/04/56479.aspx -->
     </Directory>
 
     <ComponentGroup Id="COMPONENTSFORP8PLUGIN" Directory="INSTALLDIR8" Source="..\bin\x86\Release">
-      <Component Guid="{3026ABAA-7B09-4145-99F8-132C2CA989DB}">
+      <Component Guid="{7E459353-F66B-404A-ACF5-BCAB266FB44E}">
         <File Id="ParatextPluginManagerPlugin.dll_P8" KeyPath="yes" Name="ParatextPluginManagerPlugin.dll" />
       </Component>
     </ComponentGroup>
 
     <ComponentGroup Id="COMPONENTSFORP9PLUGIN" Directory="INSTALLDIR9" Source="..\bin\x86\Release">
-      <Component Guid="{4304700E-A81D-4685-B43C-1F230A2104A1}">
+      <Component Guid="{F3E676D6-68CE-4BBB-903D-CA3B26936A56}">
         <File Id="ParatextPluginManagerPlugin.dll_P9" KeyPath="yes" Name="ParatextPluginManagerPlugin.dll" />
       </Component>
     </ComponentGroup>

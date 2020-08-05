@@ -16,7 +16,7 @@ using System.Threading.Tasks;
 namespace PpmMain.PluginRepository
 {
     /// <summary>
-    /// This service class implements an S3 plugin repostory for PPM.
+    /// This service class implements an S3 plugin repository for PPM.
     /// </summary>
     public class S3PluginRepositoryService : IPluginRepository
     {
@@ -25,6 +25,7 @@ namespace PpmMain.PluginRepository
         const String accessKey = "AKIAQDRNRZSYWRWXIHWN";
         const String secretKey = "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";
         const String bucketName = "biblica-ppm-plugin-repo";
+        public const string JsonExtension = ".json";
 
         /// <summary>
         /// The temporary AWS credentials we use for S3 requests.
@@ -34,7 +35,7 @@ namespace PpmMain.PluginRepository
         /// <summary>
         /// The directory used by default to download files from the plugin repository.
         /// </summary>
-        public DirectoryInfo TemporaryDownloadDirectory { get; } = new DirectoryInfo(Path.Combine(Path.GetTempPath(), "PPM"));
+        public virtual DirectoryInfo TemporaryDownloadDirectory { get; private set; } = new DirectoryInfo(Path.Combine(Path.GetTempPath(), "PPM"));
 
         /// <summary>
         /// The S3 Transfer Utility used to download files from S3 to the local disk.
@@ -87,7 +88,7 @@ namespace PpmMain.PluginRepository
                 throw new ArgumentException($"Unable to find a plugin with '{nameof(pluginShortname)}' of '{pluginShortname}', and '{nameof(pluginVersion)}' of '{pluginVersion}'");
             }
 
-            var result = results.First<KeyValuePair<PluginDescription, string>>();
+            var result = results.First();
 
             return DownloadS3File($"{result.Value}.zip");
         }
@@ -103,7 +104,7 @@ namespace PpmMain.PluginRepository
         public List<PluginDescription> GetAvailablePlugins(bool latestOnly = true)
         {
             // grab all the available JSON files, as they're the plugin descriptions.
-            var pluginInformationFilenames = GetRepoFilenamesByExtension(".json");
+            var pluginInformationFilenames = GetRepoFilenamesByExtension(JsonExtension);
 
             // A temporary dictionary we use to map downloaded filename (the key) to the original filenames (the value).
             // This allows us to recall what the filename pattern is for the JSON file in S3, so that we can download the plugin Zip file.
@@ -152,7 +153,7 @@ namespace PpmMain.PluginRepository
         /// <summary>
         /// This functions sets up the STS AWS session credentials.
         /// </summary>
-        private void SetUpAwsCredentials()
+        public virtual void SetUpAwsCredentials()
         {
 
             using (var stsClient = new AmazonSecurityTokenServiceClient(accessKey, secretKey, region))
@@ -178,7 +179,7 @@ namespace PpmMain.PluginRepository
         /// <summary>
         /// This functions sets up the <c>TransferUtility</c> used to download files from S3.
         /// </summary>
-        private void SetUpS3TransferClient()
+        public virtual void SetUpS3TransferClient()
         {
             S3TransferUtility = new TransferUtility(GetS3Client());
         }
@@ -187,7 +188,7 @@ namespace PpmMain.PluginRepository
         /// This function is for assisting in creating a logged-in S3 client.
         /// </summary>
         /// <returns>The logged-in S3 client</returns>
-        private AmazonS3Client GetS3Client()
+        public virtual AmazonS3Client GetS3Client()
         {
             // Use the single-user credentials to interact with the various AWS services
             return new AmazonS3Client(AwsSessionCredentials, region);
@@ -198,7 +199,7 @@ namespace PpmMain.PluginRepository
         /// </summary>
         /// <param name="extension">A case-insensitive extension. If a leading '.' isn't provided, it will be added. Eg: "JSON" or ".json" will work. (required)</param>
         /// <returns>A list of filenames with the specified extension.</returns>
-        private List<String> GetRepoFilenamesByExtension(string extension)
+        public virtual List<String> GetRepoFilenamesByExtension(string extension)
         {
             // validate input
             _ = extension ?? throw new ArgumentNullException(nameof(extension));
@@ -257,7 +258,7 @@ namespace PpmMain.PluginRepository
         /// <param name="filename">The filename of the files to download. (required)</param>
         /// <param name="outDownloadDirectory">The download save directory. (optional)</param>
         /// <returns>The file information about the downloaded file.</returns>
-        private FileInfo DownloadS3File(string filename, DirectoryInfo outDownloadDirectory = null)
+        public virtual FileInfo DownloadS3File(string filename, DirectoryInfo outDownloadDirectory = null)
         {
             // validate input
             if (String.IsNullOrEmpty(filename))
@@ -286,7 +287,7 @@ namespace PpmMain.PluginRepository
         /// <param name="filenames">The list of filenames for files to download. (required)</param>
         /// <param name="outputToInputMap">The dictionary used to map filenames on the repository to the filenames of the files downloaded locally. (optional)</param>
         /// <returns></returns>
-        private List<string> DownloadS3Files(List<string> filenames, Dictionary<string, string> outputToInputMap = null)
+        public virtual List<string> DownloadS3Files(List<string> filenames, Dictionary<string, string> outputToInputMap = null)
         {
             // validate input
             _ = filenames ?? throw new ArgumentNullException(nameof(filenames));

@@ -4,20 +4,14 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
+using System.Linq;
 
 namespace PpmMain.LocalInstaller
 {
-    public interface ILocalInstallerService
-    {
-        List<PluginDescription> GetInstalledPlugins();
-        void InstallPlugin(FileInfo pluginArchive);
-        void UninstallPlugin(PluginDescription plugin);
-    }
-
     /// <summary>
-    /// Handles management and installation of local plugins.
+    /// This service handles management and installation of local ParaText plugins.
     /// </summary>
-    public class LocalInstallerService : ILocalInstallerService
+    public class LocalInstallerService : IInstallerService
     {
         /// <summary>
         /// The directory name where ParaText plugins are installed.
@@ -30,16 +24,35 @@ namespace PpmMain.LocalInstaller
         }
 
         /// <summary>
-        /// Gets descriptions of the currently installed plugins.
+        /// This function gets descriptions of the currently installed ParaText plugins.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>The currently installed plugins.</returns>
         public List<PluginDescription> GetInstalledPlugins()
         {
-            return GetPluginDescriptions(PtInstalledPluginsPath);
+            List<PluginDescription> pluginDescriptions = new List<PluginDescription>();
+
+            string[] pluginDirectoryPaths = Directory.GetDirectories(PtInstalledPluginsPath);
+            foreach (string directoryPath in pluginDirectoryPaths)
+            {
+                string[] pluginDescriptionFilePaths = Directory.GetFiles(directoryPath, "*.json");
+                foreach (string filePath in pluginDescriptionFilePaths)
+                {
+                    PluginDescription plugin = GetPluginDescription(filePath);
+                    _ = plugin.Name ?? throw new ArgumentNullException(nameof(plugin.Name));
+                    _ = plugin.ShortName ?? throw new ArgumentNullException(nameof(plugin.ShortName));
+                    if (plugin.PtVersions is null || plugin.PtVersions.Count() == 0)
+                        throw new ArgumentNullException(nameof(plugin.PtVersions));
+
+                    pluginDescriptions.Add(plugin);
+                }
+
+            }
+
+            return pluginDescriptions;
         }
 
         /// <summary>
-        /// Installs a ParaText plugin.
+        /// This function installs a ParaText plugin.
         /// </summary>
         /// <param name="pluginArchive">The zip file containing the plugin data.</param>
         public void InstallPlugin(FileInfo pluginArchive)
@@ -59,7 +72,7 @@ namespace PpmMain.LocalInstaller
         }
 
         /// <summary>
-        /// Uninstalls a ParaText plugin.
+        /// This function uninstalls a ParaText plugin.
         /// </summary>
         /// <param name="plugin">The plugin to uninstall.</param>
         public void UninstallPlugin(PluginDescription plugin)
@@ -70,21 +83,10 @@ namespace PpmMain.LocalInstaller
         }
 
         /// <summary>
-        /// Gets plugin descriptions in a directory.
+        /// This function gets a plugin description.
         /// </summary>
-        /// <param name="directory">The directory to search for plugin descriptions.</param>
-        /// <returns>A list of plugin descriptions.</returns>
-        public static List<PluginDescription> GetPluginDescriptions(string directory)
-        {
-            List<PluginDescription> pluginDescriptions = new List<PluginDescription>();
-
-            string[] pluginDescriptionFilePaths = Directory.GetFiles(directory, "*.json");
-            foreach (string filePath in pluginDescriptionFilePaths)
-                pluginDescriptions.Add(GetPluginDescription(filePath));
-
-            return pluginDescriptions;
-        }
-
+        /// <param name="filePath">A file which describes the plugin.</param>
+        /// <returns>A plugin description.</returns>
         public static PluginDescription GetPluginDescription(string filePath)
         {
             string rawPluginDescription = File.ReadAllText(filePath);

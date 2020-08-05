@@ -1,6 +1,7 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using PpmMain.LocalInstaller;
 using PpmMain.Models;
+using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
 
@@ -12,9 +13,35 @@ namespace PpmUnitTests
         [TestMethod()]
         public void GetInstalledPluginsTest()
         {
-            //ILocalInstallerService localInstaller = new LocalInstallerService(System.IO.Path.GetTempPath());
-            //List<PluginDescription> plugins = localInstaller.GetInstalledPlugins();
-            //Assert.IsTrue("Translation Validation Plugin".Equals(plugins[0].Name));
+            /// Set up data
+            string name = "gipt";
+            string shortName1 = $"{name}1";
+            string shortName2 = $"{name}2";
+            string json1 = $@"{{'name': 'Get Installed Plugins Test 1','shortName': '{shortName1}','ptVersions': ['8','9']}}";
+            string json2 = $@"{{'name': 'Get Installed Plugins Test 1','shortName': '{shortName2}','ptVersions': ['8','9']}}";
+            string basePath = System.IO.Path.GetTempPath();
+            string testDirectoryPath = Path.Combine(basePath, name);
+            string directoryPath1 = Path.Combine(testDirectoryPath, shortName1.ToUpper());
+            string directoryPath2 = Path.Combine(testDirectoryPath, shortName2.ToUpper());
+
+            /// Create assets
+            if (!Directory.Exists(testDirectoryPath))
+                Directory.CreateDirectory(testDirectoryPath);
+            if (!Directory.Exists(directoryPath1))
+                Directory.CreateDirectory(directoryPath1);
+            File.WriteAllText(Path.Combine(directoryPath1, "file.json"), json1);
+            if (!Directory.Exists(directoryPath2))
+                Directory.CreateDirectory(directoryPath2);
+            File.WriteAllText(Path.Combine(directoryPath2, "file.json"), json2);
+
+            // Assert expectations
+            IInstallerService localInstaller = new LocalInstallerService(testDirectoryPath);
+            List<PluginDescription> plugins = localInstaller.GetInstalledPlugins();
+            Assert.IsTrue(plugins.Exists(plugin => plugin.ShortName == shortName1));
+            Assert.IsTrue(plugins.Exists(plugin => plugin.ShortName == shortName2));
+
+            // Cleanup
+            Directory.Delete(testDirectoryPath, true);
         }
 
         [TestMethod()]
@@ -54,7 +81,7 @@ namespace PpmUnitTests
             File.WriteAllText(jsonPath, json);
 
             /// Run the installer
-            ILocalInstallerService localInstaller = new LocalInstallerService(basePath);
+            IInstallerService localInstaller = new LocalInstallerService(basePath);
             localInstaller.InstallPlugin(new FileInfo(archivePath));
 
             /// Assert expectations
@@ -88,7 +115,7 @@ namespace PpmUnitTests
             File.WriteAllText(Path.Combine(directoryPath, "file.txt"), "text");
 
             /// Run the uninstaller
-            ILocalInstallerService localInstaller = new LocalInstallerService(System.IO.Path.GetTempPath());
+            IInstallerService localInstaller = new LocalInstallerService(System.IO.Path.GetTempPath());
             localInstaller.UninstallPlugin(plugin);
 
             /// Assert expectations

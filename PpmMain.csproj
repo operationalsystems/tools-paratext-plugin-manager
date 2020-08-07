@@ -100,6 +100,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Controllers\IPluginManagerMainFormController.cs" />
+    <Compile Include="Controllers\PluginManagerMainFormController.cs" />
     <Compile Include="LocalInstaller\IInstallerService.cs" />
     <Compile Include="LocalInstaller\LocalInstallerService.cs" />
     <Compile Include="Models\PluginDescription.cs" />
@@ -141,6 +143,7 @@
   <ItemGroup>
     <WCFMetadata Include="Connected Services\" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="AfterBuild" Condition="$(Configuration) == 'Release'">
     <ItemGroup>

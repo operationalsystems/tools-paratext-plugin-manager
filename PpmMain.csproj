@@ -104,6 +104,7 @@
     <Compile Include="Controllers\PluginManagerMainFormController.cs" />
     <Compile Include="LocalInstaller\IInstallerService.cs" />
     <Compile Include="LocalInstaller\LocalInstallerService.cs" />
+    <Compile Include="Models\OutdatedPlugin.cs" />
     <Compile Include="Models\PluginDescription.cs" />
     <Compile Include="ParatextPluginManagerPlugin.cs" />
     <Compile Include="Forms\PluginManagerMainForm.cs">
@@ -132,6 +133,7 @@
   <ItemGroup>
     <None Include="Directory.Build.props" />
     <None Include="packages.config" />
+    <None Include="Properties\DataSources\PpmMain.Controllers.PluginManagerMainFormController.datasource" />
     <None Include="Properties\DataSources\PpmMain.PluginRepository.S3PluginRepositoryService.datasource" />
     <None Include="README.md" />
     <None Include="scripts\build_and_publish_ppm_installer.bat" />

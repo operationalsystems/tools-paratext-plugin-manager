@@ -12,7 +12,7 @@ namespace PpmMain.Controllers
     class PluginManagerMainFormController : IPluginManagerMainFormController
     {
         public List<PluginDescription> availablePlugins { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-        public List<PluginDescription> outdatedPlugins { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        public List<OutdatedPlugin> outdatedPlugins { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
         public List<PluginDescription> installedPlugins { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
         public string filterCriteria { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
 
@@ -26,7 +26,7 @@ namespace PpmMain.Controllers
             throw new NotImplementedException();
         }
 
-        public void UpdatePlugins(List<PluginDescription> plugins)
+        public void UpdatePlugins(List<OutdatedPlugin> plugins)
         {
             throw new NotImplementedException();
         }

@@ -23,48 +23,5 @@ namespace PpmMain
         {
 
         }
-
-        private void testGetLatestPluginsButton_Click(object sender, EventArgs e)
-        {
-            List<PluginDescription> latestPlugins = RemotePluginRepository.GetAvailablePlugins(true);
-
-            testOutputTextbox.Clear();
-            latestPlugins.ForEach(pluginDescription =>
-            {
-                testOutputTextbox.Text += $"{pluginDescription.ToString()}\r\n\r\n";
-
-                if (pluginDescription.ShortName.Equals("TPT", StringComparison.InvariantCultureIgnoreCase))
-                {
-                    RemotePluginRepository.DownloadPlugin(pluginDescription.ShortName, pluginDescription.Version);
-                }
-            });
-        }
-
-        private void testGetAllPluginsButton_Click(object sender, EventArgs e)
-        {
-            List<PluginDescription> latestPlugins = RemotePluginRepository.GetAvailablePlugins(false);
-
-            testOutputTextbox.Clear();
-            latestPlugins.ForEach(pluginDescription =>
-            {
-                testOutputTextbox.Text += $"{pluginDescription.ToString()}\r\n\r\n";
-
-                if (pluginDescription.ShortName.Equals("TPT", StringComparison.InvariantCultureIgnoreCase))
-                {
-                    RemotePluginRepository.DownloadPlugin(pluginDescription.ShortName, pluginDescription.Version);
-                }
-            });
-        }
-
-        private void openPpmDownloadFolderButton_Click(object sender, EventArgs e)
-        {
-            ProcessStartInfo startInfo = new ProcessStartInfo
-            {
-                Arguments = ((S3PluginRepositoryService)RemotePluginRepository).TemporaryDownloadDirectory.FullName,
-                FileName = "explorer.exe"
-            };
-
-            Process.Start(startInfo);
-        }
     }
 }

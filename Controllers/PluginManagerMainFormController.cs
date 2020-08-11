@@ -1,9 +1,9 @@
-﻿using System;
+﻿using PpmMain.LocalInstaller;
+using PpmMain.Models;
+using PpmMain.PluginRepository;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using PpmMain.Models;
-using PpmMain.LocalInstaller;
-using PpmMain.PluginRepository;
 
 namespace PpmMain.Controllers
 {
@@ -20,7 +20,8 @@ namespace PpmMain.Controllers
         IInstallerService LocalInstallerService { get; set; }
 
         public List<PluginDescription> availablePlugins { get; set; }
-        public List<OutdatedPlugin> outdatedPlugins {
+        public List<OutdatedPlugin> outdatedPlugins
+        {
             get
             {
                 var outdated = Enumerable.Intersect(installedPlugins, availablePlugins, new PluginComparer());
@@ -41,24 +42,25 @@ namespace PpmMain.Controllers
                     };
                 });
             }
-            set => throw new NotImplementedException(); 
+            set => throw new NotImplementedException();
         }
-        public List<PluginDescription> installedPlugins { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-        public string filterCriteria { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        public List<PluginDescription> installedPlugins { get; set; }
+        public string filterCriteria { get; set; }
 
         public void InstallPlugin(PluginDescription plugin)
         {
-            throw new NotImplementedException();
+
         }
 
         public void UninstallPlugin(PluginDescription plugin)
         {
-            throw new NotImplementedException();
+            LocalInstallerService.UninstallPlugin(plugin);
+            RefreshInstalled();
         }
 
         public void UpdatePlugins(List<OutdatedPlugin> plugins)
         {
-            throw new NotImplementedException();
+
         }
 
         public PluginManagerMainFormController()
@@ -69,6 +71,11 @@ namespace PpmMain.Controllers
             RemotePluginRepository = new S3PluginRepositoryService();
             LocalInstallerService = new LocalInstallerService(installPath);
             availablePlugins = RemotePluginRepository.GetAvailablePlugins(onlyLatestPlugins);
+            RefreshInstalled();
+        }
+
+        public void RefreshInstalled()
+        {
             installedPlugins = LocalInstallerService.GetInstalledPlugins();
         }
     }

@@ -39,10 +39,11 @@
             this.button1 = new System.Windows.Forms.Button();
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.tabPage2 = new System.Windows.Forms.TabPage();
-            this.textBox5 = new System.Windows.Forms.TextBox();
+            this.PluginDescriptionUpdated = new System.Windows.Forms.TextBox();
             this.UpdatedPluginsList = new System.Windows.Forms.DataGridView();
+            this.InstalledVersion = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.outdatedPluginsBindingSource1 = new System.Windows.Forms.BindingSource(this.components);
-            this.button7 = new System.Windows.Forms.Button();
+            this.UpdateOne = new System.Windows.Forms.Button();
             this.button5 = new System.Windows.Forms.Button();
             this.button2 = new System.Windows.Forms.Button();
             this.textBox2 = new System.Windows.Forms.TextBox();
@@ -67,7 +68,6 @@
             this.descriptionDataGridViewTextBoxColumn2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.versionDescriptionDataGridViewTextBoxColumn2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.licenseDataGridViewTextBoxColumn2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.InstalledVersion = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.nameDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.versionDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.pluginManagerMainFormControllerBindingSource = new System.Windows.Forms.BindingSource(this.components);
@@ -144,6 +144,8 @@
             this.AvailablePluginsList.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.AvailablePluginsList.Size = new System.Drawing.Size(1013, 367);
             this.AvailablePluginsList.TabIndex = 11;
+            this.AvailablePluginsList.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.AvailablePluginsList_CellClick);
+            this.AvailablePluginsList.DataBindingComplete += new System.Windows.Forms.DataGridViewBindingCompleteEventHandler(this.AvailablePluginList_DataBindingComplete);
             // 
             // availablePluginsBindingSource
             // 
@@ -180,9 +182,9 @@
             // 
             // tabPage2
             // 
-            this.tabPage2.Controls.Add(this.textBox5);
+            this.tabPage2.Controls.Add(this.PluginDescriptionUpdated);
             this.tabPage2.Controls.Add(this.UpdatedPluginsList);
-            this.tabPage2.Controls.Add(this.button7);
+            this.tabPage2.Controls.Add(this.UpdateOne);
             this.tabPage2.Controls.Add(this.button5);
             this.tabPage2.Controls.Add(this.button2);
             this.tabPage2.Controls.Add(this.textBox2);
@@ -194,17 +196,21 @@
             this.tabPage2.Text = "Updated";
             this.tabPage2.UseVisualStyleBackColor = true;
             // 
-            // textBox5
+            // PluginDescriptionUpdated
             // 
-            this.textBox5.Location = new System.Drawing.Point(8, 423);
-            this.textBox5.Multiline = true;
-            this.textBox5.Name = "textBox5";
-            this.textBox5.Size = new System.Drawing.Size(1013, 208);
-            this.textBox5.TabIndex = 14;
+            this.PluginDescriptionUpdated.Location = new System.Drawing.Point(8, 423);
+            this.PluginDescriptionUpdated.Multiline = true;
+            this.PluginDescriptionUpdated.Name = "PluginDescriptionUpdated";
+            this.PluginDescriptionUpdated.Size = new System.Drawing.Size(1013, 208);
+            this.PluginDescriptionUpdated.TabIndex = 14;
             // 
             // UpdatedPluginsList
             // 
+            this.UpdatedPluginsList.AllowUserToAddRows = false;
+            this.UpdatedPluginsList.AllowUserToDeleteRows = false;
             this.UpdatedPluginsList.AllowUserToOrderColumns = true;
+            this.UpdatedPluginsList.AllowUserToResizeColumns = false;
+            this.UpdatedPluginsList.AllowUserToResizeRows = false;
             this.UpdatedPluginsList.AutoGenerateColumns = false;
             this.UpdatedPluginsList.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.UpdatedPluginsList.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
@@ -214,24 +220,37 @@
             this.UpdatedPluginsList.DataSource = this.outdatedPluginsBindingSource1;
             this.UpdatedPluginsList.Location = new System.Drawing.Point(8, 50);
             this.UpdatedPluginsList.Margin = new System.Windows.Forms.Padding(0);
+            this.UpdatedPluginsList.MultiSelect = false;
             this.UpdatedPluginsList.Name = "UpdatedPluginsList";
+            this.UpdatedPluginsList.ReadOnly = true;
+            this.UpdatedPluginsList.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.UpdatedPluginsList.Size = new System.Drawing.Size(1013, 367);
             this.UpdatedPluginsList.TabIndex = 13;
+            this.UpdatedPluginsList.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.UpdatedPluginsList_CellClick);
+            this.UpdatedPluginsList.DataBindingComplete += new System.Windows.Forms.DataGridViewBindingCompleteEventHandler(this.UpdatedPluginList_DataBindingComplete);
+            // 
+            // InstalledVersion
+            // 
+            this.InstalledVersion.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.InstalledVersion.DataPropertyName = "InstalledVersion";
+            this.InstalledVersion.HeaderText = "Installed Version";
+            this.InstalledVersion.Name = "InstalledVersion";
+            this.InstalledVersion.ReadOnly = true;
             // 
             // outdatedPluginsBindingSource1
             // 
             this.outdatedPluginsBindingSource1.DataMember = "outdatedPlugins";
             this.outdatedPluginsBindingSource1.DataSource = this.pluginManagerMainFormControllerBindingSource;
             // 
-            // button7
+            // UpdateOne
             // 
-            this.button7.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F);
-            this.button7.Location = new System.Drawing.Point(840, 13);
-            this.button7.Name = "button7";
-            this.button7.Size = new System.Drawing.Size(80, 26);
-            this.button7.TabIndex = 12;
-            this.button7.Text = "Update";
-            this.button7.UseVisualStyleBackColor = true;
+            this.UpdateOne.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F);
+            this.UpdateOne.Location = new System.Drawing.Point(840, 13);
+            this.UpdateOne.Name = "UpdateOne";
+            this.UpdateOne.Size = new System.Drawing.Size(80, 26);
+            this.UpdateOne.TabIndex = 12;
+            this.UpdateOne.Text = "Update";
+            this.UpdateOne.UseVisualStyleBackColor = true;
             // 
             // button5
             // 
@@ -304,7 +323,7 @@
             this.InstalledPluginsList.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.InstalledPluginsList.Size = new System.Drawing.Size(1013, 367);
             this.InstalledPluginsList.TabIndex = 13;
-            this.InstalledPluginsList.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.InstalledPluginsList_CellContentClick);
+            this.InstalledPluginsList.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.InstalledPluginsList_CellClick);
             this.InstalledPluginsList.DataBindingComplete += new System.Windows.Forms.DataGridViewBindingCompleteEventHandler(this.InstalledPluginList_DataBindingComplete);
             // 
             // installedPluginsBindingSource
@@ -418,13 +437,6 @@
             this.licenseDataGridViewTextBoxColumn2.HeaderText = "License";
             this.licenseDataGridViewTextBoxColumn2.Name = "licenseDataGridViewTextBoxColumn2";
             // 
-            // InstalledVersion
-            // 
-            this.InstalledVersion.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.InstalledVersion.DataPropertyName = "InstalledVersion";
-            this.InstalledVersion.HeaderText = "InstalledVersion";
-            this.InstalledVersion.Name = "InstalledVersion";
-            // 
             // nameDataGridViewTextBoxColumn
             // 
             this.nameDataGridViewTextBoxColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
@@ -451,13 +463,15 @@
             this.nameDataGridViewTextBoxColumn1.DataPropertyName = "Name";
             this.nameDataGridViewTextBoxColumn1.HeaderText = "Name";
             this.nameDataGridViewTextBoxColumn1.Name = "nameDataGridViewTextBoxColumn1";
+            this.nameDataGridViewTextBoxColumn1.ReadOnly = true;
             // 
             // versionDataGridViewTextBoxColumn1
             // 
             this.versionDataGridViewTextBoxColumn1.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
             this.versionDataGridViewTextBoxColumn1.DataPropertyName = "Version";
-            this.versionDataGridViewTextBoxColumn1.HeaderText = "Version";
+            this.versionDataGridViewTextBoxColumn1.HeaderText = "New Version";
             this.versionDataGridViewTextBoxColumn1.Name = "versionDataGridViewTextBoxColumn1";
+            this.versionDataGridViewTextBoxColumn1.ReadOnly = true;
             // 
             // nameDataGridViewTextBoxColumn2
             // 
@@ -516,12 +530,12 @@
         private System.Windows.Forms.TextBox textBox2;
         private System.Windows.Forms.Button button3;
         private System.Windows.Forms.TextBox textBox3;
-        private System.Windows.Forms.Button button7;
+        private System.Windows.Forms.Button UpdateOne;
         private System.Windows.Forms.Button button5;
         private System.Windows.Forms.Button Uninstall;
         private System.Windows.Forms.DataGridView AvailablePluginsList;
         private System.Windows.Forms.TextBox PluginDescriptionAvailable;
-        private System.Windows.Forms.TextBox textBox5;
+        private System.Windows.Forms.TextBox PluginDescriptionUpdated;
         private System.Windows.Forms.DataGridView UpdatedPluginsList;
         private System.Windows.Forms.TextBox PluginDescriptionInstalled;
         private System.Windows.Forms.DataGridView InstalledPluginsList;
@@ -545,10 +559,10 @@
         private System.Windows.Forms.BindingSource outdatedPluginsBindingSource;
         private System.Windows.Forms.DataGridViewTextBoxColumn nameDataGridViewTextBoxColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn versionDataGridViewTextBoxColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn nameDataGridViewTextBoxColumn2;
+        private System.Windows.Forms.DataGridViewTextBoxColumn versionDataGridViewTextBoxColumn2;
         private System.Windows.Forms.DataGridViewTextBoxColumn nameDataGridViewTextBoxColumn1;
         private System.Windows.Forms.DataGridViewTextBoxColumn InstalledVersion;
         private System.Windows.Forms.DataGridViewTextBoxColumn versionDataGridViewTextBoxColumn1;
-        private System.Windows.Forms.DataGridViewTextBoxColumn nameDataGridViewTextBoxColumn2;
-        private System.Windows.Forms.DataGridViewTextBoxColumn versionDataGridViewTextBoxColumn2;
     }
 }

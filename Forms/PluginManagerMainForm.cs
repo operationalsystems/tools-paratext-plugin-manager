@@ -17,20 +17,25 @@ namespace PpmMain
         private void PluginManagerMainForm_Load(object sender, EventArgs e)
         {
             Controller = new PluginManagerMainFormController();
-            RefreshInstalled();
-            RefreshAvailable();
-        }
-
-        private void InstalledPluginsList_CellContentClick(object sender, DataGridViewCellEventArgs e)
-        {
-            if (!Uninstall.Enabled) Uninstall.Enabled = true;
-            PluginDescriptionInstalled.Text = Controller.InstalledPlugins[e.RowIndex].Description;
+            RefreshAll();
         }
 
         private void AvailablePluginsList_CellClick(object sender, DataGridViewCellEventArgs e)
         {
-            if (!Uninstall.Enabled) Install.Enabled = true;
-            PluginDescriptionAvailable.Text = Controller.InstalledPlugins[e.RowIndex].Description;
+            if (!Install.Enabled) Install.Enabled = true;
+            PluginDescriptionAvailable.Text = Controller.AvailablePlugins[e.RowIndex].Description;
+        }
+
+        private void UpdatedPluginsList_CellClick(object sender, DataGridViewCellEventArgs e)
+        {
+            if (!UpdateOne.Enabled) UpdateOne.Enabled = true;
+            PluginDescriptionUpdated.Text = Controller.OutdatedPlugins[e.RowIndex].Description;
+        }
+
+        private void InstalledPluginsList_CellClick(object sender, DataGridViewCellEventArgs e)
+        {
+            if (!Uninstall.Enabled) Uninstall.Enabled = true;
+            PluginDescriptionInstalled.Text = Controller.InstalledPlugins[e.RowIndex].Description;
         }
 
         private void Uninstall_Click(object sender, EventArgs e)
@@ -67,13 +72,6 @@ namespace PpmMain
             }
         }
 
-        private void InstalledPluginList_DataBindingComplete(object sender, DataGridViewBindingCompleteEventArgs e)
-        {
-            InstalledPluginsList.ClearSelection();
-            PluginDescriptionInstalled.Clear();
-            Uninstall.Enabled = false;
-        }
-
         private void AvailablePluginList_DataBindingComplete(object sender, DataGridViewBindingCompleteEventArgs e)
         {
             AvailablePluginsList.ClearSelection();
@@ -81,19 +79,40 @@ namespace PpmMain
             Install.Enabled = false;
         }
 
+        private void UpdatedPluginList_DataBindingComplete(object sender, DataGridViewBindingCompleteEventArgs e)
+        {
+            UpdatedPluginsList.ClearSelection();
+            PluginDescriptionUpdated.Clear();
+            UpdateOne.Enabled = false;
+        }
+
+        private void InstalledPluginList_DataBindingComplete(object sender, DataGridViewBindingCompleteEventArgs e)
+        {
+            InstalledPluginsList.ClearSelection();
+            PluginDescriptionInstalled.Clear();
+            Uninstall.Enabled = false;
+        }
+
         private void RefreshAll()
         {
             RefreshAvailable();
+            RefreshUpdated();
             RefreshInstalled();
+        }
+
+        private void RefreshAvailable()
+        {
+            AvailablePluginsList.DataSource = Controller.AvailablePlugins;
+        }
+
+        private void RefreshUpdated()
+        {
+            UpdatedPluginsList.DataSource = Controller.OutdatedPlugins;
         }
 
         private void RefreshInstalled()
         {
             InstalledPluginsList.DataSource = Controller.InstalledPlugins;
-        }
-        private void RefreshAvailable()
-        {
-            AvailablePluginsList.DataSource = Controller.AvailablePlugins;
         }
     }
 }

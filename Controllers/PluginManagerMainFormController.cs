@@ -9,7 +9,7 @@ namespace PpmMain.Controllers
 {
     internal class PluginComparer : IEqualityComparer<PluginDescription>
     {
-        public bool Equals(PluginDescription x, PluginDescription y) => x.Name == y.Name && x.ShortName == y.ShortName;
+        public bool Equals(PluginDescription x, PluginDescription y) => PluginManagerMainFormController.isSamePlugin(x, y);
 
         public int GetHashCode(PluginDescription obj) => obj.Name.GetHashCode();
     }
@@ -24,7 +24,7 @@ namespace PpmMain.Controllers
         public List<PluginDescription> AvailablePlugins { 
             get 
             {
-                return (List<PluginDescription>)RemotePlugins.Except(InstalledPlugins, new PluginComparer()).ToList();
+                return RemotePlugins.Except(InstalledPlugins, new PluginComparer()).ToList();
             }
             set => throw new NotImplementedException(); 
         }
@@ -33,23 +33,31 @@ namespace PpmMain.Controllers
         {
             get
             {
-                var outdated = Enumerable.Intersect(InstalledPlugins, RemotePlugins, new PluginComparer());
-
-                return (List<OutdatedPlugin>)outdated.Select(plugin =>
+                Dictionary<PluginDescription, PluginDescription> outdated = new Dictionary<PluginDescription, PluginDescription>();
+                InstalledPlugins.ForEach(installedPlugin =>
                 {
-                    PluginDescription _availablePlugin = RemotePlugins.Find(p => p.Name == plugin.Name && p.ShortName == plugin.ShortName);
+                    PluginDescription remotePlugin = RemotePlugins.Find(rp => isSamePlugin(rp, installedPlugin) && isNewPluginVersion(rp, installedPlugin));
+                    if (null != remotePlugin)
+                        outdated.Add(installedPlugin, remotePlugin);
+                });
+
+                return outdated.Select(PluginKvp =>
+                {
+                    PluginDescription installed = PluginKvp.Key;
+                    PluginDescription available = PluginKvp.Value;
+
                     return new OutdatedPlugin
                     {
-                        Name = plugin.Name,
-                        ShortName = plugin.ShortName,
-                        InstalledVersion = plugin.Version,
-                        Version = _availablePlugin.Version,
-                        Description = _availablePlugin.Description,
-                        VersionDescription = _availablePlugin.VersionDescription,
-                        PtVersions = _availablePlugin.PtVersions,
-                        License = _availablePlugin.License
+                        Name = installed.Name,
+                        ShortName = installed.ShortName,
+                        InstalledVersion = installed.Version,
+                        Version = available.Version,
+                        Description = available.Description,
+                        VersionDescription = available.VersionDescription,
+                        PtVersions = available.PtVersions,
+                        License = available.License
                     };
-                });
+                }).ToList();
             }
             set => throw new NotImplementedException();
         }
@@ -66,6 +74,7 @@ namespace PpmMain.Controllers
         public void UninstallPlugin(PluginDescription plugin)
         {
             LocalInstallerService.UninstallPlugin(plugin);
+            RemotePluginRepository.GetAvailablePlugins();
             RefreshInstalled();
         }
 
@@ -89,5 +98,8 @@ namespace PpmMain.Controllers
         {
             InstalledPlugins = LocalInstallerService.GetInstalledPlugins();
         }
+
+        public static Func<PluginDescription, PluginDescription, bool> isSamePlugin = (PluginDescription x, PluginDescription y) => x.Name == y.Name && x.ShortName == y.ShortName;
+        public static Func<PluginDescription, PluginDescription, bool> isNewPluginVersion = (PluginDescription x, PluginDescription y) => new Version(x.Version) > new Version(y.Version);
     }
 }

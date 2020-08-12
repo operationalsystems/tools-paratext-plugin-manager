@@ -1,9 +1,10 @@
 ﻿using PpmMain.LocalInstaller;
 using PpmMain.Models;
 using PpmMain.PluginRepository;
-using System;
+using System.IO;
 using System.Collections.Generic;
 using System.Linq;
+using System;
 
 namespace PpmMain.Controllers
 {
@@ -66,7 +67,7 @@ namespace PpmMain.Controllers
 
         public void InstallPlugin(PluginDescription plugin)
         {
-            System.IO.FileInfo downloadedPlugin = RemotePluginRepository.DownloadPlugin(plugin);
+            FileInfo downloadedPlugin = RemotePluginRepository.DownloadPlugin(plugin);
             LocalInstallerService.InstallPlugin(downloadedPlugin);
             RefreshInstalled();
         }
@@ -85,7 +86,7 @@ namespace PpmMain.Controllers
 
         public PluginManagerMainFormController()
         {
-            string installPath = System.IO.Path.Combine(System.IO.Path.GetTempPath(), "DT468");
+            string installPath = Path.Combine(Directory.GetCurrentDirectory(), "plugins");
             var onlyLatestPlugins = true;
 
             RemotePluginRepository = new S3PluginRepositoryService();

@@ -19,16 +19,25 @@ namespace PpmMain.Controllers
 
         IInstallerService LocalInstallerService { get; set; }
 
-        public List<PluginDescription> availablePlugins { get; set; }
-        public List<OutdatedPlugin> outdatedPlugins
+        List<PluginDescription> RemotePlugins { get; set; }
+
+        public List<PluginDescription> AvailablePlugins { 
+            get 
+            {
+                return (List<PluginDescription>)RemotePlugins.Except(InstalledPlugins, new PluginComparer()).ToList();
+            }
+            set => throw new NotImplementedException(); 
+        }
+
+        public List<OutdatedPlugin> OutdatedPlugins
         {
             get
             {
-                var outdated = Enumerable.Intersect(installedPlugins, availablePlugins, new PluginComparer());
+                var outdated = Enumerable.Intersect(InstalledPlugins, RemotePlugins, new PluginComparer());
 
                 return (List<OutdatedPlugin>)outdated.Select(plugin =>
                 {
-                    PluginDescription _availablePlugin = availablePlugins.Find(p => p.Name == plugin.Name && p.ShortName == plugin.ShortName);
+                    PluginDescription _availablePlugin = RemotePlugins.Find(p => p.Name == plugin.Name && p.ShortName == plugin.ShortName);
                     return new OutdatedPlugin
                     {
                         Name = plugin.Name,
@@ -44,12 +53,14 @@ namespace PpmMain.Controllers
             }
             set => throw new NotImplementedException();
         }
-        public List<PluginDescription> installedPlugins { get; set; }
+        public List<PluginDescription> InstalledPlugins { get; set; }
         public string filterCriteria { get; set; }
 
         public void InstallPlugin(PluginDescription plugin)
         {
-
+            System.IO.FileInfo downloadedPlugin = RemotePluginRepository.DownloadPlugin(plugin);
+            LocalInstallerService.InstallPlugin(downloadedPlugin);
+            RefreshInstalled();
         }
 
         public void UninstallPlugin(PluginDescription plugin)
@@ -70,13 +81,13 @@ namespace PpmMain.Controllers
 
             RemotePluginRepository = new S3PluginRepositoryService();
             LocalInstallerService = new LocalInstallerService(installPath);
-            availablePlugins = RemotePluginRepository.GetAvailablePlugins(onlyLatestPlugins);
+            RemotePlugins = RemotePluginRepository.GetAvailablePlugins(onlyLatestPlugins);
             RefreshInstalled();
         }
 
         public void RefreshInstalled()
         {
-            installedPlugins = LocalInstallerService.GetInstalledPlugins();
+            InstalledPlugins = LocalInstallerService.GetInstalledPlugins();
         }
     }
 }

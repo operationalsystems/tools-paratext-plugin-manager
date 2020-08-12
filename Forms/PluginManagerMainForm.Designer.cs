@@ -35,7 +35,7 @@
             this.PluginDescriptionAvailable = new System.Windows.Forms.TextBox();
             this.AvailablePluginsList = new System.Windows.Forms.DataGridView();
             this.availablePluginsBindingSource = new System.Windows.Forms.BindingSource(this.components);
-            this.button4 = new System.Windows.Forms.Button();
+            this.Install = new System.Windows.Forms.Button();
             this.button1 = new System.Windows.Forms.Button();
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.tabPage2 = new System.Windows.Forms.TabPage();
@@ -106,7 +106,7 @@
             // 
             this.tabPage1.Controls.Add(this.PluginDescriptionAvailable);
             this.tabPage1.Controls.Add(this.AvailablePluginsList);
-            this.tabPage1.Controls.Add(this.button4);
+            this.tabPage1.Controls.Add(this.Install);
             this.tabPage1.Controls.Add(this.button1);
             this.tabPage1.Controls.Add(this.textBox1);
             this.tabPage1.Location = new System.Drawing.Point(4, 29);
@@ -127,6 +127,10 @@
             // 
             // AvailablePluginsList
             // 
+            this.AvailablePluginsList.AllowUserToAddRows = false;
+            this.AvailablePluginsList.AllowUserToDeleteRows = false;
+            this.AvailablePluginsList.AllowUserToResizeColumns = false;
+            this.AvailablePluginsList.AllowUserToResizeRows = false;
             this.AvailablePluginsList.AutoGenerateColumns = false;
             this.AvailablePluginsList.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.AvailablePluginsList.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
@@ -134,7 +138,10 @@
             this.versionDataGridViewTextBoxColumn});
             this.AvailablePluginsList.DataSource = this.availablePluginsBindingSource;
             this.AvailablePluginsList.Location = new System.Drawing.Point(8, 50);
+            this.AvailablePluginsList.MultiSelect = false;
             this.AvailablePluginsList.Name = "AvailablePluginsList";
+            this.AvailablePluginsList.ReadOnly = true;
+            this.AvailablePluginsList.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.AvailablePluginsList.Size = new System.Drawing.Size(1013, 367);
             this.AvailablePluginsList.TabIndex = 11;
             // 
@@ -143,15 +150,16 @@
             this.availablePluginsBindingSource.DataMember = "availablePlugins";
             this.availablePluginsBindingSource.DataSource = this.pluginManagerMainFormControllerBindingSource;
             // 
-            // button4
+            // Install
             // 
-            this.button4.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F);
-            this.button4.Location = new System.Drawing.Point(926, 13);
-            this.button4.Name = "button4";
-            this.button4.Size = new System.Drawing.Size(90, 26);
-            this.button4.TabIndex = 9;
-            this.button4.Text = "Install";
-            this.button4.UseVisualStyleBackColor = true;
+            this.Install.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F);
+            this.Install.Location = new System.Drawing.Point(926, 13);
+            this.Install.Name = "Install";
+            this.Install.Size = new System.Drawing.Size(90, 26);
+            this.Install.TabIndex = 9;
+            this.Install.Text = "Install";
+            this.Install.UseVisualStyleBackColor = true;
+            this.Install.Click += new System.EventHandler(this.Install_Click);
             // 
             // button1
             // 
@@ -423,6 +431,7 @@
             this.nameDataGridViewTextBoxColumn.DataPropertyName = "Name";
             this.nameDataGridViewTextBoxColumn.HeaderText = "Name";
             this.nameDataGridViewTextBoxColumn.Name = "nameDataGridViewTextBoxColumn";
+            this.nameDataGridViewTextBoxColumn.ReadOnly = true;
             // 
             // versionDataGridViewTextBoxColumn
             // 
@@ -430,6 +439,7 @@
             this.versionDataGridViewTextBoxColumn.DataPropertyName = "Version";
             this.versionDataGridViewTextBoxColumn.HeaderText = "Version";
             this.versionDataGridViewTextBoxColumn.Name = "versionDataGridViewTextBoxColumn";
+            this.versionDataGridViewTextBoxColumn.ReadOnly = true;
             // 
             // pluginManagerMainFormControllerBindingSource
             // 
@@ -499,7 +509,7 @@
         private System.Windows.Forms.TabPage tabPage1;
         private System.Windows.Forms.TabPage tabPage2;
         private System.Windows.Forms.TabPage tabPage3;
-        private System.Windows.Forms.Button button4;
+        private System.Windows.Forms.Button Install;
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.TextBox textBox1;
         private System.Windows.Forms.Button button2;

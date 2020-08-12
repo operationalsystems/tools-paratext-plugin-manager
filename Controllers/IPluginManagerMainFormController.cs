@@ -8,17 +8,17 @@ namespace PpmMain.Controllers
         /// <summary>
         /// A list of plugins that are available to be installed.
         /// </summary>
-        List<PluginDescription> availablePlugins { get; set; }
+        List<PluginDescription> AvailablePlugins { get; set; }
 
         /// <summary>
         /// A list of plugins that have been installed and for which there are available updates.
         /// </summary>
-        List<OutdatedPlugin> outdatedPlugins { get; set; }
+        List<OutdatedPlugin> OutdatedPlugins { get; set; }
 
         /// <summary>
         /// A list of plugins that have been installed.
         /// </summary>
-        List<PluginDescription> installedPlugins { get; set; }
+        List<PluginDescription> InstalledPlugins { get; set; }
 
         /// <summary>
         /// A <c>string</c> that limits the plugins that are displayed in a list.

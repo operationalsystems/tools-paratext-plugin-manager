@@ -11,7 +11,7 @@ namespace PpmMain.Controllers
     {
         public bool Equals(PluginDescription x, PluginDescription y) => x.Name == y.Name && x.ShortName == y.ShortName;
 
-        public int GetHashCode(PluginDescription obj) => obj.GetHashCode();
+        public int GetHashCode(PluginDescription obj) => obj.Name.GetHashCode();
     }
     class PluginManagerMainFormController : IPluginManagerMainFormController
     {
@@ -54,7 +54,7 @@ namespace PpmMain.Controllers
             set => throw new NotImplementedException();
         }
         public List<PluginDescription> InstalledPlugins { get; set; }
-        public string filterCriteria { get; set; }
+        public string FilterCriteria { get; set; }
 
         public void InstallPlugin(PluginDescription plugin)
         {

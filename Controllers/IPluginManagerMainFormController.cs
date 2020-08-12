@@ -3,6 +3,9 @@ using System.Collections.Generic;
 
 namespace PpmMain.Controllers
 {
+    /// <summary>
+    /// This interface represents a controller that manages the state and interactions for the Plugin Manager Main Form.
+    /// </summary>
     interface IPluginManagerMainFormController
     {
         /// <summary>
@@ -23,7 +26,7 @@ namespace PpmMain.Controllers
         /// <summary>
         /// A <c>string</c> that limits the plugins that are displayed in a list.
         /// </summary>
-        string filterCriteria { get; set; }
+        string FilterCriteria { get; set; }
 
         /// <summary>
         /// This method installs a given plugin.

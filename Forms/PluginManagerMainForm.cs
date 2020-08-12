@@ -38,13 +38,15 @@ namespace PpmMain
             PluginDescription selectedPlugin = Controller.InstalledPlugins[InstalledPluginsList.CurrentCell.RowIndex];
 
             DialogResult confirmUninstall = MessageBox.Show($"Are you sure you wish to uninstall {selectedPlugin.Name} ({selectedPlugin.Version})?",
-                                     $"Uninstalling {selectedPlugin.ShortName.ToUpper()}",
+                                     $"Confirm Plugin Uninstall",
                                      MessageBoxButtons.YesNo);
             if (confirmUninstall == DialogResult.Yes)
             {
                 Controller.UninstallPlugin(selectedPlugin);
-                RefreshAvailable();
-                RefreshInstalled();
+                RefreshAll();
+                MessageBox.Show($"{selectedPlugin.Name} ({selectedPlugin.Version}) has been uninstalled.",
+                     $"Plugin Uninstalled",
+                     MessageBoxButtons.OK);
             }
         }
 
@@ -53,13 +55,15 @@ namespace PpmMain
             PluginDescription selectedPlugin = Controller.AvailablePlugins[AvailablePluginsList.CurrentCell.RowIndex];
 
             DialogResult confirmInstall = MessageBox.Show($"Are you sure you wish to install {selectedPlugin.Name} ({selectedPlugin.Version})?",
-                                     $"Installing {selectedPlugin.ShortName.ToUpper()}",
+                                     $"Confirm Plugin Install",
                                      MessageBoxButtons.YesNo);
             if (confirmInstall == DialogResult.Yes)
             {
                 Controller.InstallPlugin(selectedPlugin);
-                RefreshAvailable();
-                RefreshInstalled();
+                RefreshAll();
+                MessageBox.Show($"{selectedPlugin.Name} ({selectedPlugin.Version}) has been installed.",
+                                     $"Plugin Installed",
+                                     MessageBoxButtons.OK);
             }
         }
 
@@ -77,14 +81,18 @@ namespace PpmMain
             Install.Enabled = false;
         }
 
+        private void RefreshAll()
+        {
+            RefreshAvailable();
+            RefreshInstalled();
+        }
+
         private void RefreshInstalled()
         {
-            InstalledPluginsList.DataSource = null;
             InstalledPluginsList.DataSource = Controller.InstalledPlugins;
         }
         private void RefreshAvailable()
         {
-            AvailablePluginsList.DataSource = null;
             AvailablePluginsList.DataSource = Controller.AvailablePlugins;
         }
     }

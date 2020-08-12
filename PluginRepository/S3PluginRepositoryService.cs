@@ -276,7 +276,7 @@ namespace PpmMain.PluginRepository
             }
 
             // Download the file and return the save path.
-            S3TransferUtility.DownloadAsync(saveFilePath, bucketName, filename);
+            S3TransferUtility.Download(saveFilePath, bucketName, filename);
             return new FileInfo(saveFilePath);
         }
 
@@ -323,7 +323,7 @@ namespace PpmMain.PluginRepository
         /// <returns>The fully qualified temporary file path.</returns>
         private string GetTemporaryAbsoluteFilePath(string initialFilePath)
         {
-            return Path.Combine(TemporaryDownloadDirectory.FullName, $"{Path.GetRandomFileName()}_{initialFilePath}");
+            return Path.Combine(TemporaryDownloadDirectory.FullName, initialFilePath);
         }
     }
 }

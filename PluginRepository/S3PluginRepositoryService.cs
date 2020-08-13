@@ -47,15 +47,6 @@ namespace PpmMain.PluginRepository
         /// </summary>
         public Dictionary<PluginDescription, string> PluginDescriptionStore { get; private set; }
 
-        public S3PluginRepositoryService()
-        {
-            // Set up the AWS credentials the S3 client will need for PPM repository requests
-            SetUpAwsCredentials();
-
-            // The transfer utility for downloading S3 files.
-            SetUpS3TransferClient();
-        }
-
         public FileInfo DownloadPlugin(string pluginShortname, string pluginVersion, DirectoryInfo downloadDirectory = null)
         {
             // validate input
@@ -190,6 +181,7 @@ namespace PpmMain.PluginRepository
         /// <returns>The logged-in S3 client</returns>
         public virtual AmazonS3Client GetS3Client()
         {
+            SetUpAwsCredentials();
             // Use the single-user credentials to interact with the various AWS services
             return new AmazonS3Client(AwsSessionCredentials, region);
         }
@@ -276,6 +268,7 @@ namespace PpmMain.PluginRepository
             }
 
             // Download the file and return the save path.
+            SetUpS3TransferClient();
             S3TransferUtility.Download(saveFilePath, bucketName, filename);
             return new FileInfo(saveFilePath);
         }
@@ -295,6 +288,7 @@ namespace PpmMain.PluginRepository
             // download the file and return the final path
             var pluginInfoDownloadTasks = new List<Task>(filenames.Count);
             var pluginInfoFilenames = new List<string>(filenames.Count);
+            SetUpS3TransferClient();
             filenames.ForEach(filename =>
             {
                 var tempFilename = GetTemporaryAbsoluteFilePath(filename);

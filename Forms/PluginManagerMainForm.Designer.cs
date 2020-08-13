@@ -42,12 +42,12 @@
             this.button1 = new System.Windows.Forms.Button();
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.Updates = new System.Windows.Forms.TabPage();
-            this.PluginDescriptionUpdated = new System.Windows.Forms.TextBox();
+            this.PluginDescriptionOutdated = new System.Windows.Forms.TextBox();
             this.OutdatedPluginsList = new System.Windows.Forms.DataGridView();
             this.nameDataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.InstalledVersion = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.versionDataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.updatedPluginsBindingSource1 = new System.Windows.Forms.BindingSource(this.components);
+            this.outdatedPluginsBindingSource1 = new System.Windows.Forms.BindingSource(this.components);
             this.UpdateOne = new System.Windows.Forms.Button();
             this.UpdateAll = new System.Windows.Forms.Button();
             this.button2 = new System.Windows.Forms.Button();
@@ -61,7 +61,7 @@
             this.Uninstall = new System.Windows.Forms.Button();
             this.button3 = new System.Windows.Forms.Button();
             this.textBox3 = new System.Windows.Forms.TextBox();
-            this.updatedPluginsBindingSource = new System.Windows.Forms.BindingSource(this.components);
+            this.outdatedPluginsBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.shortNameDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.descriptionDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.versionDescriptionDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -82,11 +82,11 @@
             ((System.ComponentModel.ISupportInitialize)(this.pluginManagerMainFormControllerBindingSource)).BeginInit();
             this.Updates.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.OutdatedPluginsList)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.updatedPluginsBindingSource1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.outdatedPluginsBindingSource1)).BeginInit();
             this.Installed.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.InstalledPluginsList)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.installedPluginsBindingSource)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.updatedPluginsBindingSource)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.outdatedPluginsBindingSource)).BeginInit();
             this.SuspendLayout();
             // 
             // PluginTabs
@@ -144,8 +144,8 @@
             this.AvailablePluginsList.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.AvailablePluginsList.Size = new System.Drawing.Size(1013, 367);
             this.AvailablePluginsList.TabIndex = 11;
-            this.AvailablePluginsList.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.AvailablePluginsList_RowClick);
             this.AvailablePluginsList.DataBindingComplete += new System.Windows.Forms.DataGridViewBindingCompleteEventHandler(this.AvailablePluginList_DataBindingComplete);
+            this.AvailablePluginsList.SelectionChanged += new System.EventHandler(this.AvailablePluginsList_SelectionChanged);
             // 
             // nameDataGridViewTextBoxColumn
             // 
@@ -202,7 +202,7 @@
             // 
             // Updates
             // 
-            this.Updates.Controls.Add(this.PluginDescriptionUpdated);
+            this.Updates.Controls.Add(this.PluginDescriptionOutdated);
             this.Updates.Controls.Add(this.OutdatedPluginsList);
             this.Updates.Controls.Add(this.UpdateOne);
             this.Updates.Controls.Add(this.UpdateAll);
@@ -216,15 +216,15 @@
             this.Updates.Text = "Updates";
             this.Updates.UseVisualStyleBackColor = true;
             // 
-            // PluginDescriptionUpdated
+            // PluginDescriptionOutdated
             // 
-            this.PluginDescriptionUpdated.Location = new System.Drawing.Point(8, 423);
-            this.PluginDescriptionUpdated.Multiline = true;
-            this.PluginDescriptionUpdated.Name = "PluginDescriptionUpdated";
-            this.PluginDescriptionUpdated.Size = new System.Drawing.Size(1013, 208);
-            this.PluginDescriptionUpdated.TabIndex = 14;
+            this.PluginDescriptionOutdated.Location = new System.Drawing.Point(8, 423);
+            this.PluginDescriptionOutdated.Multiline = true;
+            this.PluginDescriptionOutdated.Name = "PluginDescriptionOutdated";
+            this.PluginDescriptionOutdated.Size = new System.Drawing.Size(1013, 208);
+            this.PluginDescriptionOutdated.TabIndex = 14;
             // 
-            // UpdatedPluginsList
+            // OutdatedPluginsList
             // 
             this.OutdatedPluginsList.AllowUserToAddRows = false;
             this.OutdatedPluginsList.AllowUserToDeleteRows = false;
@@ -237,17 +237,18 @@
             this.nameDataGridViewTextBoxColumn1,
             this.InstalledVersion,
             this.versionDataGridViewTextBoxColumn1});
-            this.OutdatedPluginsList.DataSource = this.updatedPluginsBindingSource1;
+            this.OutdatedPluginsList.DataSource = this.outdatedPluginsBindingSource1;
             this.OutdatedPluginsList.Location = new System.Drawing.Point(8, 50);
             this.OutdatedPluginsList.Margin = new System.Windows.Forms.Padding(0);
             this.OutdatedPluginsList.MultiSelect = false;
-            this.OutdatedPluginsList.Name = "UpdatedPluginsList";
+            this.OutdatedPluginsList.Name = "OutdatedPluginsList";
             this.OutdatedPluginsList.ReadOnly = true;
             this.OutdatedPluginsList.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.OutdatedPluginsList.Size = new System.Drawing.Size(1013, 367);
             this.OutdatedPluginsList.TabIndex = 13;
-            this.OutdatedPluginsList.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.OutdatedPluginsList_RowClick);
-            this.OutdatedPluginsList.DataBindingComplete += new System.Windows.Forms.DataGridViewBindingCompleteEventHandler(this.UpdatedPluginList_DataBindingComplete);
+            this.OutdatedPluginsList.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.OutdatedPluginsList_SelectionChanged);
+            this.OutdatedPluginsList.DataBindingComplete += new System.Windows.Forms.DataGridViewBindingCompleteEventHandler(this.OutdatedPluginList_DataBindingComplete);
+            this.OutdatedPluginsList.SelectionChanged += new System.EventHandler(this.OutdatedPluginsList_SelectionChanged);
             // 
             // nameDataGridViewTextBoxColumn1
             // 
@@ -273,10 +274,10 @@
             this.versionDataGridViewTextBoxColumn1.Name = "versionDataGridViewTextBoxColumn1";
             this.versionDataGridViewTextBoxColumn1.ReadOnly = true;
             // 
-            // updatedPluginsBindingSource1
+            // outdatedPluginsBindingSource1
             // 
-            this.updatedPluginsBindingSource1.DataMember = "updatedPlugins";
-            this.updatedPluginsBindingSource1.DataSource = this.pluginManagerMainFormControllerBindingSource;
+            this.outdatedPluginsBindingSource1.DataMember = "outdatedPlugins";
+            this.outdatedPluginsBindingSource1.DataSource = this.pluginManagerMainFormControllerBindingSource;
             // 
             // UpdateOne
             // 
@@ -361,8 +362,9 @@
             this.InstalledPluginsList.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.InstalledPluginsList.Size = new System.Drawing.Size(1013, 367);
             this.InstalledPluginsList.TabIndex = 13;
-            this.InstalledPluginsList.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.InstalledPluginsList_RowClick);
+            this.InstalledPluginsList.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.InstalledPluginsList_SelectionChanged);
             this.InstalledPluginsList.DataBindingComplete += new System.Windows.Forms.DataGridViewBindingCompleteEventHandler(this.InstalledPluginList_DataBindingComplete);
+            this.InstalledPluginsList.SelectionChanged += new System.EventHandler(this.InstalledPluginsList_SelectionChanged);
             // 
             // nameDataGridViewTextBoxColumn2
             // 
@@ -510,12 +512,12 @@
             this.Updates.ResumeLayout(false);
             this.Updates.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.OutdatedPluginsList)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.updatedPluginsBindingSource1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.outdatedPluginsBindingSource1)).EndInit();
             this.Installed.ResumeLayout(false);
             this.Installed.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.InstalledPluginsList)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.installedPluginsBindingSource)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.updatedPluginsBindingSource)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.outdatedPluginsBindingSource)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -537,7 +539,7 @@
         private System.Windows.Forms.Button Uninstall;
         private System.Windows.Forms.DataGridView AvailablePluginsList;
         private System.Windows.Forms.TextBox PluginDescriptionAvailable;
-        private System.Windows.Forms.TextBox PluginDescriptionUpdated;
+        private System.Windows.Forms.TextBox PluginDescriptionOutdated;
         private System.Windows.Forms.DataGridView OutdatedPluginsList;
         private System.Windows.Forms.TextBox PluginDescriptionInstalled;
         private System.Windows.Forms.DataGridView InstalledPluginsList;
@@ -552,13 +554,13 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn descriptionDataGridViewTextBoxColumn1;
         private System.Windows.Forms.DataGridViewTextBoxColumn versionDescriptionDataGridViewTextBoxColumn1;
         private System.Windows.Forms.DataGridViewTextBoxColumn licenseDataGridViewTextBoxColumn1;
-        private System.Windows.Forms.BindingSource updatedPluginsBindingSource1;
+        private System.Windows.Forms.BindingSource outdatedPluginsBindingSource1;
         private System.Windows.Forms.DataGridViewTextBoxColumn shortNameDataGridViewTextBoxColumn2;
         private System.Windows.Forms.DataGridViewTextBoxColumn descriptionDataGridViewTextBoxColumn2;
         private System.Windows.Forms.DataGridViewTextBoxColumn versionDescriptionDataGridViewTextBoxColumn2;
         private System.Windows.Forms.DataGridViewTextBoxColumn licenseDataGridViewTextBoxColumn2;
         private System.Windows.Forms.BindingSource installedPluginsBindingSource;
-        private System.Windows.Forms.BindingSource updatedPluginsBindingSource;
+        private System.Windows.Forms.BindingSource outdatedPluginsBindingSource;
         private System.Windows.Forms.DataGridViewTextBoxColumn nameDataGridViewTextBoxColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn versionDataGridViewTextBoxColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn nameDataGridViewTextBoxColumn2;

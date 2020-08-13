@@ -20,22 +20,31 @@ namespace PpmMain
             RefreshBindings();
         }
 
-        private void AvailablePluginsList_RowClick(object sender, DataGridViewCellEventArgs e)
+        private void AvailablePluginsList_SelectionChanged(object sender, EventArgs e)
         {
             if (!Install.Enabled) Install.Enabled = true;
-            PluginDescriptionAvailable.Text = Controller.AvailablePlugins[e.RowIndex].Description;
+            if (AvailablePluginsList.SelectedRows.Count == 0) return;
+            int index = AvailablePluginsList.SelectedRows[0].Index;
+            if (index < 0) return;
+            PluginDescriptionAvailable.Text = Controller.AvailablePlugins[index].Description;
         }
 
-        private void OutdatedPluginsList_RowClick(object sender, DataGridViewCellEventArgs e)
+        private void OutdatedPluginsList_SelectionChanged(object sender, EventArgs e)
         {
             if (!UpdateOne.Enabled) UpdateOne.Enabled = true;
-            PluginDescriptionUpdated.Text = Controller.OutdatedPlugins[e.RowIndex].Description;
+            if (OutdatedPluginsList.SelectedRows.Count == 0) return;
+            int index = OutdatedPluginsList.SelectedRows[0].Index;
+            if (index < 0) return;
+            PluginDescriptionOutdated.Text = Controller.OutdatedPlugins[index].Description;
         }
 
-        private void InstalledPluginsList_RowClick(object sender, DataGridViewCellEventArgs e)
+        private void InstalledPluginsList_SelectionChanged(object sender, EventArgs e)
         {
             if (!Uninstall.Enabled) Uninstall.Enabled = true;
-            PluginDescriptionInstalled.Text = Controller.InstalledPlugins[e.RowIndex].Description;
+            if (InstalledPluginsList.SelectedRows.Count == 0) return;
+            int index = InstalledPluginsList.SelectedRows[0].Index;
+            if (index < 0) return;
+            PluginDescriptionInstalled.Text = Controller.InstalledPlugins[index].Description;
         }
 
         private void Install_Click(object sender, EventArgs e)
@@ -112,10 +121,10 @@ namespace PpmMain
             Install.Enabled = false;
         }
 
-        private void UpdatedPluginList_DataBindingComplete(object sender, DataGridViewBindingCompleteEventArgs e)
+        private void OutdatedPluginList_DataBindingComplete(object sender, DataGridViewBindingCompleteEventArgs e)
         {
             OutdatedPluginsList.ClearSelection();
-            PluginDescriptionUpdated.Clear();
+            PluginDescriptionOutdated.Clear();
             UpdateOne.Enabled = false;
         }
 

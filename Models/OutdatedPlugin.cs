@@ -1,6 +1,6 @@
 ﻿namespace PpmMain.Models
 {
-    public class UpdatedPlugin : PluginDescription
+    public class OutdatedPlugin : PluginDescription
     {
         /// <summary>
         /// The currently installed version of the plugin.

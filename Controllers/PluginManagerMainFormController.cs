@@ -30,7 +30,7 @@ namespace PpmMain.Controllers
             set => throw new NotImplementedException(); 
         }
 
-        public List<UpdatedPlugin> UpdatedPlugins
+        public List<OutdatedPlugin> OutdatedPlugins
         {
             get
             {
@@ -47,7 +47,7 @@ namespace PpmMain.Controllers
                     PluginDescription installed = PluginKvp.Key;
                     PluginDescription available = PluginKvp.Value;
 
-                    return new UpdatedPlugin
+                    return new OutdatedPlugin
                     {
                         Name = installed.Name,
                         ShortName = installed.ShortName,
@@ -79,7 +79,7 @@ namespace PpmMain.Controllers
             RefreshInstalled();
         }
 
-        public void UpdatePlugins(List<UpdatedPlugin> plugins)
+        public void UpdatePlugins(List<OutdatedPlugin> plugins)
         {
             plugins.ForEach(plugin => InstallPlugin(plugin));
         }

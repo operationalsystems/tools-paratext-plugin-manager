@@ -104,7 +104,7 @@
     <Compile Include="Controllers\PluginManagerMainFormController.cs" />
     <Compile Include="LocalInstaller\IInstallerService.cs" />
     <Compile Include="LocalInstaller\LocalInstallerService.cs" />
-    <Compile Include="Models\UpdatedPlugin.cs" />
+    <Compile Include="Models\OutdatedPlugin.cs" />
     <Compile Include="Models\PluginDescription.cs" />
     <Compile Include="ParatextPluginManagerPlugin.cs" />
     <Compile Include="Forms\PluginManagerMainForm.cs">

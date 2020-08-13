@@ -16,7 +16,7 @@ namespace PpmMain.Controllers
         /// <summary>
         /// A list of plugins that have been installed and for which there are available updates.
         /// </summary>
-        List<UpdatedPlugin> UpdatedPlugins { get; set; }
+        List<OutdatedPlugin> OutdatedPlugins { get; set; }
 
         /// <summary>
         /// A list of plugins that have been installed.
@@ -44,6 +44,6 @@ namespace PpmMain.Controllers
         /// This method updates a given list of installed plugins.
         /// </summary>
         /// <param name="plugins">A list of installed plugins to update.</param>
-        public void UpdatePlugins(List<UpdatedPlugin> plugins);
+        public void UpdatePlugins(List<OutdatedPlugin> plugins);
     }
 }

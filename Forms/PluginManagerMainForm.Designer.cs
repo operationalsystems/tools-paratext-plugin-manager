@@ -249,9 +249,9 @@
             this.InstalledPluginsList.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.InstalledPluginsList.Size = new System.Drawing.Size(1013, 367);
             this.InstalledPluginsList.TabIndex = 13;
-            this.InstalledPluginsList.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.AnyPluginsList_SelectionChanged);
-            this.InstalledPluginsList.DataBindingComplete += new System.Windows.Forms.DataGridViewBindingCompleteEventHandler(this.InstalledPluginList_DataBindingComplete);
-            this.InstalledPluginsList.SelectionChanged += new System.EventHandler(this.AnyPluginsList_SelectionChanged);
+            this.InstalledPluginsList.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.AnyPluginList_SelectionChanged);
+            this.InstalledPluginsList.DataBindingComplete += new System.Windows.Forms.DataGridViewBindingCompleteEventHandler(this.AnyPluginList_DataBindingComplete);
+            this.InstalledPluginsList.SelectionChanged += new System.EventHandler(this.AnyPluginList_SelectionChanged);
             // 
             // nameDataGridViewTextBoxColumn2
             // 
@@ -343,9 +343,9 @@
             this.OutdatedPluginsList.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.OutdatedPluginsList.Size = new System.Drawing.Size(1013, 367);
             this.OutdatedPluginsList.TabIndex = 13;
-            this.OutdatedPluginsList.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.AnyPluginsList_SelectionChanged);
-            this.OutdatedPluginsList.DataBindingComplete += new System.Windows.Forms.DataGridViewBindingCompleteEventHandler(this.OutdatedPluginList_DataBindingComplete);
-            this.OutdatedPluginsList.SelectionChanged += new System.EventHandler(this.AnyPluginsList_SelectionChanged);
+            this.OutdatedPluginsList.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.AnyPluginList_SelectionChanged);
+            this.OutdatedPluginsList.DataBindingComplete += new System.Windows.Forms.DataGridViewBindingCompleteEventHandler(this.AnyPluginList_DataBindingComplete);
+            this.OutdatedPluginsList.SelectionChanged += new System.EventHandler(this.AnyPluginList_SelectionChanged);
             // 
             // nameDataGridViewTextBoxColumn1
             // 
@@ -405,6 +405,7 @@
             // 
             // Available
             // 
+            this.Available.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
             this.Available.Controls.Add(this.PluginDescriptionAvailable);
             this.Available.Controls.Add(this.textBox1);
             this.Available.Controls.Add(this.AvailablePluginsList);
@@ -452,8 +453,8 @@
             this.AvailablePluginsList.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.AvailablePluginsList.Size = new System.Drawing.Size(1013, 367);
             this.AvailablePluginsList.TabIndex = 11;
-            this.AvailablePluginsList.DataBindingComplete += new System.Windows.Forms.DataGridViewBindingCompleteEventHandler(this.AvailablePluginList_DataBindingComplete);
-            this.AvailablePluginsList.SelectionChanged += new System.EventHandler(this.AnyPluginsList_SelectionChanged);
+            this.AvailablePluginsList.DataBindingComplete += new System.Windows.Forms.DataGridViewBindingCompleteEventHandler(this.AnyPluginList_DataBindingComplete);
+            this.AvailablePluginsList.SelectionChanged += new System.EventHandler(this.AnyPluginList_SelectionChanged);
             // 
             // nameDataGridViewTextBoxColumn
             // 
@@ -518,7 +519,6 @@
             this.ProgressLabel.TabIndex = 7;
             this.ProgressLabel.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.ProgressLabel.Visible = false;
-            this.ProgressLabel.Click += new System.EventHandler(this.label1_Click);
             // 
             // CopyrightLabel
             // 

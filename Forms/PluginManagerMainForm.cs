@@ -29,7 +29,7 @@ namespace PpmMain
         /// </summary>
         /// <param name="sender">The list that had a selection change event.</param>
         /// <param name="e">The selection change event.</param>
-        private void AnyPluginsList_SelectionChanged(object sender, EventArgs e)
+        private void AnyPluginList_SelectionChanged(object sender, EventArgs e)
         {
             DataGridView grid = (DataGridView)sender;
             List<PluginDescription> source = (List<PluginDescription>)grid.DataSource;
@@ -61,6 +61,11 @@ namespace PpmMain
             }
         }
 
+        /// <summary>
+        /// This method handles clicking the "Install" button.
+        /// </summary>
+        /// <param name="sender">The Available Plugins list.</param>
+        /// <param name="e">The click event.</param>
         private void Install_Click(object sender, EventArgs e)
         {
             PluginDescription selectedPlugin = Controller.AvailablePlugins[AvailablePluginsList.CurrentCell.RowIndex];
@@ -87,6 +92,11 @@ namespace PpmMain
             }
         }
 
+        /// <summary>
+        /// This method handles clicking the "Update" button.
+        /// </summary>
+        /// <param name="sender">The Updates list.</param>
+        /// <param name="e">The click event.</param>
         private void UpdateOne_Click(object sender, EventArgs e)
         {
             OutdatedPlugin selectedPlugin = Controller.OutdatedPlugins[OutdatedPluginsList.CurrentCell.RowIndex];
@@ -114,6 +124,11 @@ namespace PpmMain
             }
         }
 
+        /// <summary>
+        /// This method handles clicking the "Update All" button.
+        /// </summary>
+        /// <param name="sender">The Updates list.</param>
+        /// <param name="e">The click event.</param>
         private void UpdateAll_Click(object sender, EventArgs e)
         {
             int pluginCount = Controller.OutdatedPlugins.Count;
@@ -140,6 +155,11 @@ namespace PpmMain
             }
         }
 
+        /// <summary>
+        /// This method handles clicking the "Uninstall" button.
+        /// </summary>
+        /// <param name="sender">The Installed Plugins list.</param>
+        /// <param name="e">The click event.</param>
         private void Uninstall_Click(object sender, EventArgs e)
         {
             PluginDescription selectedPlugin = Controller.InstalledPlugins[InstalledPluginsList.CurrentCell.RowIndex];
@@ -166,47 +186,47 @@ namespace PpmMain
             }
         }
 
-        private void AvailablePluginList_DataBindingComplete(object sender, DataGridViewBindingCompleteEventArgs e)
+        /// <summary>
+        /// This method handles clearing any selections when the data binding is updated.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void AnyPluginList_DataBindingComplete(object sender, DataGridViewBindingCompleteEventArgs e)
         {
-            AvailablePluginsList.ClearSelection();
-            PluginDescriptionAvailable.Clear();
-            Install.Enabled = false;
+            DataGridView grid = (DataGridView)sender;
+            grid.ClearSelection();
+
+            switch (grid.Name)
+            {
+                case "AvailablePluginsList":
+                    {
+                        Install.Enabled = false;
+                        PluginDescriptionAvailable.Clear();
+                        break;
+                    }
+                case "OutdatedPluginsList":
+                    {
+                        UpdateOne.Enabled = false;
+                        PluginDescriptionOutdated.Clear();
+                        break;
+                    }
+                case "InstalledPluginsList":
+                    {
+                        Uninstall.Enabled = false;
+                        PluginDescriptionInstalled.Clear();
+                        break;
+                    }
+            }
         }
 
-        private void OutdatedPluginList_DataBindingComplete(object sender, DataGridViewBindingCompleteEventArgs e)
-        {
-            OutdatedPluginsList.ClearSelection();
-            PluginDescriptionOutdated.Clear();
-            UpdateOne.Enabled = false;
-        }
-
-        private void InstalledPluginList_DataBindingComplete(object sender, DataGridViewBindingCompleteEventArgs e)
-        {
-            InstalledPluginsList.ClearSelection();
-            PluginDescriptionInstalled.Clear();
-            Uninstall.Enabled = false;
-        }
-
+        /// <summary>
+        /// This method refreshes all the data bindings.
+        /// </summary>
         private void RefreshBindings()
         {
             AvailablePluginsList.DataSource = Controller.AvailablePlugins;
             OutdatedPluginsList.DataSource = Controller.OutdatedPlugins;
             InstalledPluginsList.DataSource = Controller.InstalledPlugins;
-        }
-
-        private void InstalledPluginsList_SelectionChanged(object sender, DataGridViewCellEventArgs e)
-        {
-
-        }
-
-        private void OutdatedPluginsList_SelectionChanged(object sender, DataGridViewCellEventArgs e)
-        {
-
-        }
-
-        private void label1_Click(object sender, EventArgs e)
-        {
-
         }
     }
 }

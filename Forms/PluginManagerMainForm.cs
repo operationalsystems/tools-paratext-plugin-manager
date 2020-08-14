@@ -1,6 +1,9 @@
 ﻿using PpmMain.Controllers;
 using PpmMain.Models;
+using PpmMain.Util;
 using System;
+using System.Collections.Generic;
+using System.Threading;
 using System.Windows.Forms;
 
 namespace PpmMain
@@ -12,6 +15,7 @@ namespace PpmMain
         public PluginManagerMainForm()
         {
             InitializeComponent();
+            CopyrightLabel.Text = MainConsts.CopyrightText;
         }
 
         private void PluginManagerMainForm_Load(object sender, EventArgs e)
@@ -20,31 +24,41 @@ namespace PpmMain
             RefreshBindings();
         }
 
-        private void AvailablePluginsList_SelectionChanged(object sender, EventArgs e)
+        /// <summary>
+        /// This method handles selecting an plugin from a list.
+        /// </summary>
+        /// <param name="sender">The list that had a selection change event.</param>
+        /// <param name="e">The selection change event.</param>
+        private void AnyPluginsList_SelectionChanged(object sender, EventArgs e)
         {
-            if (!Install.Enabled) Install.Enabled = true;
-            if (AvailablePluginsList.SelectedRows.Count == 0) return;
-            int index = AvailablePluginsList.SelectedRows[0].Index;
+            DataGridView grid = (DataGridView)sender;
+            List<PluginDescription> source = (List<PluginDescription>)grid.DataSource;
+            
+            if (grid.SelectedRows.Count == 0) return;
+            int index = grid.SelectedRows[0].Index;
             if (index < 0) return;
-            PluginDescriptionAvailable.Text = Controller.AvailablePlugins[index].Description;
-        }
 
-        private void OutdatedPluginsList_SelectionChanged(object sender, EventArgs e)
-        {
-            if (!UpdateOne.Enabled) UpdateOne.Enabled = true;
-            if (OutdatedPluginsList.SelectedRows.Count == 0) return;
-            int index = OutdatedPluginsList.SelectedRows[0].Index;
-            if (index < 0) return;
-            PluginDescriptionOutdated.Text = Controller.OutdatedPlugins[index].Description;
-        }
-
-        private void InstalledPluginsList_SelectionChanged(object sender, EventArgs e)
-        {
-            if (!Uninstall.Enabled) Uninstall.Enabled = true;
-            if (InstalledPluginsList.SelectedRows.Count == 0) return;
-            int index = InstalledPluginsList.SelectedRows[0].Index;
-            if (index < 0) return;
-            PluginDescriptionInstalled.Text = Controller.InstalledPlugins[index].Description;
+            switch (grid.Name)
+            {
+                case "AvailablePluginsList":
+                    {
+                        if (!Install.Enabled) Install.Enabled = true;
+                        PluginDescriptionAvailable.Text = source[index].Description;
+                        break;
+                    }
+                case "OutdatedPluginsList":
+                    {
+                        if (!UpdateOne.Enabled) UpdateOne.Enabled = true;
+                        PluginDescriptionOutdated.Text = source[index].Description;
+                        break;
+                    }
+                case "InstalledPluginsList":
+                    {
+                        if (!Uninstall.Enabled) Uninstall.Enabled = true;
+                        PluginDescriptionInstalled.Text = source[index].Description;
+                        break;
+                    }
+            }
         }
 
         private void Install_Click(object sender, EventArgs e)
@@ -56,8 +70,17 @@ namespace PpmMain
                                      MessageBoxButtons.YesNo);
             if (confirmInstall == DialogResult.Yes)
             {
+                FormProgress.Visible = true;
+                ProgressLabel.Visible = true;
+                ProgressLabel.Text = MainConsts.ProgressBarInstalling;
+
                 Controller.InstallPlugin(selectedPlugin);
                 RefreshBindings();
+
+                ProgressLabel.Text = "";
+                ProgressLabel.Visible = false;
+                FormProgress.Visible = false;
+
                 MessageBox.Show($"{selectedPlugin.Name} ({selectedPlugin.Version}) has been installed.",
                                      $"Plugin Installed",
                                      MessageBoxButtons.OK);
@@ -73,8 +96,18 @@ namespace PpmMain
                                      MessageBoxButtons.YesNo);
             if (confirmUpdate == DialogResult.Yes)
             {
+                FormProgress.Visible = true;
+                ProgressLabel.Visible = true;
+                ProgressLabel.Text = MainConsts.ProgressBarUpdating;
+
+
                 Controller.UpdatePlugins(new System.Collections.Generic.List<OutdatedPlugin>() { selectedPlugin });
                 RefreshBindings();
+
+                ProgressLabel.Text = "";
+                ProgressLabel.Visible = false;
+                FormProgress.Visible = false;
+
                 MessageBox.Show($"{selectedPlugin.Name} has been updated to version {selectedPlugin.Version}.",
                                      $"Plugin Updated",
                                      MessageBoxButtons.OK);
@@ -89,7 +122,17 @@ namespace PpmMain
                                      MessageBoxButtons.YesNo);
             if (confirmUpdate == DialogResult.Yes)
             {
+                FormProgress.Visible = true;
+                ProgressLabel.Visible = true;
+                ProgressLabel.Text = MainConsts.ProgressBarUpdating;
+
                 Controller.UpdatePlugins(Controller.OutdatedPlugins);
+                RefreshBindings();
+
+                ProgressLabel.Text = "";
+                ProgressLabel.Visible = false;
+                FormProgress.Visible = false;
+
                 RefreshBindings();
                 MessageBox.Show($"All plugins have been updated.",
                                      $"All Plugins Updated",
@@ -106,8 +149,17 @@ namespace PpmMain
                                      MessageBoxButtons.YesNo);
             if (confirmUninstall == DialogResult.Yes)
             {
+                FormProgress.Visible = true;
+                ProgressLabel.Visible = true;
+                ProgressLabel.Text = MainConsts.ProgressBarUninstalling;
+
                 Controller.UninstallPlugin(selectedPlugin);
                 RefreshBindings();
+
+                ProgressLabel.Text = "";
+                ProgressLabel.Visible = false;
+                FormProgress.Visible = false;
+
                 MessageBox.Show($"{selectedPlugin.Name} ({selectedPlugin.Version}) has been uninstalled.",
                      $"Plugin Uninstalled",
                      MessageBoxButtons.OK);
@@ -140,6 +192,21 @@ namespace PpmMain
             AvailablePluginsList.DataSource = Controller.AvailablePlugins;
             OutdatedPluginsList.DataSource = Controller.OutdatedPlugins;
             InstalledPluginsList.DataSource = Controller.InstalledPlugins;
+        }
+
+        private void InstalledPluginsList_SelectionChanged(object sender, DataGridViewCellEventArgs e)
+        {
+
+        }
+
+        private void OutdatedPluginsList_SelectionChanged(object sender, DataGridViewCellEventArgs e)
+        {
+
+        }
+
+        private void label1_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }

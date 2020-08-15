@@ -8,18 +8,37 @@ using System.Linq;
 
 namespace PpmMain.Controllers
 {
+    /// <summary>
+    /// A custom comparer that determines whether two plugins are the same.
+    /// </summary>
     internal class PluginComparer : IEqualityComparer<PluginDescription>
     {
-        public bool Equals(PluginDescription x, PluginDescription y) => PluginManagerMainFormController.isSamePlugin(x, y);
+        public bool Equals(PluginDescription x, PluginDescription y) => isSamePlugin(x, y);
 
         public int GetHashCode(PluginDescription obj) => obj.Name.GetHashCode();
+
+        /// <summary>
+        /// This method determines whether two plugins are the same.
+        /// </summary>
+        private readonly static Func<PluginDescription, PluginDescription, bool> isSamePlugin = (PluginDescription x, PluginDescription y) => x.Name == y.Name && x.ShortName == y.ShortName;
+
+        /// <summary>
+        /// This method determines whether the version of one plugin is greater than the version of another.
+        /// </summary>
+        internal readonly static Func<PluginDescription, PluginDescription, bool> isNewPluginVersion = (PluginDescription x, PluginDescription y) => isSamePlugin(x, y) && new Version(x.Version) > new Version(y.Version);
     }
+
+    /// <summary>
+    /// A controller which handles business logic for the main Plugin Manager form.
+    /// </summary>
     class PluginManagerMainFormController : IPluginManagerMainFormController
     {
         IPluginRepository RemotePluginRepository { get; set; }
 
         IInstallerService LocalInstallerService { get; set; }
+
         public string FilterCriteria { get; set; }
+
         public List<PluginDescription> InstalledPlugins
         {
             get
@@ -69,14 +88,16 @@ namespace PpmMain.Controllers
         {
             get
             {
+                /// Find existing plugins that have updates available
                 Dictionary<PluginDescription, PluginDescription> outdated = new Dictionary<PluginDescription, PluginDescription>();
                 InstalledPlugins.ForEach(installedPlugin =>
                 {
-                    PluginDescription remotePlugin = RemotePlugins.Find(rp => isSamePlugin(rp, installedPlugin) && isNewPluginVersion(rp, installedPlugin));
+                    PluginDescription remotePlugin = RemotePlugins.Find(rp => PluginComparer.isNewPluginVersion(rp, installedPlugin));
                     if (null != remotePlugin)
                         outdated.Add(installedPlugin, remotePlugin);
                 });
 
+                /// Create a list of plugins that includes the existing version number and the available version number
                 return outdated.Select(PluginKvp =>
                 {
                     PluginDescription installed = PluginKvp.Key;
@@ -128,12 +149,12 @@ namespace PpmMain.Controllers
             RefreshInstalled();
         }
 
-        public void RefreshInstalled()
+        /// <summary>
+        /// This method handles updating the list of installed plugins.
+        /// </summary>
+        private void RefreshInstalled()
         {
             InstalledPlugins = LocalInstallerService.GetInstalledPlugins();
         }
-
-        public static Func<PluginDescription, PluginDescription, bool> isSamePlugin = (PluginDescription x, PluginDescription y) => x.Name == y.Name && x.ShortName == y.ShortName;
-        public static Func<PluginDescription, PluginDescription, bool> isNewPluginVersion = (PluginDescription x, PluginDescription y) => new Version(x.Version) > new Version(y.Version);
     }
 }

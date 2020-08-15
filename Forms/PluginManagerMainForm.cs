@@ -297,6 +297,7 @@ namespace PpmMain
             FormProgress.Visible = true;
             ProgressLabel.Visible = true;
             ProgressLabel.Text = labelText;
+            this.Enabled = false;
         }
 
         /// <summary>
@@ -304,6 +305,7 @@ namespace PpmMain
         /// </summary>
         private void HideProgressBar()
         {
+            this.Enabled = true;
             ProgressLabel.Text = "";
             ProgressLabel.Visible = false;
             FormProgress.Visible = false;

@@ -3,13 +3,16 @@ using PpmMain.Models;
 using PpmMain.Util;
 using System;
 using System.Collections.Generic;
-using System.Threading;
+using System.ComponentModel;
 using System.Windows.Forms;
 
 namespace PpmMain
 {
     public partial class PluginManagerMainForm : Form
     {
+        /// <summary>
+        /// The controller that will handle business logic for this view.
+        /// </summary>
         PluginManagerMainFormController Controller { get; set; }
 
         public PluginManagerMainForm()
@@ -18,6 +21,11 @@ namespace PpmMain
             CopyrightLabel.Text = MainConsts.CopyrightText;
         }
 
+        /// <summary>
+        /// This method executes when the form first loads.
+        /// </summary>
+        /// <param name="sender">The form.</param>
+        /// <param name="e">The load event.</param>
         private void PluginManagerMainForm_Load(object sender, EventArgs e)
         {
             Controller = new PluginManagerMainFormController();
@@ -32,9 +40,11 @@ namespace PpmMain
         private void AnyPluginList_SelectionChanged(object sender, EventArgs e)
         {
             DataGridView grid = (DataGridView)sender;
-            List<PluginDescription> source = (List<PluginDescription>)grid.DataSource;
-            
             if (grid.SelectedRows.Count == 0) return;
+            List<PluginDescription> availablePlugins = grid.DataSource as List<PluginDescription>;
+            List<OutdatedPlugin> outdatedPlugins = grid.DataSource as List<OutdatedPlugin>;
+            List<PluginDescription> installedPlugins = grid.DataSource as List<PluginDescription>;
+
             int index = grid.SelectedRows[0].Index;
             if (index < 0) return;
 
@@ -43,19 +53,19 @@ namespace PpmMain
                 case "AvailablePluginsList":
                     {
                         if (!Install.Enabled) Install.Enabled = true;
-                        PluginDescriptionAvailable.Text = source[index].Description;
+                        PluginDescriptionAvailable.Text = availablePlugins[index].Description;
                         break;
                     }
                 case "OutdatedPluginsList":
                     {
                         if (!UpdateOne.Enabled) UpdateOne.Enabled = true;
-                        PluginDescriptionOutdated.Text = source[index].Description;
+                        PluginDescriptionOutdated.Text = outdatedPlugins[index].Description;
                         break;
                     }
                 case "InstalledPluginsList":
                     {
                         if (!Uninstall.Enabled) Uninstall.Enabled = true;
-                        PluginDescriptionInstalled.Text = source[index].Description;
+                        PluginDescriptionInstalled.Text = installedPlugins[index].Description;
                         break;
                     }
             }
@@ -79,16 +89,23 @@ namespace PpmMain
                 ProgressLabel.Visible = true;
                 ProgressLabel.Text = MainConsts.ProgressBarInstalling;
 
-                Controller.InstallPlugin(selectedPlugin);
-                RefreshBindings();
+                BackgroundWorker worker = new BackgroundWorker();
+                worker.DoWork += new DoWorkEventHandler((object sender, DoWorkEventArgs e) =>
+                {
+                    Controller.InstallPlugin(selectedPlugin);
+                    RefreshBindings();
+                });
+                worker.RunWorkerCompleted += new RunWorkerCompletedEventHandler((object sender, RunWorkerCompletedEventArgs e) =>
+                {
+                    ProgressLabel.Text = "";
+                    ProgressLabel.Visible = false;
+                    FormProgress.Visible = false;
 
-                ProgressLabel.Text = "";
-                ProgressLabel.Visible = false;
-                FormProgress.Visible = false;
-
-                MessageBox.Show($"{selectedPlugin.Name} ({selectedPlugin.Version}) has been installed.",
-                                     $"Plugin Installed",
-                                     MessageBoxButtons.OK);
+                    MessageBox.Show($"{selectedPlugin.Name} ({selectedPlugin.Version}) has been installed.",
+                         $"Plugin Installed",
+                         MessageBoxButtons.OK);
+                });
+                worker.RunWorkerAsync();
             }
         }
 
@@ -110,17 +127,23 @@ namespace PpmMain
                 ProgressLabel.Visible = true;
                 ProgressLabel.Text = MainConsts.ProgressBarUpdating;
 
+                BackgroundWorker worker = new BackgroundWorker();
+                worker.DoWork += new DoWorkEventHandler((object sender, DoWorkEventArgs e) =>
+                {
+                    Controller.UpdatePlugins(new System.Collections.Generic.List<OutdatedPlugin>() { selectedPlugin });
+                    RefreshBindings();
+                });
+                worker.RunWorkerCompleted += new RunWorkerCompletedEventHandler((object sender, RunWorkerCompletedEventArgs e) =>
+                {
+                    ProgressLabel.Text = "";
+                    ProgressLabel.Visible = false;
+                    FormProgress.Visible = false;
 
-                Controller.UpdatePlugins(new System.Collections.Generic.List<OutdatedPlugin>() { selectedPlugin });
-                RefreshBindings();
-
-                ProgressLabel.Text = "";
-                ProgressLabel.Visible = false;
-                FormProgress.Visible = false;
-
-                MessageBox.Show($"{selectedPlugin.Name} has been updated to version {selectedPlugin.Version}.",
-                                     $"Plugin Updated",
-                                     MessageBoxButtons.OK);
+                    MessageBox.Show($"{selectedPlugin.Name} has been updated to version {selectedPlugin.Version}.",
+                      $"Plugin Updated",
+                      MessageBoxButtons.OK);
+                });
+                worker.RunWorkerAsync();
             }
         }
 
@@ -141,17 +164,23 @@ namespace PpmMain
                 ProgressLabel.Visible = true;
                 ProgressLabel.Text = MainConsts.ProgressBarUpdating;
 
-                Controller.UpdatePlugins(Controller.OutdatedPlugins);
-                RefreshBindings();
+                BackgroundWorker worker = new BackgroundWorker();
+                worker.DoWork += new DoWorkEventHandler((object sender, DoWorkEventArgs e) =>
+                {
+                    Controller.UpdatePlugins(Controller.OutdatedPlugins);
+                    RefreshBindings();
+                });
+                worker.RunWorkerCompleted += new RunWorkerCompletedEventHandler((object sender, RunWorkerCompletedEventArgs e) =>
+                {
+                    ProgressLabel.Text = "";
+                    ProgressLabel.Visible = false;
+                    FormProgress.Visible = false;
 
-                ProgressLabel.Text = "";
-                ProgressLabel.Visible = false;
-                FormProgress.Visible = false;
-
-                RefreshBindings();
-                MessageBox.Show($"All plugins have been updated.",
-                                     $"All Plugins Updated",
-                                     MessageBoxButtons.OK);
+                    MessageBox.Show($"All plugins have been updated.",
+                         $"All Plugins Updated",
+                         MessageBoxButtons.OK);
+                });
+                worker.RunWorkerAsync();
             }
         }
 
@@ -173,16 +202,23 @@ namespace PpmMain
                 ProgressLabel.Visible = true;
                 ProgressLabel.Text = MainConsts.ProgressBarUninstalling;
 
-                Controller.UninstallPlugin(selectedPlugin);
-                RefreshBindings();
+                BackgroundWorker worker = new BackgroundWorker();
+                worker.DoWork += new DoWorkEventHandler((object sender, DoWorkEventArgs e) =>
+                {
+                    Controller.UninstallPlugin(selectedPlugin);
+                    RefreshBindings();
+                });
+                worker.RunWorkerCompleted += new RunWorkerCompletedEventHandler((object sender, RunWorkerCompletedEventArgs e) =>
+                {
+                    ProgressLabel.Text = "";
+                    ProgressLabel.Visible = false;
+                    FormProgress.Visible = false;
 
-                ProgressLabel.Text = "";
-                ProgressLabel.Visible = false;
-                FormProgress.Visible = false;
-
-                MessageBox.Show($"{selectedPlugin.Name} ({selectedPlugin.Version}) has been uninstalled.",
-                     $"Plugin Uninstalled",
-                     MessageBoxButtons.OK);
+                    MessageBox.Show($"{selectedPlugin.Name} ({selectedPlugin.Version}) has been uninstalled.",
+                         $"Plugin Uninstalled",
+                         MessageBoxButtons.OK);
+                });
+                worker.RunWorkerAsync();
             }
         }
 

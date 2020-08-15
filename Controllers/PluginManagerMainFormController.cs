@@ -1,10 +1,10 @@
 ﻿using PpmMain.LocalInstaller;
 using PpmMain.Models;
 using PpmMain.PluginRepository;
-using System.IO;
-using System.Collections.Generic;
-using System.Linq;
 using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 
 namespace PpmMain.Controllers
 {
@@ -22,12 +22,13 @@ namespace PpmMain.Controllers
 
         List<PluginDescription> RemotePlugins { get; set; }
 
-        public List<PluginDescription> AvailablePlugins { 
-            get 
+        public List<PluginDescription> AvailablePlugins
+        {
+            get
             {
                 return RemotePlugins.Except(InstalledPlugins, new PluginComparer()).ToList();
             }
-            set => throw new NotImplementedException(); 
+            set => throw new NotImplementedException();
         }
 
         public List<OutdatedPlugin> OutdatedPlugins

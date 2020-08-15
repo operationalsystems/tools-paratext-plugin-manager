@@ -51,7 +51,7 @@
             this.FormProgress = new System.Windows.Forms.ProgressBar();
             this.Installed = new System.Windows.Forms.TabPage();
             this.PluginDescriptionInstalled = new System.Windows.Forms.TextBox();
-            this.textBox3 = new System.Windows.Forms.TextBox();
+            this.SearchInstalled = new System.Windows.Forms.TextBox();
             this.InstalledPluginsList = new System.Windows.Forms.DataGridView();
             this.nameDataGridViewTextBoxColumn2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.versionDataGridViewTextBoxColumn2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -59,7 +59,7 @@
             this.button3 = new System.Windows.Forms.Button();
             this.Updates = new System.Windows.Forms.TabPage();
             this.PluginDescriptionOutdated = new System.Windows.Forms.TextBox();
-            this.textBox2 = new System.Windows.Forms.TextBox();
+            this.SearchUpdates = new System.Windows.Forms.TextBox();
             this.OutdatedPluginsList = new System.Windows.Forms.DataGridView();
             this.nameDataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.InstalledVersion = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -69,12 +69,12 @@
             this.button2 = new System.Windows.Forms.Button();
             this.Available = new System.Windows.Forms.TabPage();
             this.PluginDescriptionAvailable = new System.Windows.Forms.TextBox();
-            this.textBox1 = new System.Windows.Forms.TextBox();
+            this.SearchAvailable = new System.Windows.Forms.TextBox();
             this.AvailablePluginsList = new System.Windows.Forms.DataGridView();
             this.nameDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.versionDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Install = new System.Windows.Forms.Button();
-            this.button1 = new System.Windows.Forms.Button();
+            this.SearchButton = new System.Windows.Forms.Button();
             this.PluginTabs = new System.Windows.Forms.TabControl();
             this.ProgressLabel = new System.Windows.Forms.Label();
             this.CopyrightLabel = new System.Windows.Forms.Label();
@@ -201,7 +201,7 @@
             // Installed
             // 
             this.Installed.Controls.Add(this.PluginDescriptionInstalled);
-            this.Installed.Controls.Add(this.textBox3);
+            this.Installed.Controls.Add(this.SearchInstalled);
             this.Installed.Controls.Add(this.InstalledPluginsList);
             this.Installed.Controls.Add(this.Uninstall);
             this.Installed.Controls.Add(this.button3);
@@ -221,12 +221,12 @@
             this.PluginDescriptionInstalled.Size = new System.Drawing.Size(1013, 180);
             this.PluginDescriptionInstalled.TabIndex = 14;
             // 
-            // textBox3
+            // SearchInstalled
             // 
-            this.textBox3.Location = new System.Drawing.Point(13, 13);
-            this.textBox3.Name = "textBox3";
-            this.textBox3.Size = new System.Drawing.Size(269, 26);
-            this.textBox3.TabIndex = 9;
+            this.SearchInstalled.Location = new System.Drawing.Point(13, 13);
+            this.SearchInstalled.Name = "SearchInstalled";
+            this.SearchInstalled.Size = new System.Drawing.Size(269, 26);
+            this.SearchInstalled.TabIndex = 9;
             // 
             // InstalledPluginsList
             // 
@@ -293,7 +293,7 @@
             // Updates
             // 
             this.Updates.Controls.Add(this.PluginDescriptionOutdated);
-            this.Updates.Controls.Add(this.textBox2);
+            this.Updates.Controls.Add(this.SearchUpdates);
             this.Updates.Controls.Add(this.OutdatedPluginsList);
             this.Updates.Controls.Add(this.UpdateOne);
             this.Updates.Controls.Add(this.UpdateAll);
@@ -314,12 +314,12 @@
             this.PluginDescriptionOutdated.Size = new System.Drawing.Size(1013, 180);
             this.PluginDescriptionOutdated.TabIndex = 14;
             // 
-            // textBox2
+            // SearchUpdates
             // 
-            this.textBox2.Location = new System.Drawing.Point(13, 13);
-            this.textBox2.Name = "textBox2";
-            this.textBox2.Size = new System.Drawing.Size(269, 26);
-            this.textBox2.TabIndex = 9;
+            this.SearchUpdates.Location = new System.Drawing.Point(13, 13);
+            this.SearchUpdates.Name = "SearchUpdates";
+            this.SearchUpdates.Size = new System.Drawing.Size(269, 26);
+            this.SearchUpdates.TabIndex = 9;
             // 
             // OutdatedPluginsList
             // 
@@ -407,10 +407,10 @@
             // 
             this.Available.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
             this.Available.Controls.Add(this.PluginDescriptionAvailable);
-            this.Available.Controls.Add(this.textBox1);
+            this.Available.Controls.Add(this.SearchAvailable);
             this.Available.Controls.Add(this.AvailablePluginsList);
             this.Available.Controls.Add(this.Install);
-            this.Available.Controls.Add(this.button1);
+            this.Available.Controls.Add(this.SearchButton);
             this.Available.Location = new System.Drawing.Point(4, 29);
             this.Available.Margin = new System.Windows.Forms.Padding(0);
             this.Available.Name = "Available";
@@ -427,12 +427,12 @@
             this.PluginDescriptionAvailable.Size = new System.Drawing.Size(1013, 180);
             this.PluginDescriptionAvailable.TabIndex = 12;
             // 
-            // textBox1
+            // SearchAvailable
             // 
-            this.textBox1.Location = new System.Drawing.Point(13, 13);
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(269, 26);
-            this.textBox1.TabIndex = 7;
+            this.SearchAvailable.Location = new System.Drawing.Point(13, 13);
+            this.SearchAvailable.Name = "SearchAvailable";
+            this.SearchAvailable.Size = new System.Drawing.Size(269, 26);
+            this.SearchAvailable.TabIndex = 7;
             // 
             // AvailablePluginsList
             // 
@@ -483,15 +483,15 @@
             this.Install.UseVisualStyleBackColor = true;
             this.Install.Click += new System.EventHandler(this.Install_Click);
             // 
-            // button1
+            // SearchButton
             // 
-            this.button1.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F);
-            this.button1.Location = new System.Drawing.Point(288, 13);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(80, 26);
-            this.button1.TabIndex = 8;
-            this.button1.Text = "Search";
-            this.button1.UseVisualStyleBackColor = true;
+            this.SearchButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F);
+            this.SearchButton.Location = new System.Drawing.Point(288, 13);
+            this.SearchButton.Name = "SearchButton";
+            this.SearchButton.Size = new System.Drawing.Size(80, 26);
+            this.SearchButton.TabIndex = 8;
+            this.SearchButton.Text = "Search";
+            this.SearchButton.UseVisualStyleBackColor = true;
             // 
             // PluginTabs
             // 
@@ -535,9 +535,9 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.Window;
             this.ClientSize = new System.Drawing.Size(1037, 672);
+            this.Controls.Add(this.FormProgress);
             this.Controls.Add(this.CopyrightLabel);
             this.Controls.Add(this.ProgressLabel);
-            this.Controls.Add(this.FormProgress);
             this.Controls.Add(this.PluginTabs);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "PluginManagerMainForm";
@@ -585,7 +585,7 @@
         private System.Windows.Forms.ProgressBar FormProgress;
         private System.Windows.Forms.TabPage Installed;
         private System.Windows.Forms.TextBox PluginDescriptionInstalled;
-        private System.Windows.Forms.TextBox textBox3;
+        private System.Windows.Forms.TextBox SearchInstalled;
         private System.Windows.Forms.DataGridView InstalledPluginsList;
         private System.Windows.Forms.DataGridViewTextBoxColumn nameDataGridViewTextBoxColumn2;
         private System.Windows.Forms.DataGridViewTextBoxColumn versionDataGridViewTextBoxColumn2;
@@ -593,7 +593,7 @@
         private System.Windows.Forms.Button button3;
         private System.Windows.Forms.TabPage Updates;
         private System.Windows.Forms.TextBox PluginDescriptionOutdated;
-        private System.Windows.Forms.TextBox textBox2;
+        private System.Windows.Forms.TextBox SearchUpdates;
         private System.Windows.Forms.DataGridView OutdatedPluginsList;
         private System.Windows.Forms.DataGridViewTextBoxColumn nameDataGridViewTextBoxColumn1;
         private System.Windows.Forms.DataGridViewTextBoxColumn InstalledVersion;
@@ -603,12 +603,12 @@
         private System.Windows.Forms.Button button2;
         private System.Windows.Forms.TabPage Available;
         private System.Windows.Forms.TextBox PluginDescriptionAvailable;
-        private System.Windows.Forms.TextBox textBox1;
+        private System.Windows.Forms.TextBox SearchAvailable;
         private System.Windows.Forms.DataGridView AvailablePluginsList;
         private System.Windows.Forms.DataGridViewTextBoxColumn nameDataGridViewTextBoxColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn versionDataGridViewTextBoxColumn;
         private System.Windows.Forms.Button Install;
-        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Button SearchButton;
         private System.Windows.Forms.TabControl PluginTabs;
         private System.Windows.Forms.Label ProgressLabel;
         private System.Windows.Forms.Label CopyrightLabel;

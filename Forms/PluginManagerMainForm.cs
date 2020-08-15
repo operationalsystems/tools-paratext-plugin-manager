@@ -33,6 +33,34 @@ namespace PpmMain
         }
 
         /// <summary>
+        /// This method handles a search button being clicked.
+        /// </summary>
+        /// <param name="sender">The button being clicked.</param>
+        /// <param name="e">The click event.</param>
+        private void SearchButton_Click(object sender, EventArgs e)
+        {
+            UpdateSearchFilter();
+        }
+
+        /// <summary>
+        /// This method clears the search when all text has been removed from the search box.
+        /// </summary>
+        /// <param name="sender">The search text box.</param>
+        /// <param name="e">The changed text event.</param>
+        private void SearchText_TextChanged(object sender, EventArgs e)
+        {
+            if (String.IsNullOrEmpty(SearchText.Text))
+            {
+                UpdateSearchFilter();
+                SearchButton.Enabled = false;
+            }
+            else
+            {
+                SearchButton.Enabled = true;
+            }
+        }
+
+        /// <summary>
         /// This method handles selecting an plugin from a list.
         /// </summary>
         /// <param name="sender">The list that had a selection change event.</param>
@@ -85,9 +113,7 @@ namespace PpmMain
                                      MessageBoxButtons.YesNo);
             if (confirmInstall == DialogResult.Yes)
             {
-                FormProgress.Visible = true;
-                ProgressLabel.Visible = true;
-                ProgressLabel.Text = MainConsts.ProgressBarInstalling;
+                ShowProgressBar(MainConsts.ProgressBarInstalling);
 
                 BackgroundWorker worker = new BackgroundWorker();
                 worker.DoWork += new DoWorkEventHandler((object sender, DoWorkEventArgs e) =>
@@ -97,9 +123,7 @@ namespace PpmMain
                 });
                 worker.RunWorkerCompleted += new RunWorkerCompletedEventHandler((object sender, RunWorkerCompletedEventArgs e) =>
                 {
-                    ProgressLabel.Text = "";
-                    ProgressLabel.Visible = false;
-                    FormProgress.Visible = false;
+                    HideProgressBar();
 
                     MessageBox.Show($"{selectedPlugin.Name} ({selectedPlugin.Version}) has been installed.",
                          $"Plugin Installed",
@@ -123,9 +147,7 @@ namespace PpmMain
                                      MessageBoxButtons.YesNo);
             if (confirmUpdate == DialogResult.Yes)
             {
-                FormProgress.Visible = true;
-                ProgressLabel.Visible = true;
-                ProgressLabel.Text = MainConsts.ProgressBarUpdating;
+                ShowProgressBar(MainConsts.ProgressBarUpdating);
 
                 BackgroundWorker worker = new BackgroundWorker();
                 worker.DoWork += new DoWorkEventHandler((object sender, DoWorkEventArgs e) =>
@@ -135,9 +157,7 @@ namespace PpmMain
                 });
                 worker.RunWorkerCompleted += new RunWorkerCompletedEventHandler((object sender, RunWorkerCompletedEventArgs e) =>
                 {
-                    ProgressLabel.Text = "";
-                    ProgressLabel.Visible = false;
-                    FormProgress.Visible = false;
+                    HideProgressBar();
 
                     MessageBox.Show($"{selectedPlugin.Name} has been updated to version {selectedPlugin.Version}.",
                       $"Plugin Updated",
@@ -160,9 +180,7 @@ namespace PpmMain
                                      MessageBoxButtons.YesNo);
             if (confirmUpdate == DialogResult.Yes)
             {
-                FormProgress.Visible = true;
-                ProgressLabel.Visible = true;
-                ProgressLabel.Text = MainConsts.ProgressBarUpdating;
+                ShowProgressBar(MainConsts.ProgressBarUpdating);
 
                 BackgroundWorker worker = new BackgroundWorker();
                 worker.DoWork += new DoWorkEventHandler((object sender, DoWorkEventArgs e) =>
@@ -172,9 +190,7 @@ namespace PpmMain
                 });
                 worker.RunWorkerCompleted += new RunWorkerCompletedEventHandler((object sender, RunWorkerCompletedEventArgs e) =>
                 {
-                    ProgressLabel.Text = "";
-                    ProgressLabel.Visible = false;
-                    FormProgress.Visible = false;
+                    HideProgressBar();
 
                     MessageBox.Show($"All plugins have been updated.",
                          $"All Plugins Updated",
@@ -198,9 +214,7 @@ namespace PpmMain
                                      MessageBoxButtons.YesNo);
             if (confirmUninstall == DialogResult.Yes)
             {
-                FormProgress.Visible = true;
-                ProgressLabel.Visible = true;
-                ProgressLabel.Text = MainConsts.ProgressBarUninstalling;
+                ShowProgressBar(MainConsts.ProgressBarUninstalling);
 
                 BackgroundWorker worker = new BackgroundWorker();
                 worker.DoWork += new DoWorkEventHandler((object sender, DoWorkEventArgs e) =>
@@ -210,9 +224,7 @@ namespace PpmMain
                 });
                 worker.RunWorkerCompleted += new RunWorkerCompletedEventHandler((object sender, RunWorkerCompletedEventArgs e) =>
                 {
-                    ProgressLabel.Text = "";
-                    ProgressLabel.Visible = false;
-                    FormProgress.Visible = false;
+                    HideProgressBar();
 
                     MessageBox.Show($"{selectedPlugin.Name} ({selectedPlugin.Version}) has been uninstalled.",
                          $"Plugin Uninstalled",
@@ -263,6 +275,38 @@ namespace PpmMain
             AvailablePluginsList.DataSource = Controller.AvailablePlugins;
             OutdatedPluginsList.DataSource = Controller.OutdatedPlugins;
             InstalledPluginsList.DataSource = Controller.InstalledPlugins;
+            if (0 == Controller.OutdatedPlugins.Count)
+                UpdateAll.Enabled = false;
+        }
+
+        /// <summary>
+        /// This method handles updating the search filter to change what plugins appear in the list.
+        /// </summary>
+        private void UpdateSearchFilter()
+        {
+            Controller.FilterCriteria = SearchText.Text;
+            RefreshBindings();
+        }
+
+        /// <summary>
+        /// This method shows the progress bar and sets the associated label text.
+        /// </summary>
+        /// <param name="labelText">The label text to display.</param>
+        private void ShowProgressBar(string labelText)
+        {
+            FormProgress.Visible = true;
+            ProgressLabel.Visible = true;
+            ProgressLabel.Text = labelText;
+        }
+
+        /// <summary>
+        /// This method hides the progress bar and clears the associated label text.
+        /// </summary>
+        private void HideProgressBar()
+        {
+            ProgressLabel.Text = "";
+            ProgressLabel.Visible = false;
+            FormProgress.Visible = false;
         }
     }
 }

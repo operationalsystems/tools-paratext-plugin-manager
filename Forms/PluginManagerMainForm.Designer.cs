@@ -51,33 +51,29 @@
             this.FormProgress = new System.Windows.Forms.ProgressBar();
             this.Installed = new System.Windows.Forms.TabPage();
             this.PluginDescriptionInstalled = new System.Windows.Forms.TextBox();
-            this.SearchInstalled = new System.Windows.Forms.TextBox();
             this.InstalledPluginsList = new System.Windows.Forms.DataGridView();
             this.nameDataGridViewTextBoxColumn2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.versionDataGridViewTextBoxColumn2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Uninstall = new System.Windows.Forms.Button();
-            this.button3 = new System.Windows.Forms.Button();
             this.Updates = new System.Windows.Forms.TabPage();
             this.PluginDescriptionOutdated = new System.Windows.Forms.TextBox();
-            this.SearchUpdates = new System.Windows.Forms.TextBox();
             this.OutdatedPluginsList = new System.Windows.Forms.DataGridView();
             this.nameDataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.InstalledVersion = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.versionDataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.UpdateOne = new System.Windows.Forms.Button();
             this.UpdateAll = new System.Windows.Forms.Button();
-            this.button2 = new System.Windows.Forms.Button();
             this.Available = new System.Windows.Forms.TabPage();
             this.PluginDescriptionAvailable = new System.Windows.Forms.TextBox();
-            this.SearchAvailable = new System.Windows.Forms.TextBox();
             this.AvailablePluginsList = new System.Windows.Forms.DataGridView();
             this.nameDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.versionDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Install = new System.Windows.Forms.Button();
-            this.SearchButton = new System.Windows.Forms.Button();
             this.PluginTabs = new System.Windows.Forms.TabControl();
             this.ProgressLabel = new System.Windows.Forms.Label();
             this.CopyrightLabel = new System.Windows.Forms.Label();
+            this.SearchText = new System.Windows.Forms.TextBox();
+            this.SearchButton = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.availablePluginsBindingSource)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pluginManagerMainFormControllerBindingSource)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.outdatedPluginsBindingSource1)).BeginInit();
@@ -201,10 +197,8 @@
             // Installed
             // 
             this.Installed.Controls.Add(this.PluginDescriptionInstalled);
-            this.Installed.Controls.Add(this.SearchInstalled);
             this.Installed.Controls.Add(this.InstalledPluginsList);
             this.Installed.Controls.Add(this.Uninstall);
-            this.Installed.Controls.Add(this.button3);
             this.Installed.Location = new System.Drawing.Point(4, 29);
             this.Installed.Name = "Installed";
             this.Installed.Padding = new System.Windows.Forms.Padding(10, 10, 10, 3);
@@ -220,13 +214,6 @@
             this.PluginDescriptionInstalled.Name = "PluginDescriptionInstalled";
             this.PluginDescriptionInstalled.Size = new System.Drawing.Size(1013, 180);
             this.PluginDescriptionInstalled.TabIndex = 14;
-            // 
-            // SearchInstalled
-            // 
-            this.SearchInstalled.Location = new System.Drawing.Point(13, 13);
-            this.SearchInstalled.Name = "SearchInstalled";
-            this.SearchInstalled.Size = new System.Drawing.Size(269, 26);
-            this.SearchInstalled.TabIndex = 9;
             // 
             // InstalledPluginsList
             // 
@@ -271,8 +258,9 @@
             // 
             // Uninstall
             // 
+            this.Uninstall.Enabled = false;
             this.Uninstall.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F);
-            this.Uninstall.Location = new System.Drawing.Point(926, 13);
+            this.Uninstall.Location = new System.Drawing.Point(931, 13);
             this.Uninstall.Name = "Uninstall";
             this.Uninstall.Size = new System.Drawing.Size(90, 26);
             this.Uninstall.TabIndex = 11;
@@ -280,24 +268,12 @@
             this.Uninstall.UseVisualStyleBackColor = true;
             this.Uninstall.Click += new System.EventHandler(this.Uninstall_Click);
             // 
-            // button3
-            // 
-            this.button3.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F);
-            this.button3.Location = new System.Drawing.Point(288, 13);
-            this.button3.Name = "button3";
-            this.button3.Size = new System.Drawing.Size(80, 26);
-            this.button3.TabIndex = 10;
-            this.button3.Text = "Search";
-            this.button3.UseVisualStyleBackColor = true;
-            // 
             // Updates
             // 
             this.Updates.Controls.Add(this.PluginDescriptionOutdated);
-            this.Updates.Controls.Add(this.SearchUpdates);
             this.Updates.Controls.Add(this.OutdatedPluginsList);
             this.Updates.Controls.Add(this.UpdateOne);
             this.Updates.Controls.Add(this.UpdateAll);
-            this.Updates.Controls.Add(this.button2);
             this.Updates.Location = new System.Drawing.Point(4, 29);
             this.Updates.Name = "Updates";
             this.Updates.Padding = new System.Windows.Forms.Padding(10, 10, 10, 3);
@@ -313,13 +289,6 @@
             this.PluginDescriptionOutdated.Name = "PluginDescriptionOutdated";
             this.PluginDescriptionOutdated.Size = new System.Drawing.Size(1013, 180);
             this.PluginDescriptionOutdated.TabIndex = 14;
-            // 
-            // SearchUpdates
-            // 
-            this.SearchUpdates.Location = new System.Drawing.Point(13, 13);
-            this.SearchUpdates.Name = "SearchUpdates";
-            this.SearchUpdates.Size = new System.Drawing.Size(269, 26);
-            this.SearchUpdates.TabIndex = 9;
             // 
             // OutdatedPluginsList
             // 
@@ -373,8 +342,9 @@
             // 
             // UpdateOne
             // 
+            this.UpdateOne.Enabled = false;
             this.UpdateOne.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F);
-            this.UpdateOne.Location = new System.Drawing.Point(840, 13);
+            this.UpdateOne.Location = new System.Drawing.Point(845, 13);
             this.UpdateOne.Name = "UpdateOne";
             this.UpdateOne.Size = new System.Drawing.Size(80, 26);
             this.UpdateOne.TabIndex = 12;
@@ -384,8 +354,9 @@
             // 
             // UpdateAll
             // 
+            this.UpdateAll.Enabled = false;
             this.UpdateAll.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F);
-            this.UpdateAll.Location = new System.Drawing.Point(926, 13);
+            this.UpdateAll.Location = new System.Drawing.Point(931, 13);
             this.UpdateAll.Name = "UpdateAll";
             this.UpdateAll.Size = new System.Drawing.Size(90, 26);
             this.UpdateAll.TabIndex = 11;
@@ -393,24 +364,12 @@
             this.UpdateAll.UseVisualStyleBackColor = true;
             this.UpdateAll.Click += new System.EventHandler(this.UpdateAll_Click);
             // 
-            // button2
-            // 
-            this.button2.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F);
-            this.button2.Location = new System.Drawing.Point(288, 13);
-            this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(80, 26);
-            this.button2.TabIndex = 10;
-            this.button2.Text = "Search";
-            this.button2.UseVisualStyleBackColor = true;
-            // 
             // Available
             // 
             this.Available.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
             this.Available.Controls.Add(this.PluginDescriptionAvailable);
-            this.Available.Controls.Add(this.SearchAvailable);
             this.Available.Controls.Add(this.AvailablePluginsList);
             this.Available.Controls.Add(this.Install);
-            this.Available.Controls.Add(this.SearchButton);
             this.Available.Location = new System.Drawing.Point(4, 29);
             this.Available.Margin = new System.Windows.Forms.Padding(0);
             this.Available.Name = "Available";
@@ -426,13 +385,6 @@
             this.PluginDescriptionAvailable.Name = "PluginDescriptionAvailable";
             this.PluginDescriptionAvailable.Size = new System.Drawing.Size(1013, 180);
             this.PluginDescriptionAvailable.TabIndex = 12;
-            // 
-            // SearchAvailable
-            // 
-            this.SearchAvailable.Location = new System.Drawing.Point(13, 13);
-            this.SearchAvailable.Name = "SearchAvailable";
-            this.SearchAvailable.Size = new System.Drawing.Size(269, 26);
-            this.SearchAvailable.TabIndex = 7;
             // 
             // AvailablePluginsList
             // 
@@ -474,24 +426,15 @@
             // 
             // Install
             // 
+            this.Install.Enabled = false;
             this.Install.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F);
-            this.Install.Location = new System.Drawing.Point(926, 13);
+            this.Install.Location = new System.Drawing.Point(931, 13);
             this.Install.Name = "Install";
             this.Install.Size = new System.Drawing.Size(90, 26);
             this.Install.TabIndex = 9;
             this.Install.Text = "Install";
             this.Install.UseVisualStyleBackColor = true;
             this.Install.Click += new System.EventHandler(this.Install_Click);
-            // 
-            // SearchButton
-            // 
-            this.SearchButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F);
-            this.SearchButton.Location = new System.Drawing.Point(288, 13);
-            this.SearchButton.Name = "SearchButton";
-            this.SearchButton.Size = new System.Drawing.Size(80, 26);
-            this.SearchButton.TabIndex = 8;
-            this.SearchButton.Text = "Search";
-            this.SearchButton.UseVisualStyleBackColor = true;
             // 
             // PluginTabs
             // 
@@ -506,7 +449,6 @@
             this.PluginTabs.Padding = new System.Drawing.Point(0, 0);
             this.PluginTabs.SelectedIndex = 0;
             this.PluginTabs.Size = new System.Drawing.Size(1037, 642);
-            this.PluginTabs.SizeMode = System.Windows.Forms.TabSizeMode.FillToRight;
             this.PluginTabs.TabIndex = 5;
             // 
             // ProgressLabel
@@ -529,12 +471,36 @@
             this.CopyrightLabel.TabIndex = 8;
             this.CopyrightLabel.Text = "© 2020 Biblica, Inc.";
             // 
+            // SearchText
+            // 
+            this.SearchText.Font = new System.Drawing.Font("Microsoft Sans Serif", 11F);
+            this.SearchText.Location = new System.Drawing.Point(12, 43);
+            this.SearchText.Name = "SearchText";
+            this.SearchText.Size = new System.Drawing.Size(269, 24);
+            this.SearchText.TabIndex = 10;
+            this.SearchText.TextChanged += new System.EventHandler(this.SearchText_TextChanged);
+            // 
+            // SearchButton
+            // 
+            this.SearchButton.Enabled = false;
+            this.SearchButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F);
+            this.SearchButton.Location = new System.Drawing.Point(291, 42);
+            this.SearchButton.Name = "SearchButton";
+            this.SearchButton.Size = new System.Drawing.Size(80, 26);
+            this.SearchButton.TabIndex = 16;
+            this.SearchButton.Text = "Search";
+            this.SearchButton.UseVisualStyleBackColor = true;
+            this.SearchButton.Click += new System.EventHandler(this.SearchButton_Click);
+            // 
             // PluginManagerMainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.BackColor = System.Drawing.SystemColors.Window;
             this.ClientSize = new System.Drawing.Size(1037, 672);
+            this.Controls.Add(this.SearchButton);
+            this.Controls.Add(this.SearchText);
             this.Controls.Add(this.FormProgress);
             this.Controls.Add(this.CopyrightLabel);
             this.Controls.Add(this.ProgressLabel);
@@ -585,32 +551,28 @@
         private System.Windows.Forms.ProgressBar FormProgress;
         private System.Windows.Forms.TabPage Installed;
         private System.Windows.Forms.TextBox PluginDescriptionInstalled;
-        private System.Windows.Forms.TextBox SearchInstalled;
         private System.Windows.Forms.DataGridView InstalledPluginsList;
         private System.Windows.Forms.DataGridViewTextBoxColumn nameDataGridViewTextBoxColumn2;
         private System.Windows.Forms.DataGridViewTextBoxColumn versionDataGridViewTextBoxColumn2;
         private System.Windows.Forms.Button Uninstall;
-        private System.Windows.Forms.Button button3;
         private System.Windows.Forms.TabPage Updates;
         private System.Windows.Forms.TextBox PluginDescriptionOutdated;
-        private System.Windows.Forms.TextBox SearchUpdates;
         private System.Windows.Forms.DataGridView OutdatedPluginsList;
         private System.Windows.Forms.DataGridViewTextBoxColumn nameDataGridViewTextBoxColumn1;
         private System.Windows.Forms.DataGridViewTextBoxColumn InstalledVersion;
         private System.Windows.Forms.DataGridViewTextBoxColumn versionDataGridViewTextBoxColumn1;
         private System.Windows.Forms.Button UpdateOne;
         private System.Windows.Forms.Button UpdateAll;
-        private System.Windows.Forms.Button button2;
         private System.Windows.Forms.TabPage Available;
         private System.Windows.Forms.TextBox PluginDescriptionAvailable;
-        private System.Windows.Forms.TextBox SearchAvailable;
         private System.Windows.Forms.DataGridView AvailablePluginsList;
         private System.Windows.Forms.DataGridViewTextBoxColumn nameDataGridViewTextBoxColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn versionDataGridViewTextBoxColumn;
         private System.Windows.Forms.Button Install;
-        private System.Windows.Forms.Button SearchButton;
         private System.Windows.Forms.TabControl PluginTabs;
         private System.Windows.Forms.Label ProgressLabel;
         private System.Windows.Forms.Label CopyrightLabel;
+        private System.Windows.Forms.TextBox SearchText;
+        private System.Windows.Forms.Button SearchButton;
     }
 }

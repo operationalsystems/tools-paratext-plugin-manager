@@ -19,8 +19,42 @@ namespace PpmMain.Controllers
         IPluginRepository RemotePluginRepository { get; set; }
 
         IInstallerService LocalInstallerService { get; set; }
+        public string FilterCriteria { get; set; }
+        public List<PluginDescription> InstalledPlugins
+        {
+            get
+            {
+                return String.IsNullOrEmpty(FilterCriteria)
+                    ? this._installedPlugins
+                    : this._installedPlugins.Where(plugin =>
+                        {
+                            return -1 != plugin.Name.IndexOf(FilterCriteria, StringComparison.CurrentCultureIgnoreCase);
+                        }).ToList();
+            }
+            set
+            {
+                this._installedPlugins = value;
+            }
+        }
+        private List<PluginDescription> _installedPlugins;
 
-        List<PluginDescription> RemotePlugins { get; set; }
+        List<PluginDescription> RemotePlugins
+        {
+            get
+            {
+                return String.IsNullOrEmpty(FilterCriteria)
+                    ? this._remotePlugins
+                    : this._remotePlugins.Where(plugin =>
+                        {
+                            return -1 != plugin.Name.IndexOf(FilterCriteria, StringComparison.CurrentCultureIgnoreCase);
+                        }).ToList();
+            }
+            set
+            {
+                this._remotePlugins = value;
+            }
+        }
+        private List<PluginDescription> _remotePlugins;
 
         public List<PluginDescription> AvailablePlugins
         {
@@ -63,8 +97,6 @@ namespace PpmMain.Controllers
             }
             set => throw new NotImplementedException();
         }
-        public List<PluginDescription> InstalledPlugins { get; set; }
-        public string FilterCriteria { get; set; }
 
         public void InstallPlugin(PluginDescription plugin)
         {

@@ -275,8 +275,8 @@ namespace PpmMain
             AvailablePluginsList.DataSource = Controller.AvailablePlugins;
             OutdatedPluginsList.DataSource = Controller.OutdatedPlugins;
             InstalledPluginsList.DataSource = Controller.InstalledPlugins;
-            if (0 == Controller.OutdatedPlugins.Count)
-                UpdateAll.Enabled = false;
+            UpdateAll.Enabled = (Controller.OutdatedPlugins.Count > 0);
+
         }
 
         /// <summary>

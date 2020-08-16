@@ -1,6 +1,7 @@
 ﻿using PpmMain.LocalInstaller;
 using PpmMain.Models;
 using PpmMain.PluginRepository;
+using PpmMain.Util;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -63,10 +64,7 @@ namespace PpmMain.Controllers
             {
                 return String.IsNullOrEmpty(FilterCriteria)
                     ? this._remotePlugins
-                    : this._remotePlugins.Where(plugin =>
-                        {
-                            return -1 != plugin.Name.IndexOf(FilterCriteria, StringComparison.CurrentCultureIgnoreCase);
-                        }).ToList();
+                    : this._remotePlugins.Where(plugin => (-1 != plugin.Name.IndexOf(FilterCriteria, StringComparison.CurrentCultureIgnoreCase))).ToList();
             }
             set
             {
@@ -128,8 +126,11 @@ namespace PpmMain.Controllers
 
         public void UninstallPlugin(PluginDescription plugin)
         {
+            var onlyLatestPlugins = true;
+            var onlyCompatiblePlugins = true;
+
             LocalInstallerService.UninstallPlugin(plugin);
-            RemotePluginRepository.GetAvailablePlugins();
+            RemotePluginRepository.GetAvailablePlugins(onlyLatestPlugins, onlyCompatiblePlugins);
             RefreshInstalled();
         }
 
@@ -142,10 +143,11 @@ namespace PpmMain.Controllers
         {
             string installPath = Path.Combine(Directory.GetCurrentDirectory(), "plugins");
             var onlyLatestPlugins = true;
+            var onlyCompatiblePlugins = true;
 
             RemotePluginRepository = new S3PluginRepositoryService();
             LocalInstallerService = new LocalInstallerService(installPath);
-            RemotePlugins = RemotePluginRepository.GetAvailablePlugins(onlyLatestPlugins);
+            RemotePlugins = RemotePluginRepository.GetAvailablePlugins(onlyLatestPlugins, onlyCompatiblePlugins);
             RefreshInstalled();
         }
 

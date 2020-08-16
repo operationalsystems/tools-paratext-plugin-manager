@@ -7,6 +7,7 @@ using Amazon.SecurityToken;
 using Amazon.SecurityToken.Model;
 using Newtonsoft.Json;
 using PpmMain.Models;
+using PpmMain.Util;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -92,8 +93,10 @@ namespace PpmMain.PluginRepository
             return DownloadPlugin(pluginDescription.ShortName, pluginDescription.Version, downloadDirectory);
         }
 
-        public List<PluginDescription> GetAvailablePlugins(bool latestOnly = true)
+        public List<PluginDescription> GetAvailablePlugins(bool latestOnly = true, bool compatibleOnly = true)
         {
+            int currentPtVersion = new Version(HostUtil.Instance.ParatextVersion).Major;
+
             // grab all the available JSON files, as they're the plugin descriptions.
             var pluginInformationFilenames = GetRepoFilenamesByExtension(JsonExtension);
 
@@ -110,11 +113,15 @@ namespace PpmMain.PluginRepository
                 PluginDescriptionStore.Add(pluginDescription, outputToInputMap[jsonFilepath]);
             });
 
+            Dictionary<PluginDescription, string> compatiblePlugins = compatibleOnly
+                ? PluginDescriptionStore.Where(currentPluginKvp => currentPluginKvp.Key.PtVersions.Contains(currentPtVersion.ToString())).ToDictionary(i => i.Key, i => i.Value)
+                : PluginDescriptionStore;
+
             if (latestOnly)
             {
                 // filter out the latest version of each unique plugin
                 var latestPlugins = new Dictionary<string, PluginDescription>();
-                foreach (KeyValuePair<PluginDescription, string> currentPluginKvp in PluginDescriptionStore)
+                foreach (KeyValuePair<PluginDescription, string> currentPluginKvp in compatiblePlugins)
                 {
                     if (!latestPlugins.ContainsKey(currentPluginKvp.Key.ShortName))
                     {
@@ -137,8 +144,8 @@ namespace PpmMain.PluginRepository
                 return latestPlugins.Select(d => d.Value).ToList();
             }
 
-            // return the unfiltered plugins
-            return PluginDescriptionStore.Select(d => d.Key).ToList();
+            // return the compatible plugins
+            return compatiblePlugins.Select(d => d.Key).ToList();
         }
 
         /// <summary>

@@ -95,7 +95,11 @@ namespace PpmMain.PluginRepository
 
         public List<PluginDescription> GetAvailablePlugins(bool latestOnly = true, bool compatibleOnly = true)
         {
+#if DEBUG
+            int currentPtVersion = 8;
+#else
             int currentPtVersion = new Version(HostUtil.Instance.ParatextVersion).Major;
+#endif
 
             // grab all the available JSON files, as they're the plugin descriptions.
             var pluginInformationFilenames = GetRepoFilenamesByExtension(JsonExtension);

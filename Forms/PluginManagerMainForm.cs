@@ -41,6 +41,17 @@ namespace PpmMain
         {
             UpdateSearchFilter();
         }
+        
+        /// <summary>
+        /// This method handles hitting enter in the search field.
+        /// </summary>
+        /// <param name="sender">The search text box.</param>
+        /// <param name="e">The key up event.</param>
+        private void SearchText_KeyUp(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+                UpdateSearchFilter();
+        }
 
         /// <summary>
         /// This method clears the search when all text has been removed from the search box.

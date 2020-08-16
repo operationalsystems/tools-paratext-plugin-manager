@@ -479,6 +479,7 @@
             this.SearchText.Size = new System.Drawing.Size(269, 24);
             this.SearchText.TabIndex = 10;
             this.SearchText.TextChanged += new System.EventHandler(this.SearchText_TextChanged);
+            this.SearchText.KeyUp += new System.Windows.Forms.KeyEventHandler(this.SearchText_KeyUp);
             // 
             // SearchButton
             // 

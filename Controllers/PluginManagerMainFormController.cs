@@ -40,16 +40,25 @@ namespace PpmMain.Controllers
 
         public string FilterCriteria { get; set; }
 
+        /// <summary>
+        /// Determines whether a plugin should be displayed based on the filter criteria.
+        /// </summary>
+        private readonly Func<PluginDescription, string, bool> isNotFiltered = (PluginDescription plugin, string filterCriteria) =>
+        {
+            bool nameMatches = -1 != plugin.Name.IndexOf(filterCriteria, StringComparison.CurrentCultureIgnoreCase);
+            bool versionMatches = -1 != plugin.Version.IndexOf(filterCriteria, StringComparison.CurrentCultureIgnoreCase); ;
+            bool versionDescriptionMatches = -1 != plugin.VersionDescription.IndexOf(filterCriteria, StringComparison.CurrentCultureIgnoreCase); ;
+            bool descriptionMatches = -1 != plugin.Description.IndexOf(filterCriteria, StringComparison.CurrentCultureIgnoreCase); ;
+            return nameMatches || versionMatches || versionDescriptionMatches || descriptionMatches;
+        };
+        
         public List<PluginDescription> InstalledPlugins
         {
             get
             {
                 return String.IsNullOrEmpty(FilterCriteria)
                     ? this._installedPlugins
-                    : this._installedPlugins.Where(plugin =>
-                        {
-                            return -1 != plugin.Name.IndexOf(FilterCriteria, StringComparison.CurrentCultureIgnoreCase);
-                        }).ToList();
+                    : this._installedPlugins.Where(plugin => isNotFiltered(plugin, FilterCriteria)).ToList();
             }
             set
             {
@@ -64,7 +73,7 @@ namespace PpmMain.Controllers
             {
                 return String.IsNullOrEmpty(FilterCriteria)
                     ? this._remotePlugins
-                    : this._remotePlugins.Where(plugin => (-1 != plugin.Name.IndexOf(FilterCriteria, StringComparison.CurrentCultureIgnoreCase))).ToList();
+                    : this._remotePlugins.Where(plugin => isNotFiltered(plugin, FilterCriteria)).ToList();
             }
             set
             {

@@ -136,7 +136,10 @@ namespace PpmMain
                 {
                     HideProgressBar();
 
-                    MessageBox.Show($"{selectedPlugin.Name} ({selectedPlugin.Version}) has been installed.",
+                    MessageBox.Show(@$"
+{selectedPlugin.Name} ({selectedPlugin.Version}) has been installed.
+
+{MainConsts.PostUpdateMessage}",
                          $"Plugin Installed",
                          MessageBoxButtons.OK);
                 });
@@ -170,7 +173,10 @@ namespace PpmMain
                 {
                     HideProgressBar();
 
-                    MessageBox.Show($"{selectedPlugin.Name} has been updated to version {selectedPlugin.Version}.",
+                    MessageBox.Show(@$"
+{selectedPlugin.Name} has been updated to version {selectedPlugin.Version}.
+
+{MainConsts.PostUpdateMessage}",
                       $"Plugin Updated",
                       MessageBoxButtons.OK);
                 });
@@ -203,7 +209,10 @@ namespace PpmMain
                 {
                     HideProgressBar();
 
-                    MessageBox.Show($"All plugins have been updated.",
+                    MessageBox.Show(@$"
+All plugins have been updated.
+
+{MainConsts.PostUpdateMessage}",
                          $"All Plugins Updated",
                          MessageBoxButtons.OK);
                 });
@@ -237,7 +246,10 @@ namespace PpmMain
                 {
                     HideProgressBar();
 
-                    MessageBox.Show($"{selectedPlugin.Name} ({selectedPlugin.Version}) has been uninstalled.",
+                    MessageBox.Show(@$"
+{selectedPlugin.Name} ({selectedPlugin.Version}) has been uninstalled.
+
+{MainConsts.PostUpdateMessage}",
                          $"Plugin Uninstalled",
                          MessageBoxButtons.OK);
                 });

@@ -87,7 +87,7 @@ namespace PpmMain
                 case "OutdatedPluginsList":
                     {
                         if (!UpdateOne.Enabled) UpdateOne.Enabled = true;
-                        PluginDescriptionOutdated.Text = outdatedPlugins[index].Description;
+                        PluginDescriptionOutdated.Text = outdatedPlugins[index].VersionDescription;
                         break;
                     }
                 case "InstalledPluginsList":

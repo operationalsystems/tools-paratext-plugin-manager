@@ -41,7 +41,7 @@ namespace PpmMain
         {
             UpdateSearchFilter();
         }
-        
+
         /// <summary>
         /// This method handles hitting enter in the search field.
         /// </summary>

@@ -14,7 +14,7 @@ namespace PpmMain
     /// Paratext Plugin Manager plugin root class.
     /// </summary>
     [AddIn("Paratext Plugin Manager plugin", Description = "Plugin for performing Paratext Plugin installation and version management.", Version = "1.0", Publisher = "Biblica")]
-    [QualificationData(PluginMetaDataKeys.menuText, "Paratext-Plugin-Manager")]
+    [QualificationData(PluginMetaDataKeys.menuText, "Paratext Plugin Manager")]
     [QualificationData(PluginMetaDataKeys.insertAfterMenuName, "Tools|")]
     [QualificationData(PluginMetaDataKeys.enableWhen, WhenToEnable.always)]
     [QualificationData(PluginMetaDataKeys.multipleInstances, CreateInstanceRule.always)]

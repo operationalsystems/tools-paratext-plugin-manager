@@ -7,6 +7,7 @@ using Amazon.SecurityToken;
 using Amazon.SecurityToken.Model;
 using Newtonsoft.Json;
 using PpmMain.Models;
+using PpmMain.Util;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -46,15 +47,6 @@ namespace PpmMain.PluginRepository
         /// The plugin description dictionary used to map the associated filenames on the repository.
         /// </summary>
         public Dictionary<PluginDescription, string> PluginDescriptionStore { get; private set; }
-
-        public S3PluginRepositoryService()
-        {
-            // Set up the AWS credentials the S3 client will need for PPM repository requests
-            SetUpAwsCredentials();
-
-            // The transfer utility for downloading S3 files.
-            SetUpS3TransferClient();
-        }
 
         public FileInfo DownloadPlugin(string pluginShortname, string pluginVersion, DirectoryInfo downloadDirectory = null)
         {
@@ -101,8 +93,14 @@ namespace PpmMain.PluginRepository
             return DownloadPlugin(pluginDescription.ShortName, pluginDescription.Version, downloadDirectory);
         }
 
-        public List<PluginDescription> GetAvailablePlugins(bool latestOnly = true)
+        public List<PluginDescription> GetAvailablePlugins(bool latestOnly = true, bool compatibleOnly = true)
         {
+#if DEBUG
+            int currentPtVersion = 8;
+#else
+            int currentPtVersion = new Version(HostUtil.Instance.ParatextVersion).Major;
+#endif
+
             // grab all the available JSON files, as they're the plugin descriptions.
             var pluginInformationFilenames = GetRepoFilenamesByExtension(JsonExtension);
 
@@ -119,11 +117,15 @@ namespace PpmMain.PluginRepository
                 PluginDescriptionStore.Add(pluginDescription, outputToInputMap[jsonFilepath]);
             });
 
+            Dictionary<PluginDescription, string> compatiblePlugins = compatibleOnly
+                ? PluginDescriptionStore.Where(currentPluginKvp => currentPluginKvp.Key.PtVersions.Contains(currentPtVersion.ToString())).ToDictionary(i => i.Key, i => i.Value)
+                : PluginDescriptionStore;
+
             if (latestOnly)
             {
                 // filter out the latest version of each unique plugin
                 var latestPlugins = new Dictionary<string, PluginDescription>();
-                foreach (KeyValuePair<PluginDescription, string> currentPluginKvp in PluginDescriptionStore)
+                foreach (KeyValuePair<PluginDescription, string> currentPluginKvp in compatiblePlugins)
                 {
                     if (!latestPlugins.ContainsKey(currentPluginKvp.Key.ShortName))
                     {
@@ -146,8 +148,8 @@ namespace PpmMain.PluginRepository
                 return latestPlugins.Select(d => d.Value).ToList();
             }
 
-            // return the unfiltered plugins
-            return PluginDescriptionStore.Select(d => d.Key).ToList();
+            // return the compatible plugins
+            return compatiblePlugins.Select(d => d.Key).ToList();
         }
 
         /// <summary>
@@ -190,6 +192,7 @@ namespace PpmMain.PluginRepository
         /// <returns>The logged-in S3 client</returns>
         public virtual AmazonS3Client GetS3Client()
         {
+            SetUpAwsCredentials();
             // Use the single-user credentials to interact with the various AWS services
             return new AmazonS3Client(AwsSessionCredentials, region);
         }
@@ -276,7 +279,8 @@ namespace PpmMain.PluginRepository
             }
 
             // Download the file and return the save path.
-            S3TransferUtility.DownloadAsync(saveFilePath, bucketName, filename);
+            SetUpS3TransferClient();
+            S3TransferUtility.Download(saveFilePath, bucketName, filename);
             return new FileInfo(saveFilePath);
         }
 
@@ -295,6 +299,7 @@ namespace PpmMain.PluginRepository
             // download the file and return the final path
             var pluginInfoDownloadTasks = new List<Task>(filenames.Count);
             var pluginInfoFilenames = new List<string>(filenames.Count);
+            SetUpS3TransferClient();
             filenames.ForEach(filename =>
             {
                 var tempFilename = GetTemporaryAbsoluteFilePath(filename);
@@ -323,7 +328,7 @@ namespace PpmMain.PluginRepository
         /// <returns>The fully qualified temporary file path.</returns>
         private string GetTemporaryAbsoluteFilePath(string initialFilePath)
         {
-            return Path.Combine(TemporaryDownloadDirectory.FullName, $"{Path.GetRandomFileName()}_{initialFilePath}");
+            return Path.Combine(TemporaryDownloadDirectory.FullName, initialFilePath);
         }
     }
 }

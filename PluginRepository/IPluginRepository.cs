@@ -13,8 +13,9 @@ namespace PpmMain.PluginRepository
         /// This function return a list of the available plugins.
         /// </summary>
         /// <param name="latestOnly">true: return only the latest available version of plugins; false: return all versions of plugins. default: true</param>
+        /// <param name="compatibleOnly">true: return only the versions which are compatible with the current version of Paratext; false: return all versions of plugins. default: true</param>
         /// <returns>A list of available plugins.</returns>
-        List<PluginDescription> GetAvailablePlugins(bool latestOnly = true);
+        List<PluginDescription> GetAvailablePlugins(bool latestOnly = true, bool compatibleOnly = true);
 
         /// <summary>
         /// This function downloads a specified plugin.

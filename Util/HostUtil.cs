@@ -40,6 +40,17 @@ namespace PpmMain.Util
         public IHost Host { set => _host = value; }
 
         /// <summary>
+        /// The version of Paratext that is running the plugin.
+        /// </summary>
+        public string ParatextVersion
+        {
+            get
+            {
+                return _host.ApplicationVersion;
+            }
+        }
+
+        /// <summary>
         /// Reports exception to log and message box w/prefix text.
         ///
         /// Either prefixText (or) ex must be non-null.

@@ -1,4 +1,5 @@
 ﻿using PpmMain.Controllers;
+using PpmMain.Forms;
 using PpmMain.Models;
 using PpmMain.Util;
 using System;
@@ -119,32 +120,51 @@ namespace PpmMain
         {
             PluginDescription selectedPlugin = Controller.AvailablePlugins[AvailablePluginsList.CurrentCell.RowIndex];
 
-            DialogResult confirmInstall = MessageBox.Show($"Are you sure you wish to install {selectedPlugin.Name} ({selectedPlugin.Version})?",
-                                     $"Confirm Plugin Install",
-                                     MessageBoxButtons.YesNo);
-            if (confirmInstall == DialogResult.Yes)
+            LicenseForm eulaPrompt = new LicenseForm();
+            eulaPrompt.FormType = LicenseForm.FormTypes.Prompt;
+            eulaPrompt.FormTitle = $"{selectedPlugin.Name} {MainConsts.LicenseFormTitle}";
+            eulaPrompt.LicenseText = selectedPlugin.License;
+            eulaPrompt.OnAccept = () =>
             {
-                ShowProgressBar(MainConsts.ProgressBarInstalling);
+                eulaPrompt.Close();
 
-                BackgroundWorker worker = new BackgroundWorker();
-                worker.DoWork += new DoWorkEventHandler((object sender, DoWorkEventArgs e) =>
+                /// Confirm that the user wishes to install the plugin.
+                DialogResult confirmInstall = MessageBox.Show($"Are you sure you wish to install {selectedPlugin.Name} ({selectedPlugin.Version})?",
+                                            $"Confirm Plugin Install",
+                                            MessageBoxButtons.YesNo);
+                if (confirmInstall == DialogResult.Yes)
                 {
-                    Controller.InstallPlugin(selectedPlugin);
-                    RefreshBindings();
-                });
-                worker.RunWorkerCompleted += new RunWorkerCompletedEventHandler((object sender, RunWorkerCompletedEventArgs e) =>
-                {
-                    HideProgressBar();
+                    ShowProgressBar(MainConsts.ProgressBarInstalling);
 
-                    MessageBox.Show(@$"
+                    /// We need to move the work into the background so that the progress bar keeps moving.
+                    BackgroundWorker worker = new BackgroundWorker();
+                    worker.DoWork += new DoWorkEventHandler((object sender, DoWorkEventArgs e) =>
+                    {
+                        Controller.InstallPlugin(selectedPlugin);
+                        RefreshBindings();
+                    });
+                    worker.RunWorkerCompleted += new RunWorkerCompletedEventHandler((object sender, RunWorkerCompletedEventArgs e) =>
+                    {
+                        HideProgressBar();
+
+                        MessageBox.Show(@$"
 {selectedPlugin.Name} ({selectedPlugin.Version}) has been installed.
 
 {MainConsts.PostUpdateMessage}",
-                         $"Plugin Installed",
-                         MessageBoxButtons.OK);
-                });
-                worker.RunWorkerAsync();
-            }
+                                $"Plugin Installed",
+                                MessageBoxButtons.OK);
+                    });
+                    worker.RunWorkerAsync();
+                }
+            };
+            eulaPrompt.OnDismiss = () =>
+            {
+                eulaPrompt.Close();
+                MessageBox.Show("Installation cancelled.",
+$"Plugin Not Installed",
+MessageBoxButtons.OK);
+            };
+            eulaPrompt.Show();
         }
 
         /// <summary>
@@ -156,6 +176,7 @@ namespace PpmMain
         {
             OutdatedPlugin selectedPlugin = Controller.OutdatedPlugins[OutdatedPluginsList.CurrentCell.RowIndex];
 
+            /// Confirm that the user wishes to update the plugin.
             DialogResult confirmUpdate = MessageBox.Show($"Are you sure you wish to update {selectedPlugin.Name} from version {selectedPlugin.InstalledVersion} to {selectedPlugin.Version}?",
                                      $"Confirm Plugin Update",
                                      MessageBoxButtons.YesNo);
@@ -163,6 +184,7 @@ namespace PpmMain
             {
                 ShowProgressBar(MainConsts.ProgressBarUpdating);
 
+                /// We need to move the work into the background so that the progress bar keeps moving.
                 BackgroundWorker worker = new BackgroundWorker();
                 worker.DoWork += new DoWorkEventHandler((object sender, DoWorkEventArgs e) =>
                 {
@@ -192,6 +214,8 @@ namespace PpmMain
         private void UpdateAll_Click(object sender, EventArgs e)
         {
             int pluginCount = Controller.OutdatedPlugins.Count;
+
+            /// Confirm that the user wishes to update all the plugins.
             DialogResult confirmUpdate = MessageBox.Show($"Are you sure you wish to update {pluginCount} plugins?",
                                      $"Confirm Update All",
                                      MessageBoxButtons.YesNo);
@@ -199,6 +223,7 @@ namespace PpmMain
             {
                 ShowProgressBar(MainConsts.ProgressBarUpdating);
 
+                /// We need to move the work into the background so that the progress bar keeps moving.
                 BackgroundWorker worker = new BackgroundWorker();
                 worker.DoWork += new DoWorkEventHandler((object sender, DoWorkEventArgs e) =>
                 {
@@ -229,6 +254,7 @@ All plugins have been updated.
         {
             PluginDescription selectedPlugin = Controller.InstalledPlugins[InstalledPluginsList.CurrentCell.RowIndex];
 
+            /// Confirm that the user wishes to uninstall the plugin.
             DialogResult confirmUninstall = MessageBox.Show($"Are you sure you wish to uninstall {selectedPlugin.Name} ({selectedPlugin.Version})?",
                                      $"Confirm Plugin Uninstall",
                                      MessageBoxButtons.YesNo);
@@ -236,6 +262,7 @@ All plugins have been updated.
             {
                 ShowProgressBar(MainConsts.ProgressBarUninstalling);
 
+                /// We need to move the work into the background so that the progress bar keeps moving.
                 BackgroundWorker worker = new BackgroundWorker();
                 worker.DoWork += new DoWorkEventHandler((object sender, DoWorkEventArgs e) =>
                 {

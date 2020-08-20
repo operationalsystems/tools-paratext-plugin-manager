@@ -31,7 +31,6 @@
             this.LicenseTextBox = new System.Windows.Forms.RichTextBox();
             this.DismissLicenseButton = new System.Windows.Forms.Button();
             this.AcceptLicenseButton = new System.Windows.Forms.Button();
-            this.Print = new System.Windows.Forms.Button();
             this.LicensePrompt = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
@@ -65,25 +64,15 @@
             this.AcceptLicenseButton.UseVisualStyleBackColor = true;
             this.AcceptLicenseButton.Click += new System.EventHandler(this.Accept_Click);
             // 
-            // Print
-            // 
-            this.Print.Location = new System.Drawing.Point(12, 580);
-            this.Print.Name = "Print";
-            this.Print.Size = new System.Drawing.Size(75, 23);
-            this.Print.TabIndex = 3;
-            this.Print.Text = "Print";
-            this.Print.UseVisualStyleBackColor = true;
-            this.Print.Click += new System.EventHandler(this.Print_Click);
-            // 
             // LicensePrompt
             // 
             this.LicensePrompt.AutoSize = true;
             this.LicensePrompt.Font = new System.Drawing.Font("Microsoft Sans Serif", 11F);
             this.LicensePrompt.Location = new System.Drawing.Point(12, 13);
             this.LicensePrompt.Name = "LicensePrompt";
-            this.LicensePrompt.Size = new System.Drawing.Size(461, 18);
+            this.LicensePrompt.Size = new System.Drawing.Size(350, 18);
             this.LicensePrompt.TabIndex = 4;
-            this.LicensePrompt.Text = "Please read and accept the End User License Agreement to proceed.";
+            this.LicensePrompt.Text = "Press Page Down to read the rest of the agreement.";
             // 
             // LicenseForm
             // 
@@ -91,7 +80,6 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(598, 615);
             this.Controls.Add(this.LicensePrompt);
-            this.Controls.Add(this.Print);
             this.Controls.Add(this.AcceptLicenseButton);
             this.Controls.Add(this.DismissLicenseButton);
             this.Controls.Add(this.LicenseTextBox);
@@ -110,7 +98,6 @@
         private System.Windows.Forms.RichTextBox LicenseTextBox;
         private System.Windows.Forms.Button DismissLicenseButton;
         private System.Windows.Forms.Button AcceptLicenseButton;
-        private System.Windows.Forms.Button Print;
         private System.Windows.Forms.Label LicensePrompt;
     }
 }

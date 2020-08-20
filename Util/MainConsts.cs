@@ -17,9 +17,10 @@ namespace PpmMain.Util
         public const string ProgressBarUpdating = "Updating ...";
         public const string PluginListChangedMessage = "Please restart Paratext for changes to take effect.";
 
-        public const string LicenseFormAccept = "Accept";
+        public const string LicenseFormAccept = "I Agree";
         public const string LicenseFormCancel = "Cancel";
         public const string LicenseFormDismiss = "Dismiss";
         public const string LicenseFormTitle = "End User License Agreement";
+        public const string LicenseFormDescription = "Press Page Down to see the rest of the agreement.";
     }
 }

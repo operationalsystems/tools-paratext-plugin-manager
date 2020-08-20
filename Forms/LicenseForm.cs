@@ -9,7 +9,8 @@ namespace PpmMain.Forms
         /// <summary>
         /// The types of forms that can be represented by the <c>License Form</c>.
         /// </summary>
-        public enum FormTypes { 
+        public enum FormTypes
+        {
             /// <summary>
             /// A form which prompts the user to accept or cancel.
             /// </summary>
@@ -29,7 +30,7 @@ namespace PpmMain.Forms
             set
             {
                 _formType = value;
-                if (value.Equals(FormTypes.Prompt))
+                if (_formType.Equals(FormTypes.Prompt))
                 {
                     AcceptLicenseButton.Visible = true;
                     DismissLicenseButton.Text = MainConsts.LicenseFormCancel;
@@ -41,7 +42,7 @@ namespace PpmMain.Forms
                 }
             }
         }
-        private FormTypes _formType;
+        private FormTypes _formType = FormTypes.Prompt;
 
         /// <summary>
         /// A callback function to be invoked when a button is clicked.
@@ -64,6 +65,11 @@ namespace PpmMain.Forms
         public string FormTitle { get => this.Text; set => this.Text = value; }
 
         /// <summary>
+        /// The text displayed above the license.
+        /// </summary>
+        public string FormDescription { get => LicensePrompt.Text; set => LicensePrompt.Text = value; }
+
+        /// <summary>
         /// The RTF license text.
         /// </summary>
         public string LicenseText
@@ -82,7 +88,6 @@ namespace PpmMain.Forms
 
         private void LicenseForm_Load(object sender, EventArgs e)
         {
-            FormType = FormTypes.Prompt;
         }
 
         private void Accept_Click(object sender, EventArgs e)

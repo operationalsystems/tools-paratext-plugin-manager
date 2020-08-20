@@ -1,11 +1,13 @@
-﻿using PpmMain.Util;
-using System;
+﻿using System;
 using System.Windows.Forms;
 
 namespace PpmMain.Forms
 {
     public partial class LicenseForm : Form
     {
+        private const string DismissButtonText = "Dismiss";
+        private const string CancelButtonText = "Cancel";
+
         /// <summary>
         /// The types of forms that can be represented by the <c>License Form</c>.
         /// </summary>
@@ -33,12 +35,12 @@ namespace PpmMain.Forms
                 if (_formType.Equals(FormTypes.Prompt))
                 {
                     AcceptLicenseButton.Visible = true;
-                    DismissLicenseButton.Text = MainConsts.LicenseFormCancel;
+                    DismissLicenseButton.Text = CancelButtonText;
                 }
                 else
                 {
                     AcceptLicenseButton.Visible = false;
-                    DismissLicenseButton.Text = MainConsts.LicenseFormDismiss;
+                    DismissLicenseButton.Text = DismissButtonText;
                 }
             }
         }

@@ -1,4 +1,6 @@
-﻿namespace PpmMain
+﻿using PpmMain.Util;
+
+namespace PpmMain
 {
     partial class PluginManagerMainForm
     {
@@ -31,6 +33,7 @@
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(PluginManagerMainForm));
             this.availablePluginsBindingSource = new System.Windows.Forms.BindingSource(this.components);
+            this.pluginManagerMainFormControllerBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.outdatedPluginsBindingSource1 = new System.Windows.Forms.BindingSource(this.components);
             this.installedPluginsBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.outdatedPluginsBindingSource = new System.Windows.Forms.BindingSource(this.components);
@@ -51,30 +54,33 @@
             this.Installed = new System.Windows.Forms.TabPage();
             this.PluginDescriptionInstalled = new System.Windows.Forms.TextBox();
             this.InstalledPluginsList = new System.Windows.Forms.DataGridView();
+            this.nameDataGridViewTextBoxColumn2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.versionDataGridViewTextBoxColumn2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Uninstall = new System.Windows.Forms.Button();
             this.Updates = new System.Windows.Forms.TabPage();
             this.PluginDescriptionOutdated = new System.Windows.Forms.TextBox();
             this.OutdatedPluginsList = new System.Windows.Forms.DataGridView();
+            this.nameDataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.InstalledVersion = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.versionDataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.UpdateOne = new System.Windows.Forms.Button();
             this.UpdateAll = new System.Windows.Forms.Button();
             this.Available = new System.Windows.Forms.TabPage();
             this.PluginDescriptionAvailable = new System.Windows.Forms.TextBox();
             this.AvailablePluginsList = new System.Windows.Forms.DataGridView();
+            this.nameDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.versionDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Install = new System.Windows.Forms.Button();
             this.PluginTabs = new System.Windows.Forms.TabControl();
             this.ProgressLabel = new System.Windows.Forms.Label();
             this.CopyrightLabel = new System.Windows.Forms.Label();
             this.SearchText = new System.Windows.Forms.TextBox();
             this.SearchButton = new System.Windows.Forms.Button();
-            this.nameDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.versionDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.pluginManagerMainFormControllerBindingSource = new System.Windows.Forms.BindingSource(this.components);
-            this.nameDataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.versionDataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.nameDataGridViewTextBoxColumn2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.versionDataGridViewTextBoxColumn2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.menuStrip1 = new System.Windows.Forms.MenuStrip();
+            this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.LicenseToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.availablePluginsBindingSource)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pluginManagerMainFormControllerBindingSource)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.outdatedPluginsBindingSource1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.installedPluginsBindingSource)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.outdatedPluginsBindingSource)).BeginInit();
@@ -85,13 +91,17 @@
             this.Available.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.AvailablePluginsList)).BeginInit();
             this.PluginTabs.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pluginManagerMainFormControllerBindingSource)).BeginInit();
+            this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
             // availablePluginsBindingSource
             // 
             this.availablePluginsBindingSource.DataMember = "availablePlugins";
             this.availablePluginsBindingSource.DataSource = this.pluginManagerMainFormControllerBindingSource;
+            // 
+            // pluginManagerMainFormControllerBindingSource
+            // 
+            this.pluginManagerMainFormControllerBindingSource.DataSource = typeof(PpmMain.Controllers.PluginManagerMainFormController);
             // 
             // outdatedPluginsBindingSource1
             // 
@@ -236,6 +246,22 @@
             this.InstalledPluginsList.DataBindingComplete += new System.Windows.Forms.DataGridViewBindingCompleteEventHandler(this.AnyPluginList_DataBindingComplete);
             this.InstalledPluginsList.SelectionChanged += new System.EventHandler(this.AnyPluginList_SelectionChanged);
             // 
+            // nameDataGridViewTextBoxColumn2
+            // 
+            this.nameDataGridViewTextBoxColumn2.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.nameDataGridViewTextBoxColumn2.DataPropertyName = "Name";
+            this.nameDataGridViewTextBoxColumn2.HeaderText = "Name";
+            this.nameDataGridViewTextBoxColumn2.Name = "nameDataGridViewTextBoxColumn2";
+            this.nameDataGridViewTextBoxColumn2.ReadOnly = true;
+            // 
+            // versionDataGridViewTextBoxColumn2
+            // 
+            this.versionDataGridViewTextBoxColumn2.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.versionDataGridViewTextBoxColumn2.DataPropertyName = "Version";
+            this.versionDataGridViewTextBoxColumn2.HeaderText = "Version";
+            this.versionDataGridViewTextBoxColumn2.Name = "versionDataGridViewTextBoxColumn2";
+            this.versionDataGridViewTextBoxColumn2.ReadOnly = true;
+            // 
             // Uninstall
             // 
             this.Uninstall.Enabled = false;
@@ -296,6 +322,14 @@
             this.OutdatedPluginsList.DataBindingComplete += new System.Windows.Forms.DataGridViewBindingCompleteEventHandler(this.AnyPluginList_DataBindingComplete);
             this.OutdatedPluginsList.SelectionChanged += new System.EventHandler(this.AnyPluginList_SelectionChanged);
             // 
+            // nameDataGridViewTextBoxColumn1
+            // 
+            this.nameDataGridViewTextBoxColumn1.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.nameDataGridViewTextBoxColumn1.DataPropertyName = "Name";
+            this.nameDataGridViewTextBoxColumn1.HeaderText = "Name";
+            this.nameDataGridViewTextBoxColumn1.Name = "nameDataGridViewTextBoxColumn1";
+            this.nameDataGridViewTextBoxColumn1.ReadOnly = true;
+            // 
             // InstalledVersion
             // 
             this.InstalledVersion.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
@@ -303,6 +337,14 @@
             this.InstalledVersion.HeaderText = "Installed Version";
             this.InstalledVersion.Name = "InstalledVersion";
             this.InstalledVersion.ReadOnly = true;
+            // 
+            // versionDataGridViewTextBoxColumn1
+            // 
+            this.versionDataGridViewTextBoxColumn1.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.versionDataGridViewTextBoxColumn1.DataPropertyName = "Version";
+            this.versionDataGridViewTextBoxColumn1.HeaderText = "New Version";
+            this.versionDataGridViewTextBoxColumn1.Name = "versionDataGridViewTextBoxColumn1";
+            this.versionDataGridViewTextBoxColumn1.ReadOnly = true;
             // 
             // UpdateOne
             // 
@@ -372,6 +414,22 @@
             this.AvailablePluginsList.DataBindingComplete += new System.Windows.Forms.DataGridViewBindingCompleteEventHandler(this.AnyPluginList_DataBindingComplete);
             this.AvailablePluginsList.SelectionChanged += new System.EventHandler(this.AnyPluginList_SelectionChanged);
             // 
+            // nameDataGridViewTextBoxColumn
+            // 
+            this.nameDataGridViewTextBoxColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.nameDataGridViewTextBoxColumn.DataPropertyName = "Name";
+            this.nameDataGridViewTextBoxColumn.HeaderText = "Name";
+            this.nameDataGridViewTextBoxColumn.Name = "nameDataGridViewTextBoxColumn";
+            this.nameDataGridViewTextBoxColumn.ReadOnly = true;
+            // 
+            // versionDataGridViewTextBoxColumn
+            // 
+            this.versionDataGridViewTextBoxColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.versionDataGridViewTextBoxColumn.DataPropertyName = "Version";
+            this.versionDataGridViewTextBoxColumn.HeaderText = "Version";
+            this.versionDataGridViewTextBoxColumn.Name = "versionDataGridViewTextBoxColumn";
+            this.versionDataGridViewTextBoxColumn.ReadOnly = true;
+            // 
             // Install
             // 
             this.Install.Enabled = false;
@@ -391,7 +449,7 @@
             this.PluginTabs.Controls.Add(this.Installed);
             this.PluginTabs.Dock = System.Windows.Forms.DockStyle.Top;
             this.PluginTabs.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.PluginTabs.Location = new System.Drawing.Point(0, 0);
+            this.PluginTabs.Location = new System.Drawing.Point(0, 24);
             this.PluginTabs.Margin = new System.Windows.Forms.Padding(0);
             this.PluginTabs.Name = "PluginTabs";
             this.PluginTabs.Padding = new System.Drawing.Point(0, 0);
@@ -422,7 +480,7 @@
             // SearchText
             // 
             this.SearchText.Font = new System.Drawing.Font("Microsoft Sans Serif", 11F);
-            this.SearchText.Location = new System.Drawing.Point(12, 43);
+            this.SearchText.Location = new System.Drawing.Point(12, 68);
             this.SearchText.Name = "SearchText";
             this.SearchText.Size = new System.Drawing.Size(269, 24);
             this.SearchText.TabIndex = 10;
@@ -433,7 +491,7 @@
             // 
             this.SearchButton.Enabled = false;
             this.SearchButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F);
-            this.SearchButton.Location = new System.Drawing.Point(291, 42);
+            this.SearchButton.Location = new System.Drawing.Point(291, 67);
             this.SearchButton.Name = "SearchButton";
             this.SearchButton.Size = new System.Drawing.Size(80, 26);
             this.SearchButton.TabIndex = 16;
@@ -441,57 +499,30 @@
             this.SearchButton.UseVisualStyleBackColor = true;
             this.SearchButton.Click += new System.EventHandler(this.SearchButton_Click);
             // 
-            // nameDataGridViewTextBoxColumn
+            // menuStrip1
             // 
-            this.nameDataGridViewTextBoxColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.nameDataGridViewTextBoxColumn.DataPropertyName = "Name";
-            this.nameDataGridViewTextBoxColumn.HeaderText = "Name";
-            this.nameDataGridViewTextBoxColumn.Name = "nameDataGridViewTextBoxColumn";
-            this.nameDataGridViewTextBoxColumn.ReadOnly = true;
+            this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.helpToolStripMenuItem});
+            this.menuStrip1.Location = new System.Drawing.Point(0, 0);
+            this.menuStrip1.Name = "menuStrip1";
+            this.menuStrip1.Size = new System.Drawing.Size(1037, 24);
+            this.menuStrip1.TabIndex = 17;
+            this.menuStrip1.Text = "menuStrip1";
             // 
-            // versionDataGridViewTextBoxColumn
+            // helpToolStripMenuItem
             // 
-            this.versionDataGridViewTextBoxColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.versionDataGridViewTextBoxColumn.DataPropertyName = "Version";
-            this.versionDataGridViewTextBoxColumn.HeaderText = "Version";
-            this.versionDataGridViewTextBoxColumn.Name = "versionDataGridViewTextBoxColumn";
-            this.versionDataGridViewTextBoxColumn.ReadOnly = true;
+            this.helpToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.LicenseToolStripMenuItem});
+            this.helpToolStripMenuItem.Name = "helpToolStripMenuItem";
+            this.helpToolStripMenuItem.Size = new System.Drawing.Size(44, 20);
+            this.helpToolStripMenuItem.Text = "Help";
             // 
-            // pluginManagerMainFormControllerBindingSource
+            // LicenseToolStripMenuItem
             // 
-            this.pluginManagerMainFormControllerBindingSource.DataSource = typeof(PpmMain.Controllers.PluginManagerMainFormController);
-            // 
-            // nameDataGridViewTextBoxColumn1
-            // 
-            this.nameDataGridViewTextBoxColumn1.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.nameDataGridViewTextBoxColumn1.DataPropertyName = "Name";
-            this.nameDataGridViewTextBoxColumn1.HeaderText = "Name";
-            this.nameDataGridViewTextBoxColumn1.Name = "nameDataGridViewTextBoxColumn1";
-            this.nameDataGridViewTextBoxColumn1.ReadOnly = true;
-            // 
-            // versionDataGridViewTextBoxColumn1
-            // 
-            this.versionDataGridViewTextBoxColumn1.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.versionDataGridViewTextBoxColumn1.DataPropertyName = "Version";
-            this.versionDataGridViewTextBoxColumn1.HeaderText = "New Version";
-            this.versionDataGridViewTextBoxColumn1.Name = "versionDataGridViewTextBoxColumn1";
-            this.versionDataGridViewTextBoxColumn1.ReadOnly = true;
-            // 
-            // nameDataGridViewTextBoxColumn2
-            // 
-            this.nameDataGridViewTextBoxColumn2.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.nameDataGridViewTextBoxColumn2.DataPropertyName = "Name";
-            this.nameDataGridViewTextBoxColumn2.HeaderText = "Name";
-            this.nameDataGridViewTextBoxColumn2.Name = "nameDataGridViewTextBoxColumn2";
-            this.nameDataGridViewTextBoxColumn2.ReadOnly = true;
-            // 
-            // versionDataGridViewTextBoxColumn2
-            // 
-            this.versionDataGridViewTextBoxColumn2.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.versionDataGridViewTextBoxColumn2.DataPropertyName = "Version";
-            this.versionDataGridViewTextBoxColumn2.HeaderText = "Version";
-            this.versionDataGridViewTextBoxColumn2.Name = "versionDataGridViewTextBoxColumn2";
-            this.versionDataGridViewTextBoxColumn2.ReadOnly = true;
+            this.LicenseToolStripMenuItem.Name = "LicenseToolStripMenuItem";
+            this.LicenseToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.LicenseToolStripMenuItem.Text = "License";
+            this.LicenseToolStripMenuItem.Click += new System.EventHandler(this.LicenseToolStripMenuItem_Click);
             // 
             // PluginManagerMainForm
             // 
@@ -506,12 +537,15 @@
             this.Controls.Add(this.CopyrightLabel);
             this.Controls.Add(this.ProgressLabel);
             this.Controls.Add(this.PluginTabs);
+            this.Controls.Add(this.menuStrip1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.MainMenuStrip = this.menuStrip1;
             this.Name = "PluginManagerMainForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "Paratext Plugin Manager";
+            this.Text = MainConsts.PluginName;
             this.Load += new System.EventHandler(this.PluginManagerMainForm_Load);
             ((System.ComponentModel.ISupportInitialize)(this.availablePluginsBindingSource)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pluginManagerMainFormControllerBindingSource)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.outdatedPluginsBindingSource1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.installedPluginsBindingSource)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.outdatedPluginsBindingSource)).EndInit();
@@ -525,7 +559,8 @@
             this.Available.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.AvailablePluginsList)).EndInit();
             this.PluginTabs.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.pluginManagerMainFormControllerBindingSource)).EndInit();
+            this.menuStrip1.ResumeLayout(false);
+            this.menuStrip1.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -576,5 +611,8 @@
         private System.Windows.Forms.Label CopyrightLabel;
         private System.Windows.Forms.TextBox SearchText;
         private System.Windows.Forms.Button SearchButton;
+        private System.Windows.Forms.MenuStrip menuStrip1;
+        private System.Windows.Forms.ToolStripMenuItem helpToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem LicenseToolStripMenuItem;
     }
 }

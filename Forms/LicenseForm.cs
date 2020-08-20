@@ -61,7 +61,7 @@ namespace PpmMain.Forms
         /// <summary>
         /// The title that is displayed at the top of the form.
         /// </summary>
-        public string FormTitle { get => ActiveForm.Text; set => ActiveForm.Text = value; }
+        public string FormTitle { get => this.Text; set => this.Text = value; }
 
         /// <summary>
         /// The RTF license text.

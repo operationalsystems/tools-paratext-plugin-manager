@@ -123,6 +123,11 @@
     <Compile Include="PluginRepository\IPluginRepository.cs" />
     <Compile Include="PluginRepository\S3PluginRepositoryService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
     <Compile Include="Util\MainConsts.cs" />
     <Compile Include="Util\HostUtil.cs" />
   </ItemGroup>
@@ -140,13 +145,19 @@
       <DependentUpon>PluginManagerMainForm.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <None Include="Directory.Build.props" />
     <None Include="packages.config" />
+    <None Include="PPM_EULA.rtf" />
     <None Include="Properties\DataSources\PpmMain.Controllers.PluginManagerMainFormController.datasource" />
     <None Include="Properties\DataSources\PpmMain.PluginRepository.S3PluginRepositoryService.datasource" />
     <None Include="README.md" />
+    <None Include="Resources\PPM_EULA.rtf" />
     <None Include="scripts\build_and_publish_ppm_installer.bat" />
   </ItemGroup>
   <ItemGroup>

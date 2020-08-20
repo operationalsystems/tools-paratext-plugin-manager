@@ -1,6 +1,7 @@
 ﻿using PpmMain.Controllers;
 using PpmMain.Forms;
 using PpmMain.Models;
+using PpmMain.Properties;
 using PpmMain.Util;
 using System;
 using System.Collections.Generic;
@@ -150,7 +151,7 @@ namespace PpmMain
                         MessageBox.Show(@$"
 {selectedPlugin.Name} ({selectedPlugin.Version}) has been installed.
 
-{MainConsts.PostUpdateMessage}",
+{MainConsts.PluginListChangedMessage}",
                                 $"Plugin Installed",
                                 MessageBoxButtons.OK);
                     });
@@ -198,7 +199,7 @@ MessageBoxButtons.OK);
                     MessageBox.Show(@$"
 {selectedPlugin.Name} has been updated to version {selectedPlugin.Version}.
 
-{MainConsts.PostUpdateMessage}",
+{MainConsts.PluginListChangedMessage}",
                       $"Plugin Updated",
                       MessageBoxButtons.OK);
                 });
@@ -237,7 +238,7 @@ MessageBoxButtons.OK);
                     MessageBox.Show(@$"
 All plugins have been updated.
 
-{MainConsts.PostUpdateMessage}",
+{MainConsts.PluginListChangedMessage}",
                          $"All Plugins Updated",
                          MessageBoxButtons.OK);
                 });
@@ -276,7 +277,7 @@ All plugins have been updated.
                     MessageBox.Show(@$"
 {selectedPlugin.Name} ({selectedPlugin.Version}) has been uninstalled.
 
-{MainConsts.PostUpdateMessage}",
+{MainConsts.PluginListChangedMessage}",
                          $"Plugin Uninstalled",
                          MessageBoxButtons.OK);
                 });
@@ -359,6 +360,18 @@ All plugins have been updated.
             ProgressLabel.Text = "";
             ProgressLabel.Visible = false;
             FormProgress.Visible = false;
+        }
+
+        private void LicenseToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            string pluginName = System.Reflection.Assembly.GetExecutingAssembly().GetName().Name;
+
+            LicenseForm eulaForm = new LicenseForm();
+            eulaForm.FormType = LicenseForm.FormTypes.Info;
+            eulaForm.FormTitle = $"{pluginName} - {MainConsts.LicenseFormTitle}";
+            eulaForm.LicenseText = Resources.PPM_EULA;
+            eulaForm.OnDismiss = () => eulaForm.Close();
+            eulaForm.Show();
         }
     }
 }

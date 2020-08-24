@@ -208,7 +208,7 @@ namespace PpmMain
             this.Installed.Location = new System.Drawing.Point(4, 29);
             this.Installed.Name = "Installed";
             this.Installed.Padding = new System.Windows.Forms.Padding(10, 10, 10, 3);
-            this.Installed.Size = new System.Drawing.Size(1029, 609);
+            this.Installed.Size = new System.Drawing.Size(1027, 619);
             this.Installed.TabIndex = 2;
             this.Installed.Text = "Installed";
             this.Installed.UseVisualStyleBackColor = true;
@@ -218,7 +218,7 @@ namespace PpmMain
             this.PluginDescriptionInstalled.Location = new System.Drawing.Point(8, 423);
             this.PluginDescriptionInstalled.Multiline = true;
             this.PluginDescriptionInstalled.Name = "PluginDescriptionInstalled";
-            this.PluginDescriptionInstalled.Size = new System.Drawing.Size(1013, 180);
+            this.PluginDescriptionInstalled.Size = new System.Drawing.Size(1013, 166);
             this.PluginDescriptionInstalled.TabIndex = 14;
             // 
             // InstalledPluginsList
@@ -283,7 +283,7 @@ namespace PpmMain
             this.Updates.Location = new System.Drawing.Point(4, 29);
             this.Updates.Name = "Updates";
             this.Updates.Padding = new System.Windows.Forms.Padding(10, 10, 10, 3);
-            this.Updates.Size = new System.Drawing.Size(1029, 609);
+            this.Updates.Size = new System.Drawing.Size(1027, 619);
             this.Updates.TabIndex = 1;
             this.Updates.Text = "Updates";
             this.Updates.UseVisualStyleBackColor = true;
@@ -293,7 +293,7 @@ namespace PpmMain
             this.PluginDescriptionOutdated.Location = new System.Drawing.Point(8, 423);
             this.PluginDescriptionOutdated.Multiline = true;
             this.PluginDescriptionOutdated.Name = "PluginDescriptionOutdated";
-            this.PluginDescriptionOutdated.Size = new System.Drawing.Size(1013, 180);
+            this.PluginDescriptionOutdated.Size = new System.Drawing.Size(1013, 166);
             this.PluginDescriptionOutdated.TabIndex = 14;
             // 
             // OutdatedPluginsList
@@ -379,7 +379,7 @@ namespace PpmMain
             this.Available.Location = new System.Drawing.Point(4, 29);
             this.Available.Margin = new System.Windows.Forms.Padding(0);
             this.Available.Name = "Available";
-            this.Available.Size = new System.Drawing.Size(1029, 609);
+            this.Available.Size = new System.Drawing.Size(1027, 619);
             this.Available.TabIndex = 0;
             this.Available.Text = "Available";
             this.Available.UseVisualStyleBackColor = true;
@@ -389,7 +389,7 @@ namespace PpmMain
             this.PluginDescriptionAvailable.Location = new System.Drawing.Point(8, 423);
             this.PluginDescriptionAvailable.Multiline = true;
             this.PluginDescriptionAvailable.Name = "PluginDescriptionAvailable";
-            this.PluginDescriptionAvailable.Size = new System.Drawing.Size(1013, 180);
+            this.PluginDescriptionAvailable.Size = new System.Drawing.Size(1013, 166);
             this.PluginDescriptionAvailable.TabIndex = 12;
             // 
             // AvailablePluginsList
@@ -454,7 +454,7 @@ namespace PpmMain
             this.PluginTabs.Name = "PluginTabs";
             this.PluginTabs.Padding = new System.Drawing.Point(0, 0);
             this.PluginTabs.SelectedIndex = 0;
-            this.PluginTabs.Size = new System.Drawing.Size(1037, 642);
+            this.PluginTabs.Size = new System.Drawing.Size(1035, 652);
             this.PluginTabs.TabIndex = 5;
             // 
             // ProgressLabel
@@ -505,7 +505,7 @@ namespace PpmMain
             this.helpToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(1037, 24);
+            this.menuStrip1.Size = new System.Drawing.Size(1035, 24);
             this.menuStrip1.TabIndex = 17;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -520,7 +520,7 @@ namespace PpmMain
             // LicenseToolStripMenuItem
             // 
             this.LicenseToolStripMenuItem.Name = "LicenseToolStripMenuItem";
-            this.LicenseToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.LicenseToolStripMenuItem.Size = new System.Drawing.Size(113, 22);
             this.LicenseToolStripMenuItem.Text = "License";
             this.LicenseToolStripMenuItem.Click += new System.EventHandler(this.LicenseToolStripMenuItem_Click);
             // 
@@ -530,7 +530,7 @@ namespace PpmMain
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.BackColor = System.Drawing.SystemColors.Window;
-            this.ClientSize = new System.Drawing.Size(1037, 672);
+            this.ClientSize = new System.Drawing.Size(1035, 678);
             this.Controls.Add(this.SearchButton);
             this.Controls.Add(this.SearchText);
             this.Controls.Add(this.FormProgress);
@@ -542,7 +542,7 @@ namespace PpmMain
             this.MainMenuStrip = this.menuStrip1;
             this.Name = "PluginManagerMainForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = MainConsts.PluginName;
+            this.Text = "Paratext Plugin Manager";
             this.Load += new System.EventHandler(this.PluginManagerMainForm_Load);
             ((System.ComponentModel.ISupportInitialize)(this.availablePluginsBindingSource)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pluginManagerMainFormControllerBindingSource)).EndInit();

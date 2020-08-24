@@ -134,6 +134,22 @@ namespace PpmMain.Controllers
             RefreshInstalled();
         }
 
+        public void InstallPlugin(OutdatedPlugin plugin)
+        {
+            PluginDescription pluginToInstall = new PluginDescription()
+            {
+                Name = plugin.Name,
+                ShortName = plugin.ShortName,
+                Version = plugin.Version,
+                Description = plugin.Description,
+                VersionDescription = plugin.VersionDescription,
+                PtVersions = plugin.PtVersions,
+                License = plugin.License,
+            };
+
+            InstallPlugin(pluginToInstall);
+        }
+
         public void UninstallPlugin(PluginDescription plugin)
         {
             var onlyLatestPlugins = true;

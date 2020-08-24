@@ -5,7 +5,7 @@ using PpmMain.Properties;
 using PpmMain.Util;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace PpmMain
@@ -121,51 +121,45 @@ namespace PpmMain
         {
             PluginDescription selectedPlugin = Controller.AvailablePlugins[AvailablePluginsList.CurrentCell.RowIndex];
 
-            LicenseForm eulaPrompt = new LicenseForm();
-            eulaPrompt.FormType = LicenseForm.FormTypes.Prompt;
-            eulaPrompt.FormTitle = $"{selectedPlugin.Name} {MainConsts.LicenseFormTitle}";
-            eulaPrompt.LicenseText = selectedPlugin.License;
-            eulaPrompt.OnAccept = () =>
+            /// Confirm that the user wishes to install the plugin.
+            DialogResult confirmInstall = MessageBox.Show($"Are you sure you wish to install {selectedPlugin.Name} ({selectedPlugin.Version})?",
+                                        $"Confirm Plugin Install",
+                                        MessageBoxButtons.YesNo);
+            if (confirmInstall == DialogResult.Yes)
             {
-                eulaPrompt.Close();
-
-                /// Confirm that the user wishes to install the plugin.
-                DialogResult confirmInstall = MessageBox.Show($"Are you sure you wish to install {selectedPlugin.Name} ({selectedPlugin.Version})?",
-                                            $"Confirm Plugin Install",
-                                            MessageBoxButtons.YesNo);
-                if (confirmInstall == DialogResult.Yes)
+                LicenseForm eulaPrompt = new LicenseForm();
+                eulaPrompt.FormType = LicenseForm.FormTypes.Prompt;
+                eulaPrompt.FormTitle = $"{selectedPlugin.Name} - {MainConsts.LicenseFormTitle}";
+                eulaPrompt.LicenseText = selectedPlugin.License;
+                eulaPrompt.OnAccept = () =>
                 {
+                    eulaPrompt.Close();
+
                     ShowProgressBar(MainConsts.ProgressBarInstalling);
 
-                    /// We need to move the work into the background so that the progress bar keeps moving.
-                    BackgroundWorker worker = new BackgroundWorker();
-                    worker.DoWork += new DoWorkEventHandler((object sender, DoWorkEventArgs e) =>
-                    {
-                        Controller.InstallPlugin(selectedPlugin);
-                        RefreshBindings();
-                    });
-                    worker.RunWorkerCompleted += new RunWorkerCompletedEventHandler((object sender, RunWorkerCompletedEventArgs e) =>
-                    {
-                        HideProgressBar();
+                    Task.Run(async () =>
+                       {
+                           await Task.Run(() => Controller.InstallPlugin(selectedPlugin));
+                           RefreshBindings();
+                           HideProgressBar();
 
-                        MessageBox.Show(@$"
+                           MessageBox.Show(@$"
 {selectedPlugin.Name} ({selectedPlugin.Version}) has been installed.
 
 {MainConsts.PluginListChangedMessage}",
-                                $"Plugin Installed",
-                                MessageBoxButtons.OK);
-                    });
-                    worker.RunWorkerAsync();
-                }
-            };
-            eulaPrompt.OnDismiss = () =>
-            {
-                eulaPrompt.Close();
-                MessageBox.Show("Installation cancelled.",
-$"Plugin Not Installed",
-MessageBoxButtons.OK);
-            };
-            eulaPrompt.Show();
+                                            $"Plugin Installed",
+                                            MessageBoxButtons.OK);
+                       });
+                };
+                eulaPrompt.OnDismiss = () =>
+                {
+                    eulaPrompt.Close();
+                    MessageBox.Show("Installation cancelled.",
+    $"Plugin Not Installed",
+    MessageBoxButtons.OK);
+                };
+                eulaPrompt.Show();
+            }
         }
 
         /// <summary>
@@ -176,35 +170,7 @@ MessageBoxButtons.OK);
         private void UpdateOne_Click(object sender, EventArgs e)
         {
             OutdatedPlugin selectedPlugin = Controller.OutdatedPlugins[OutdatedPluginsList.CurrentCell.RowIndex];
-
-            /// Confirm that the user wishes to update the plugin.
-            DialogResult confirmUpdate = MessageBox.Show($"Are you sure you wish to update {selectedPlugin.Name} from version {selectedPlugin.InstalledVersion} to {selectedPlugin.Version}?",
-                                     $"Confirm Plugin Update",
-                                     MessageBoxButtons.YesNo);
-            if (confirmUpdate == DialogResult.Yes)
-            {
-                ShowProgressBar(MainConsts.ProgressBarUpdating);
-
-                /// We need to move the work into the background so that the progress bar keeps moving.
-                BackgroundWorker worker = new BackgroundWorker();
-                worker.DoWork += new DoWorkEventHandler((object sender, DoWorkEventArgs e) =>
-                {
-                    Controller.UpdatePlugins(new System.Collections.Generic.List<OutdatedPlugin>() { selectedPlugin });
-                    RefreshBindings();
-                });
-                worker.RunWorkerCompleted += new RunWorkerCompletedEventHandler((object sender, RunWorkerCompletedEventArgs e) =>
-                {
-                    HideProgressBar();
-
-                    MessageBox.Show(@$"
-{selectedPlugin.Name} has been updated to version {selectedPlugin.Version}.
-
-{MainConsts.PluginListChangedMessage}",
-                      $"Plugin Updated",
-                      MessageBoxButtons.OK);
-                });
-                worker.RunWorkerAsync();
-            }
+            //await UpdatePlugin(selectedPlugin);
         }
 
         /// <summary>
@@ -214,36 +180,57 @@ MessageBoxButtons.OK);
         /// <param name="e">The click event.</param>
         private void UpdateAll_Click(object sender, EventArgs e)
         {
-            int pluginCount = Controller.OutdatedPlugins.Count;
-
-            /// Confirm that the user wishes to update all the plugins.
-            DialogResult confirmUpdate = MessageBox.Show($"Are you sure you wish to update {pluginCount} plugins?",
-                                     $"Confirm Update All",
-                                     MessageBoxButtons.YesNo);
-            if (confirmUpdate == DialogResult.Yes)
+            LicenseForm eulaPrompt = new LicenseForm();
+            eulaPrompt.FormType = LicenseForm.FormTypes.Prompt;
+            Task.Run(async () =>
             {
-                ShowProgressBar(MainConsts.ProgressBarUpdating);
-
-                /// We need to move the work into the background so that the progress bar keeps moving.
-                BackgroundWorker worker = new BackgroundWorker();
-                worker.DoWork += new DoWorkEventHandler((object sender, DoWorkEventArgs e) =>
+                for (int i = 0; i < Controller.OutdatedPlugins.Count; i++)
                 {
-                    Controller.UpdatePlugins(Controller.OutdatedPlugins);
-                    RefreshBindings();
-                });
-                worker.RunWorkerCompleted += new RunWorkerCompletedEventHandler((object sender, RunWorkerCompletedEventArgs e) =>
-                {
-                    HideProgressBar();
+                    OutdatedPlugin selectedPlugin = Controller.OutdatedPlugins[i];
+                    DialogResult confirmInstall = MessageBox.Show($"Are you sure you wish to update {selectedPlugin.Name} from version {selectedPlugin.InstalledVersion} to {selectedPlugin.Version}?",
+                                 $"Confirm Plugin Update",
+                                 MessageBoxButtons.YesNo);
+                    if (DialogResult.Yes == confirmInstall)
+                    {
+                        eulaPrompt.FormTitle = $"{selectedPlugin.Name} - {MainConsts.LicenseFormTitle}";
+                        eulaPrompt.LicenseText = selectedPlugin.License;
+                        eulaPrompt.OnAccept = () =>
+                        {
+                            eulaPrompt.DialogResult = DialogResult.Yes;
+                            eulaPrompt.Close();
+                        };
+                        eulaPrompt.OnDismiss = () =>
+                        {
+                            eulaPrompt.DialogResult = DialogResult.Cancel;
+                            eulaPrompt.Close();
+                        };
+                        DialogResult confirmEula = eulaPrompt.ShowDialog();
 
-                    MessageBox.Show(@$"
-All plugins have been updated.
+                        if (DialogResult.Yes == confirmEula)
+                        {
+                            ShowProgressBar(MainConsts.ProgressBarUpdating);
+
+                            await Task.Run(() => Controller.InstallPlugin(selectedPlugin));
+                            RefreshBindings();
+
+                            HideProgressBar();
+
+                            MessageBox.Show(@$"
+{selectedPlugin.Name} has been updated to version {selectedPlugin.Version}.
 
 {MainConsts.PluginListChangedMessage}",
-                         $"All Plugins Updated",
-                         MessageBoxButtons.OK);
-                });
-                worker.RunWorkerAsync();
-            }
+                              $"Plugin Updated",
+                              MessageBoxButtons.OK);
+                        }
+                        else
+                        {
+                            MessageBox.Show("Update cancelled.",
+             $"Plugin Not Updated",
+             MessageBoxButtons.OK);
+                        };
+                    }
+                }
+            });
         }
 
         /// <summary>
@@ -263,15 +250,12 @@ All plugins have been updated.
             {
                 ShowProgressBar(MainConsts.ProgressBarUninstalling);
 
-                /// We need to move the work into the background so that the progress bar keeps moving.
-                BackgroundWorker worker = new BackgroundWorker();
-                worker.DoWork += new DoWorkEventHandler((object sender, DoWorkEventArgs e) =>
+
+                Task.Run(async () =>
                 {
-                    Controller.UninstallPlugin(selectedPlugin);
+                    await Task.Run(() => Controller.UninstallPlugin(selectedPlugin));
                     RefreshBindings();
-                });
-                worker.RunWorkerCompleted += new RunWorkerCompletedEventHandler((object sender, RunWorkerCompletedEventArgs e) =>
-                {
+
                     HideProgressBar();
 
                     MessageBox.Show(@$"
@@ -281,15 +265,14 @@ All plugins have been updated.
                          $"Plugin Uninstalled",
                          MessageBoxButtons.OK);
                 });
-                worker.RunWorkerAsync();
             }
         }
 
         /// <summary>
         /// This method handles clearing any selections when the data binding is updated.
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
+        /// <param name="sender">The data source.</param>
+        /// <param name="e">The binding event.</param>
         private void AnyPluginList_DataBindingComplete(object sender, DataGridViewBindingCompleteEventArgs e)
         {
             DataGridView grid = (DataGridView)sender;
@@ -316,6 +299,23 @@ All plugins have been updated.
                         break;
                     }
             }
+        }
+
+        /// <summary>
+        /// This method handles clicking on the License menu item.
+        /// </summary>
+        /// <param name="sender">The menu item.</param>
+        /// <param name="e">The click event.</param>
+        private void LicenseToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            string pluginName = System.Reflection.Assembly.GetExecutingAssembly().GetName().Name;
+
+            LicenseForm eulaForm = new LicenseForm();
+            eulaForm.FormType = LicenseForm.FormTypes.Info;
+            eulaForm.FormTitle = $"{pluginName} - {MainConsts.LicenseFormTitle}";
+            eulaForm.LicenseText = Resources.PPM_EULA;
+            eulaForm.OnDismiss = () => eulaForm.Close();
+            eulaForm.Show();
         }
 
         /// <summary>
@@ -360,18 +360,6 @@ All plugins have been updated.
             ProgressLabel.Text = "";
             ProgressLabel.Visible = false;
             FormProgress.Visible = false;
-        }
-
-        private void LicenseToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            string pluginName = System.Reflection.Assembly.GetExecutingAssembly().GetName().Name;
-
-            LicenseForm eulaForm = new LicenseForm();
-            eulaForm.FormType = LicenseForm.FormTypes.Info;
-            eulaForm.FormTitle = $"{pluginName} - {MainConsts.LicenseFormTitle}";
-            eulaForm.LicenseText = Resources.PPM_EULA;
-            eulaForm.OnDismiss = () => eulaForm.Close();
-            eulaForm.Show();
         }
     }
 }

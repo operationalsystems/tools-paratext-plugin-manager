@@ -60,7 +60,7 @@
             this.AcceptLicenseButton.Name = "AcceptLicenseButton";
             this.AcceptLicenseButton.Size = new System.Drawing.Size(75, 23);
             this.AcceptLicenseButton.TabIndex = 2;
-            this.AcceptLicenseButton.Text = "Accept";
+            this.AcceptLicenseButton.Text = "I Agree";
             this.AcceptLicenseButton.UseVisualStyleBackColor = true;
             this.AcceptLicenseButton.Click += new System.EventHandler(this.Accept_Click);
             // 

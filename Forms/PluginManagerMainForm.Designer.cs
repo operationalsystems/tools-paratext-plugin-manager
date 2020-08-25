@@ -64,7 +64,6 @@ namespace PpmMain
             this.InstalledVersion = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.versionDataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.UpdateOne = new System.Windows.Forms.Button();
-            this.UpdateAll = new System.Windows.Forms.Button();
             this.Available = new System.Windows.Forms.TabPage();
             this.PluginDescriptionAvailable = new System.Windows.Forms.TextBox();
             this.AvailablePluginsList = new System.Windows.Forms.DataGridView();
@@ -279,7 +278,6 @@ namespace PpmMain
             this.Updates.Controls.Add(this.PluginDescriptionOutdated);
             this.Updates.Controls.Add(this.OutdatedPluginsList);
             this.Updates.Controls.Add(this.UpdateOne);
-            this.Updates.Controls.Add(this.UpdateAll);
             this.Updates.Location = new System.Drawing.Point(4, 29);
             this.Updates.Name = "Updates";
             this.Updates.Padding = new System.Windows.Forms.Padding(10, 10, 10, 3);
@@ -350,25 +348,13 @@ namespace PpmMain
             // 
             this.UpdateOne.Enabled = false;
             this.UpdateOne.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F);
-            this.UpdateOne.Location = new System.Drawing.Point(845, 13);
+            this.UpdateOne.Location = new System.Drawing.Point(931, 13);
             this.UpdateOne.Name = "UpdateOne";
-            this.UpdateOne.Size = new System.Drawing.Size(80, 26);
+            this.UpdateOne.Size = new System.Drawing.Size(90, 26);
             this.UpdateOne.TabIndex = 12;
             this.UpdateOne.Text = "Update";
             this.UpdateOne.UseVisualStyleBackColor = true;
             this.UpdateOne.Click += new System.EventHandler(this.UpdateOne_Click);
-            // 
-            // UpdateAll
-            // 
-            this.UpdateAll.Enabled = false;
-            this.UpdateAll.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F);
-            this.UpdateAll.Location = new System.Drawing.Point(931, 13);
-            this.UpdateAll.Name = "UpdateAll";
-            this.UpdateAll.Size = new System.Drawing.Size(90, 26);
-            this.UpdateAll.TabIndex = 11;
-            this.UpdateAll.Text = "Update All";
-            this.UpdateAll.UseVisualStyleBackColor = true;
-            this.UpdateAll.Click += new System.EventHandler(this.UpdateAll_Click);
             // 
             // Available
             // 
@@ -599,7 +585,6 @@ namespace PpmMain
         private System.Windows.Forms.DataGridViewTextBoxColumn InstalledVersion;
         private System.Windows.Forms.DataGridViewTextBoxColumn versionDataGridViewTextBoxColumn1;
         private System.Windows.Forms.Button UpdateOne;
-        private System.Windows.Forms.Button UpdateAll;
         private System.Windows.Forms.TabPage Available;
         private System.Windows.Forms.TextBox PluginDescriptionAvailable;
         private System.Windows.Forms.DataGridView AvailablePluginsList;

@@ -156,6 +156,9 @@ namespace PpmMain
                 eulaPrompt.OnDismiss = () =>
                 {
                     eulaPrompt.Close();
+                    MessageBox.Show("Installation cancelled.",
+$"Plugin Not Installed",
+MessageBoxButtons.OK);
                 };
                 eulaPrompt.Show();
             }
@@ -204,6 +207,9 @@ namespace PpmMain
                 eulaPrompt.OnDismiss = () =>
                 {
                     eulaPrompt.Close();
+                    MessageBox.Show("Update cancelled.",
+$"Plugin Not Updated",
+MessageBoxButtons.OK);
                 };
                 eulaPrompt.ShowDialog();
             }

@@ -31,6 +31,8 @@ http://blogs.msdn.com/robmen/archive/2003/10/04/56479.aspx -->
     rest of the app the first time the icon is run.  If this is not behavior you
     are trying to support, you're better off using non-advertised shortcuts. "-->
 
+	<WixVariable Id="WixUILicenseRtf" Value="$(var.SolutionDir)\Resources\PPM_EULA.rtf" />
+		
     <Property Id="PARATEXT8" Secure="yes">
       <RegistrySearch 
         Id="Paratext8"
@@ -127,8 +129,10 @@ http://blogs.msdn.com/robmen/archive/2003/10/04/56479.aspx -->
       <DialogRef Id="FatalError" />
       <DialogRef Id="UserExit" />
 
+      <Publish Dialog="WelcomeDlg" Control="Next" Event="NewDialog" Value="LicenseAgreementDlg" Order="2"></Publish>
+      <Publish Dialog="LicenseAgreementDlg" Control="Back" Event="NewDialog" Value="WelcomeDlg">1</Publish>
+      <Publish Dialog="LicenseAgreementDlg" Control="Next" Event="EndDialog" Value="Return" Order="2"></Publish>
       <Publish Dialog="ExitDialog" Control="Finish" Event="EndDialog" Value="Return" Order="999">1</Publish>
-      <Publish Dialog="WelcomeDlg" Control="Next" Event="EndDialog" Value="Return" Order="2"></Publish>
 
     </UI>
     <UIRef Id="WixUI_Common" />

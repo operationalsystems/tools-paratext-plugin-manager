@@ -104,12 +104,34 @@ http://blogs.msdn.com/robmen/archive/2003/10/04/56479.aspx -->
     <ComponentGroup Id="COMPONENTSFORP8PLUGIN" Directory="INSTALLDIR8" Source="$(var.PpmMain.TargetDir)">
       <Component Guid="{7E459353-F66B-404A-ACF5-BCAB266FB44E}">
         <File Id="ParatextPluginManagerPlugin.dll_P8" KeyPath="yes" Name="ParatextPluginManagerPlugin.dll" />
-      </Component>
+		<File Id="AWSSDK.Core.dll_P8" Name="AWSSDK.Core.dll" />
+		<File Id="AWSSDK.Core.pdb_P8" Name="AWSSDK.Core.pdb" />
+		<File Id="AWSSDK.Core.xml_P8" Name="AWSSDK.Core.xml" />
+		<File Id="AWSSDK.S3.dll_P8" Name="AWSSDK.S3.dll" />
+		<File Id="AWSSDK.S3.pdb_P8" Name="AWSSDK.S3.pdb" />
+		<File Id="AWSSDK.S3.xml_P8" Name="AWSSDK.S3.xml" />
+		<File Id="AWSSDK.SecurityToken.dll_P8" Name="AWSSDK.SecurityToken.dll" />
+		<File Id="AWSSDK.SecurityToken.pdb_P8" Name="AWSSDK.SecurityToken.pdb" />
+		<File Id="AWSSDK.SecurityToken.xml_P8" Name="AWSSDK.SecurityToken.xml" />
+		<File Id="Newtonsoft.Json.dll_P8" Name="Newtonsoft.Json.dll" />
+		<File Id="Newtonsoft.Json.xml_P8" Name="Newtonsoft.Json.xml" />
+     </Component>
     </ComponentGroup>
 
     <ComponentGroup Id="COMPONENTSFORP9PLUGIN" Directory="INSTALLDIR9" Source="$(var.PpmMain.TargetDir)">
       <Component Guid="{F3E676D6-68CE-4BBB-903D-CA3B26936A56}">
         <File Id="ParatextPluginManagerPlugin.dll_P9" KeyPath="yes" Name="ParatextPluginManagerPlugin.dll" />
+		<File Id="AWSSDK.Core.dll_P9" Name="AWSSDK.Core.dll"/>
+		<File Id="AWSSDK.Core.pdb_P9" Name="AWSSDK.Core.pdb"/>
+		<File Id="AWSSDK.Core.xml_P9" Name="AWSSDK.Core.xml" />
+		<File Id="AWSSDK.S3.dll_P9" Name="AWSSDK.S3.dll"/>
+		<File Id="AWSSDK.S3.pdb_P9" Name="AWSSDK.S3.pdb" />
+		<File Id="AWSSDK.S3.xml_P9" Name="AWSSDK.S3.xml" />
+		<File Id="AWSSDK.SecurityToken.dll_P9" Name="AWSSDK.SecurityToken.dll" />
+		<File Id="AWSSDK.SecurityToken.pdb_P9" Name="AWSSDK.SecurityToken.pdb" />
+		<File Id="AWSSDK.SecurityToken.xml_P9" Name="AWSSDK.SecurityToken.xml" />
+		<File Id="Newtonsoft.Json.dll_P9" Name="Newtonsoft.Json.dll" />
+		<File Id="Newtonsoft.Json.xml_P9" Name="Newtonsoft.Json.xml" />
       </Component>
     </ComponentGroup>
 

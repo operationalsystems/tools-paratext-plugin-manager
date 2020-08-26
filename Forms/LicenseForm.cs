@@ -1,4 +1,5 @@
-﻿using System;
+﻿using PpmMain.Util;
+using System;
 using System.Windows.Forms;
 
 namespace PpmMain.Forms
@@ -86,6 +87,7 @@ namespace PpmMain.Forms
         public LicenseForm()
         {
             InitializeComponent();
+            Copyright.Text = MainConsts.Copyright;
         }
 
         private void LicenseForm_Load(object sender, EventArgs e)

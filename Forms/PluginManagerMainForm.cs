@@ -20,7 +20,7 @@ namespace PpmMain
         public PluginManagerMainForm()
         {
             InitializeComponent();
-            CopyrightLabel.Text = MainConsts.CopyrightText;
+            CopyrightLabel.Text = MainConsts.Copyright;
         }
 
         /// <summary>

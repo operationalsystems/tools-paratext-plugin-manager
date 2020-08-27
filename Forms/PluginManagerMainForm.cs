@@ -5,7 +5,7 @@ using PpmMain.Properties;
 using PpmMain.Util;
 using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
+using System.ComponentModel;
 using System.Windows.Forms;
 
 namespace PpmMain
@@ -125,43 +125,55 @@ namespace PpmMain
             DialogResult confirmInstall = MessageBox.Show($"Are you sure you wish to install {selectedPlugin.Name} ({selectedPlugin.Version})?",
                                         $"Confirm Plugin Install",
                                         MessageBoxButtons.YesNo);
-            if (confirmInstall == DialogResult.Yes)
+            if (DialogResult.Yes != confirmInstall) return;
+
+            LicenseForm eulaPrompt = new LicenseForm
             {
-                LicenseForm eulaPrompt = new LicenseForm
-                {
-                    FormType = LicenseForm.FormTypes.Prompt,
-                    FormTitle = $"{selectedPlugin.Name} - {MainConsts.LicenseFormTitle}",
-                    LicenseText = selectedPlugin.License
-                };
-                eulaPrompt.OnAccept = () =>
-                {
-                    eulaPrompt.Close();
+                FormType = LicenseForm.FormTypes.Prompt,
+                FormTitle = $"{selectedPlugin.Name} - {MainConsts.LicenseFormTitle}",
+                LicenseText = selectedPlugin.License
+            };
+            eulaPrompt.OnAccept = () =>
+            {
+                eulaPrompt.DialogResult = DialogResult.Yes;
+                eulaPrompt.Close();
+            };
+            eulaPrompt.OnDismiss = () =>
+            {
+                eulaPrompt.DialogResult = DialogResult.No;
+                eulaPrompt.Close();
+            };
 
-                    ShowProgressBar(MainConsts.ProgressBarInstalling);
+            eulaPrompt.ShowDialog();
 
-                    Task.Run(async () =>
-                       {
-                           await Task.Run(() => Controller.InstallPlugin(selectedPlugin));
-                           RefreshBindings();
-                           HideProgressBar();
+            if (DialogResult.Yes != eulaPrompt.DialogResult)
+            {
+                MessageBox.Show("Installation cancelled.",
+$"Plugin Not Installed",
+MessageBoxButtons.OK);
+                return;
+            };
 
-                           MessageBox.Show(@$"
+            ShowProgressBar(MainConsts.ProgressBarInstalling);
+
+            BackgroundWorker backgroundworker = new BackgroundWorker();
+            backgroundworker.DoWork += (sender, args) =>
+            {
+                Controller.InstallPlugin(selectedPlugin);
+            };
+            backgroundworker.RunWorkerCompleted += (sender, args) =>
+            {
+                RefreshBindings();
+                HideProgressBar();
+
+                MessageBox.Show(@$"
 {selectedPlugin.Name} ({selectedPlugin.Version}) has been installed.
 
 {MainConsts.PluginListChangedMessage}",
-                                            $"Plugin Installed",
-                                            MessageBoxButtons.OK);
-                       });
-                };
-                eulaPrompt.OnDismiss = () =>
-                {
-                    eulaPrompt.Close();
-                    MessageBox.Show("Installation cancelled.",
-$"Plugin Not Installed",
-MessageBoxButtons.OK);
-                };
-                eulaPrompt.Show();
-            }
+                                 $"Plugin Installed",
+                                 MessageBoxButtons.OK);
+            };
+            backgroundworker.RunWorkerAsync();
         }
 
         /// <summary>
@@ -175,25 +187,128 @@ MessageBoxButtons.OK);
             DialogResult confirmInstall = MessageBox.Show($"Are you sure you wish to update {selectedPlugin.Name} from version {selectedPlugin.InstalledVersion} to {selectedPlugin.Version}?",
                          $"Confirm Plugin Update",
                          MessageBoxButtons.YesNo);
-            if (DialogResult.Yes == confirmInstall)
+
+            if (DialogResult.Yes != confirmInstall) return;
+
+            LicenseForm eulaPrompt = new LicenseForm
             {
-                LicenseForm eulaPrompt = new LicenseForm
+                FormType = LicenseForm.FormTypes.Prompt,
+                FormTitle = $"{selectedPlugin.Name} - {MainConsts.LicenseFormTitle}",
+                LicenseText = selectedPlugin.License
+            };
+            eulaPrompt.OnAccept = () =>
+            {
+                eulaPrompt.DialogResult = DialogResult.Yes;
+                eulaPrompt.Close();
+            };
+            eulaPrompt.OnDismiss = () =>
+            {
+                eulaPrompt.DialogResult = DialogResult.No;
+                eulaPrompt.Close();
+            };
+
+            eulaPrompt.ShowDialog();
+
+            if (DialogResult.Yes != eulaPrompt.DialogResult)
+            {
+                MessageBox.Show("Update cancelled.",
+$"Plugin Not Updated",
+MessageBoxButtons.OK);
+                return;
+            };
+
+            ShowProgressBar(MainConsts.ProgressBarUpdating);
+
+            BackgroundWorker backgroundworker = new BackgroundWorker();
+            backgroundworker.DoWork += (sender, args) =>
+            {
+                Controller.InstallPlugin(selectedPlugin);
+            };
+            backgroundworker.RunWorkerCompleted += (sender, args) =>
+            {
+                RefreshBindings();
+
+                HideProgressBar();
+
+                MessageBox.Show(@$"
+{selectedPlugin.Name} has been updated to version {selectedPlugin.Version}.
+
+{MainConsts.PluginListChangedMessage}",
+                  $"Plugin Updated",
+                  MessageBoxButtons.OK);
+            };
+            backgroundworker.RunWorkerAsync();
+        }
+
+        /// <summary>
+        /// This method handles clicking the "Update All" button.
+        /// </summary>
+        /// <param name="sender">The Updates list.</param>
+        /// <param name="e">The click event.</param>
+        private void UpdateAll_Click(object sender, EventArgs e)
+        {
+            Queue<MethodInvoker> installationQueue = new Queue<MethodInvoker>();
+            void installNextPlugin()
+            {
+                if (installationQueue.Count > 0)
                 {
-                    FormType = LicenseForm.FormTypes.Prompt,
-                    FormTitle = $"{selectedPlugin.Name} - {MainConsts.LicenseFormTitle}",
-                    LicenseText = selectedPlugin.License
-                };
-                eulaPrompt.OnAccept = () =>
+                    MethodInvoker installPlugin = installationQueue.Dequeue();
+                    installPlugin();
+                }
+            }
+            for (int i = 0; i < Controller.OutdatedPlugins.Count; i++)
+            {
+                OutdatedPlugin selectedPlugin = Controller.OutdatedPlugins[i];
+
+                installationQueue.Enqueue(() =>
                 {
-                    eulaPrompt.Close();
+                    DialogResult confirmInstall = MessageBox.Show($"Are you sure you wish to update {selectedPlugin.Name} from version {selectedPlugin.InstalledVersion} to {selectedPlugin.Version}?",
+                                 $"Confirm Plugin Update",
+                                 MessageBoxButtons.YesNo);
+
+                    if (DialogResult.Yes != confirmInstall)
+                    {
+                        installNextPlugin();
+                        return;
+                    }
+
+                    LicenseForm eulaPrompt = new LicenseForm
+                    {
+                        FormType = LicenseForm.FormTypes.Prompt,
+                        FormTitle = $"{selectedPlugin.Name} - {MainConsts.LicenseFormTitle}",
+                        LicenseText = selectedPlugin.License
+                    };
+                    eulaPrompt.OnAccept = () =>
+                    {
+                        eulaPrompt.DialogResult = DialogResult.Yes;
+                        eulaPrompt.Close();
+                    };
+                    eulaPrompt.OnDismiss = () =>
+                    {
+                        eulaPrompt.DialogResult = DialogResult.No;
+                        eulaPrompt.Close();
+                    };
+                    eulaPrompt.ShowDialog();
+
+                    if (DialogResult.Yes != eulaPrompt.DialogResult)
+                    {
+                        MessageBox.Show("Update cancelled.",
+$"Plugin Not Updated",
+MessageBoxButtons.OK);
+                        installNextPlugin();
+                        return;
+                    }
 
                     ShowProgressBar(MainConsts.ProgressBarUpdating);
 
-                    Task.Run(async () =>
+                    BackgroundWorker backgroundworker = new BackgroundWorker();
+                    backgroundworker.DoWork += (sender, args) =>
                     {
-                        await Task.Run(() => Controller.InstallPlugin(selectedPlugin));
+                        Controller.InstallPlugin(selectedPlugin);
+                    };
+                    backgroundworker.RunWorkerCompleted += (sender, args) =>
+                    {
                         RefreshBindings();
-
                         HideProgressBar();
 
                         MessageBox.Show(@$"
@@ -202,17 +317,12 @@ MessageBoxButtons.OK);
 {MainConsts.PluginListChangedMessage}",
                           $"Plugin Updated",
                           MessageBoxButtons.OK);
-                    });
-                };
-                eulaPrompt.OnDismiss = () =>
-                {
-                    eulaPrompt.Close();
-                    MessageBox.Show("Update cancelled.",
-$"Plugin Not Updated",
-MessageBoxButtons.OK);
-                };
-                eulaPrompt.ShowDialog();
+                        installNextPlugin();
+                    };
+                    backgroundworker.RunWorkerAsync();
+                });
             }
+            installNextPlugin();
         }
 
         /// <summary>
@@ -228,26 +338,29 @@ MessageBoxButtons.OK);
             DialogResult confirmUninstall = MessageBox.Show($"Are you sure you wish to uninstall {selectedPlugin.Name} ({selectedPlugin.Version})?",
                                      $"Confirm Plugin Uninstall",
                                      MessageBoxButtons.YesNo);
-            if (confirmUninstall == DialogResult.Yes)
+            if (DialogResult.Yes != confirmUninstall) return;
+
+            ShowProgressBar(MainConsts.ProgressBarUninstalling);
+
+            BackgroundWorker backgroundworker = new BackgroundWorker();
+            backgroundworker.DoWork += (sender, args) =>
             {
-                ShowProgressBar(MainConsts.ProgressBarUninstalling);
+                Controller.UninstallPlugin(selectedPlugin);
+            };
+            backgroundworker.RunWorkerCompleted += (sender, args) =>
+            {
+                RefreshBindings();
 
+                HideProgressBar();
 
-                Task.Run(async () =>
-                {
-                    await Task.Run(() => Controller.UninstallPlugin(selectedPlugin));
-                    RefreshBindings();
-
-                    HideProgressBar();
-
-                    MessageBox.Show(@$"
+                MessageBox.Show(@$"
 {selectedPlugin.Name} ({selectedPlugin.Version}) has been uninstalled.
 
 {MainConsts.PluginListChangedMessage}",
-                         $"Plugin Uninstalled",
-                         MessageBoxButtons.OK);
-                });
-            }
+                     $"Plugin Uninstalled",
+                     MessageBoxButtons.OK);
+            };
+            backgroundworker.RunWorkerAsync();
         }
 
         /// <summary>
@@ -308,6 +421,7 @@ MessageBoxButtons.OK);
             AvailablePluginsList.DataSource = Controller.AvailablePlugins;
             OutdatedPluginsList.DataSource = Controller.OutdatedPlugins;
             InstalledPluginsList.DataSource = Controller.InstalledPlugins;
+            UpdateAll.Enabled = (Controller.OutdatedPlugins.Count > 0);
         }
 
         /// <summary>

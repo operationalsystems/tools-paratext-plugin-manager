@@ -13,14 +13,15 @@ namespace PpmMain
     /// <summary>
     /// Paratext Plugin Manager plugin root class.
     /// </summary>
-    [AddIn("Paratext Plugin Manager plugin", Description = "Plugin for performing Paratext Plugin installation and version management.", Version = "1.0", Publisher = "Biblica")]
-    [QualificationData(PluginMetaDataKeys.menuText, "Paratext Plugin Manager")]
+    [AddIn(MainConsts.PluginName, Description = MainConsts.PluginDescription, Version = MainConsts.PluginVersion, Publisher = MainConsts.PluginPublisher)]
+    [QualificationData(PluginMetaDataKeys.menuText, MainConsts.PluginName)]
     [QualificationData(PluginMetaDataKeys.insertAfterMenuName, "Tools|")]
     [QualificationData(PluginMetaDataKeys.enableWhen, WhenToEnable.always)]
     [QualificationData(PluginMetaDataKeys.multipleInstances, CreateInstanceRule.always)]
 
     public class ParatextPluginManagerPlugin : IParatextAddIn2
     {
+
         /// <summary>
         /// No-op, to fulfill IParatextAddIn2 contract.
         /// </summary>

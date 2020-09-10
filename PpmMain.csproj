@@ -153,7 +153,6 @@
   <ItemGroup>
     <None Include="Directory.Build.props" />
     <None Include="packages.config" />
-    <None Include="PPM_EULA.rtf" />
     <None Include="Properties\DataSources\PpmMain.Controllers.PluginManagerMainFormController.datasource" />
     <None Include="Properties\DataSources\PpmMain.PluginRepository.S3PluginRepositoryService.datasource" />
     <None Include="README.md" />

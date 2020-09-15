@@ -171,7 +171,7 @@ namespace PpmMain.Controllers
             var onlyLatestPlugins = true;
             var onlyCompatiblePlugins = true;
 
-            RemotePluginRepository = new S3PluginRepositoryService();
+            RemotePluginRepository = new HTTPPluginRepositoryService();
             LocalInstallerService = new LocalInstallerService(installPath);
             RemotePlugins = RemotePluginRepository.GetAvailablePlugins(onlyLatestPlugins, onlyCompatiblePlugins);
             RefreshInstalled();

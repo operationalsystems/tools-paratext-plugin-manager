@@ -1,8 +1,4 @@
-﻿using PpmMain.Properties;
-using System.Diagnostics;
-using System.Reflection.Emit;
-
-namespace PpmMain.Util
+﻿namespace PpmMain.Util
 {
     public static class MainConsts
     {
@@ -31,6 +27,15 @@ namespace PpmMain.Util
         /// </summary>
         public const string Copyright = "© 2020 Biblica, Inc.";
 
+        /// <summary>
+        /// The base url where plugin artifacts can be found.
+        /// </summary>
+        public const string PluginRepoUrl = "http://d2cg82er6k5ye7.cloudfront.net";
+
+        /// <summary>
+        /// The extension used by Plugin Manifest files
+        /// </summary>
+        public const string PluginManifestExtension = ".json";
 
         /// <summary>
         /// The text to display when installing a plugin.

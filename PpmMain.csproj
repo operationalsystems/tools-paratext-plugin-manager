@@ -123,20 +123,16 @@
     <Compile Include="Forms\PluginManagerMainForm.Designer.cs">
       <DependentUpon>PluginManagerMainForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="PluginRepository\HTTPPluginRepositoryService.cs" />
+    <Compile Include="PluginRepository\PluginRepositoryService.cs" />
     <Compile Include="PluginRepository\IPluginRepository.cs" />
-    <Compile Include="PluginRepository\S3PluginRepositoryService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Util\UriUtils.cs" />
-    <Compile Include="UriSigningService\IUriSigningService.cs" />
-	<Compile Include="Properties\Resources.Designer.cs">
+    <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <Compile Include="Util\MainConsts.cs" />
     <Compile Include="Util\HostUtil.cs" />
-    <Compile Include="UriSigningService\UriSigningService.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="AddInViews\AddInViews.dll" />
@@ -154,7 +150,7 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
-	  <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

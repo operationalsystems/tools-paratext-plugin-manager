@@ -1,6 +1,7 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using PpmMain.PluginRepository;
+using PpmMain.Util;
 using System.Collections.Generic;
 using System.IO;
 
@@ -16,7 +17,7 @@ namespace PpmUnitTests
         /// <summary>
         /// Mock <c>S3PluginRepositoryService</c> so that we can mock away the S3 functionality.
         /// </summary>
-        private Mock<S3PluginRepositoryService> mockPluginRepositoryService;
+        private Mock<PluginRepositoryService> mockPluginRepositoryService;
 
         /// <summary>
         /// A Test specific temporary repo service download location.
@@ -31,11 +32,7 @@ namespace PpmUnitTests
         public void TestSetup()
         {
             // Mock: S3PluginRepositoryService
-            mockPluginRepositoryService = new Mock<S3PluginRepositoryService>();
-
-            // Disable the S3 initialization logic
-            mockPluginRepositoryService.Setup(pluginRepoService => pluginRepoService.SetUpAwsCredentials());
-            mockPluginRepositoryService.Setup(pluginRepoService => pluginRepoService.SetUpS3TransferClient());
+            mockPluginRepositoryService = new Mock<PluginRepositoryService>();
             mockPluginRepositoryService.Setup(pluginRepoService => pluginRepoService.TemporaryDownloadDirectory).Returns(TestTemporaryDownloadLocation);
 
             // set up expected return items.
@@ -55,12 +52,12 @@ namespace PpmUnitTests
             /// set up service under test
             // Return a fake list of plugins.
             mockPluginRepositoryService
-                .Setup(pluginRepoService => pluginRepoService.GetRepoFilenamesByExtension(S3PluginRepositoryService.JsonExtension))
+                .Setup(pluginRepoService => pluginRepoService.GetPluginFilesByExtension(MainConsts.PluginManifestExtension))
                 .Returns(returnRepoPluginDescriptionJsonList);
             // Download the locally available test JSON files.
             mockPluginRepositoryService
                 .Setup(pluginRepoService =>
-                    pluginRepoService.DownloadS3Files(
+                    pluginRepoService.DownloadFiles(
                         returnRepoPluginDescriptionJsonList,
                         It.IsAny<Dictionary<string, string>>()
                         )
@@ -86,7 +83,7 @@ namespace PpmUnitTests
             // Download the locally available Zip files.
             mockPluginRepositoryService
                 .Setup(pluginRepoService =>
-                    pluginRepoService.DownloadS3File($"testplugin-{TEST_PLUGIN_VERSION_1}.zip", It.IsAny<DirectoryInfo>())
+                    pluginRepoService.DownloadFile($"testplugin-{TEST_PLUGIN_VERSION_1}.zip", It.IsAny<DirectoryInfo>())
                     );
 
             var downloadedFilepath = mockPluginRepositoryService.Object.DownloadPlugin(TEST_PLUGIN_SHORTNAME, TEST_PLUGIN_VERSION_1, TestTemporaryDownloadLocation);

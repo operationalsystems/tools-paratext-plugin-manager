@@ -63,15 +63,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="PluginRepository\S3PluginRepositoryServiceTests.cs" />
+    <Compile Include="PluginRepository\PluginRepositoryServiceTests.cs" />
     <Compile Include="LocalInstallerService\LocalInstallerServiceTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\PpmMain.csproj">
-      <Project>{f3d8ca5a-b752-42dc-b2f4-b12ab527e6d9}</Project>
-      <Name>PpmMain</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -79,6 +73,12 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <None Include="Resources\testplugin-1.0.zip" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\PpmMain.csproj">
+      <Project>{f3d8ca5a-b752-42dc-b2f4-b12ab527e6d9}</Project>
+      <Name>PpmMain</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets" Condition="Exists('$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets')" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

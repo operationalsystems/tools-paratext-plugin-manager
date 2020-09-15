@@ -28,9 +28,9 @@
         public const string Copyright = "© 2020 Biblica, Inc.";
 
         /// <summary>
-        /// The base url where plugin artifacts can be found.
+        /// The directory name for downloaded plugins.
         /// </summary>
-        public const string PluginRepoUrl = "http://d2cg82er6k5ye7.cloudfront.net";
+        public const string PluginDownloadDirectoryName = "PPM";
 
         /// <summary>
         /// The extension used by Plugin Manifest files

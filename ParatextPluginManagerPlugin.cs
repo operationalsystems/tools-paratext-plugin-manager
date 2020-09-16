@@ -4,6 +4,7 @@ using System;
 using System.AddIn;
 using System.AddIn.Pipeline;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Text;
 using System.Threading;
 using System.Windows.Forms;
@@ -48,6 +49,18 @@ namespace PpmMain
         }
 
         /// <summary>
+        /// Overridable utility method to show message boxes.
+        /// </summary>
+        /// <param name="messageText">Message box text (required).</param>
+        /// <param name="messageButtons">Message box buttons (required).</param>
+        /// <param name="messageIcon">Message box icon (required).</param>
+        /// <returns>Result from message box call (e.g., "Cancel").</returns>
+        public virtual DialogResult ShowMessageBox(string messageText, MessageBoxButtons messageButtons, MessageBoxIcon messageIcon)
+        {
+            return MessageBox.Show(messageText, "Notice...", messageButtons, messageIcon);
+        }
+
+        /// <summary>
         /// Entry point method.
         /// </summary>
         /// <param name="host">Host interface, providing access to Paratext services.</param>
@@ -66,6 +79,13 @@ namespace PpmMain
                     Application.EnableVisualStyles();
                     var uiThread = new Thread(() =>
                     {
+#if DEBUG
+                        // Provided because plugins are separate processes that may only be attached to,
+                        // once instantiated (can't run Paratext and automatically attach, as with shared libraries).
+                        ShowMessageBox($"Attach debugger now to PID {Process.GetCurrentProcess().Id}, if needed!",
+                            MessageBoxButtons.OK, MessageBoxIcon.Information);
+#endif
+
                         try
                         {
                             Application.Run(new PluginManagerMainForm());

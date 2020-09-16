@@ -1,8 +1,4 @@
-﻿using PpmMain.Properties;
-using System.Diagnostics;
-using System.Reflection.Emit;
-
-namespace PpmMain.Util
+﻿namespace PpmMain.Util
 {
     public static class MainConsts
     {
@@ -31,6 +27,15 @@ namespace PpmMain.Util
         /// </summary>
         public const string Copyright = "© 2020 Biblica, Inc.";
 
+        /// <summary>
+        /// The directory name for downloaded plugins.
+        /// </summary>
+        public const string PluginDownloadDirectoryName = "PPM";
+
+        /// <summary>
+        /// The extension used by Plugin Manifest files
+        /// </summary>
+        public const string PluginManifestExtension = ".json";
 
         /// <summary>
         /// The text to display when installing a plugin.

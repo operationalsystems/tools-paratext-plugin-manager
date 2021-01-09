@@ -1,49 +1,41 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
 <!-- These variables define the Windows Installer product version, product code and upgrade code. They   -->
 <?define Property_ProductVersion = "1.0.0.0" ?>
-
 <!-- * means auto-generate a new guid each time. This is "a unique identifier for the particular product release" -->
 <?define Property_ProductCode = "{100FF197-E798-43F3-93BA-C9FA3EE491A8}" ?>
-
 <!--Don't even think of EVER changing this, despite the counter-intuitive name. What it is: "a shared identifier that represents multiple versions of an application" -->
 <?define Property_UpgradeCode = "{7C939A05-5FE4-48CD-B6C9-B7111F97DF0E}" ?>
-
 <?define Property_Manufacturer = "Biblica" ?>
 <?define Property_ProductName = "Paratext Plugin Manager" ?>
-
 <!-- good intro to the component vs. file thing, and why each file here is a separate component:
 http://blogs.msdn.com/robmen/archive/2003/10/04/56479.aspx -->
-
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi" xmlns:util="http://schemas.microsoft.com/wix/UtilExtension">
+  <Product
+    Id="$(var.Property_ProductCode)"
+    Name="$(var.Property_ProductName) $(var.Property_ProductVersion)"
+    Language="1033" Version="$(var.Property_ProductVersion)"
+    Manufacturer="$(var.Property_Manufacturer)"
+    UpgradeCode="cbbbc849-b94e-4663-9a94-88462c5ad22b">
 
-	<Product 
-    Id="$(var.Property_ProductCode)" Name="$(var.Property_ProductName) $(var.Property_ProductVersion)" Language="1033" Version="$(var.Property_ProductVersion)" Manufacturer="$(var.Property_Manufacturer)" UpgradeCode="cbbbc849-b94e-4663-9a94-88462c5ad22b">
-
-		<Package InstallerVersion="200" Compressed="yes" />
-
+    <Package InstallerVersion="200" Compressed="yes" />
     <MajorUpgrade Schedule="afterInstallInitialize"
-              DowngradeErrorMessage="A later version of [ProductName] is already installed. If you really want to downgrade, first uninstall [ProductName], then do this install again." />
-
+                  DowngradeErrorMessage="A later version of [ProductName] is already installed. If you really want to downgrade, first uninstall [ProductName], then do this install again." />
     <!-- 
     "from the list: Don't use Advertise="yes" Advertised shortcuts are designed to allow
     users to install just the shortcut for your app, then demand-install the
     rest of the app the first time the icon is run.  If this is not behavior you
     are trying to support, you're better off using non-advertised shortcuts. "-->
-
-	<WixVariable Id="WixUILicenseRtf" Value="$(var.SolutionDir)\Resources\PPM_EULA.rtf"/>
-		
+    <WixVariable Id="WixUILicenseRtf" Value="$(var.SolutionDir)\Resources\PPM_EULA.rtf" />
     <Property Id="PARATEXT8" Secure="yes">
-      <RegistrySearch 
+      <RegistrySearch
         Id="Paratext8"
         Root="HKLM"
         Key="SOFTWARE\Paratext\8"
         Name="Program_Files_Directory_Ptw8"
         Type="directory" />
     </Property>
-    
     <Property Id="PARATEXT9" Secure="yes">
-      <RegistrySearch 
+      <RegistrySearch
         Id="Paratext9"
         Root="HKLM"
         Key="SOFTWARE\Paratext\8"
@@ -56,125 +48,109 @@ http://blogs.msdn.com/robmen/archive/2003/10/04/56479.aspx -->
 
     <Property Id="UPDATEP8PLUGINCACHE" Secure="yes">
       <DirectorySearch Id="Paratext8PluginCacheExeExists" Path="[PARATEXT8]">
-        <FileSearch Name="UpdateParatextPluginCache.exe"/>
+        <FileSearch Name="UpdateParatextPluginCache.exe" />
       </DirectorySearch>
     </Property>
-
     <Property Id="UPDATEP9PLUGINCACHE" Secure="yes">
       <DirectorySearch Id="Paratext9PluginCacheExeExists" Path="[PARATEXT9]">
-        <FileSearch Name="UpdateParatextPluginCache.exe"/>
+        <FileSearch Name="UpdateParatextPluginCache.exe" />
       </DirectorySearch>
     </Property>
-
     <!-- This is extremely unlikely... -->
     <Condition Message="Paratext is not installed properly. Missing required file: UpdateParatextPluginCache.exe. Re-run the Paratext Installer to repair the installation. Then re-run the [ProductName] Installer.">
       <![CDATA[Installed OR
-			(PARATEXT8 AND UPDATEP8PLUGINCACHE) OR
-			(PARATEXT9 AND UPDATEP9PLUGINCACHE)]]>
+      (PARATEXT8 AND UPDATEP8PLUGINCACHE) OR
+      (PARATEXT9 AND UPDATEP9PLUGINCACHE)]]>
     </Condition>
-
     <!--because of bug, this needs to be 1 -->
     <Property Id="ALLUSERS">1</Property>
-
     <Directory Id="TARGETDIR" Name="SourceDir">
       <Directory Id="ProgramFilesFolder">
         <Directory Id="PARATEXT8" Name="ParatextDir8">
           <Directory Id="PLUGINDIR8" Name="plugins">
-			  <Component Id="PLUGINDIR8_Permission" Guid="{46193EE5-17A6-4608-AE16-880C508EA4C2}">
-				  <CreateFolder Directory="PLUGINDIR8">
-					  <util:PermissionEx User="Users" GenericAll="yes"/>
-				  </CreateFolder>
-			  </Component>
+            <Component Id="PLUGINDIR8_Permission" Guid="{46193EE5-17A6-4608-AE16-880C508EA4C2}">
+              <CreateFolder Directory="PLUGINDIR8">
+                <util:PermissionEx User="Users" GenericAll="yes" />
+              </CreateFolder>
+            </Component>
             <Directory Id="INSTALLDIR8" Name="ParatextPluginManager" />
           </Directory>
         </Directory>
         <Directory Id="PARATEXT9" Name="ParatextDir9">
           <Directory Id="PLUGINDIR9" Name="plugins">
-			  <Component Id="PLUGINDIR9_Permission" Guid="{0B8261A1-0E96-4749-8D23-587924FC8BCF}">
-				  <CreateFolder>
-					  <util:PermissionEx User="Users" GenericAll="yes"/>
-				  </CreateFolder>
-			  </Component>
+            <Component Id="PLUGINDIR9_Permission" Guid="{0B8261A1-0E96-4749-8D23-587924FC8BCF}">
+              <CreateFolder>
+                <util:PermissionEx User="Users" GenericAll="yes" />
+              </CreateFolder>
+            </Component>
             <Directory Id="INSTALLDIR9" Name="ParatextPluginManager" />
           </Directory>
         </Directory>
       </Directory>
     </Directory>
-
     <ComponentGroup Id="COMPONENTSFORP8PLUGIN" Directory="INSTALLDIR8" Source="$(var.PpmMain.TargetDir)">
       <Component Guid="{7E459353-F66B-404A-ACF5-BCAB266FB44E}">
         <File Id="ParatextPluginManagerPlugin.dll_P8" KeyPath="yes" Name="ParatextPluginManagerPlugin.dll" />
-		<File Id="AWSSDK.Core.dll_P8" Name="AWSSDK.Core.dll" />
-		<File Id="AWSSDK.Core.pdb_P8" Name="AWSSDK.Core.pdb" />
-		<File Id="AWSSDK.Core.xml_P8" Name="AWSSDK.Core.xml" />
-		<File Id="AWSSDK.S3.dll_P8" Name="AWSSDK.S3.dll" />
-		<File Id="AWSSDK.S3.pdb_P8" Name="AWSSDK.S3.pdb" />
-		<File Id="AWSSDK.S3.xml_P8" Name="AWSSDK.S3.xml" />
-		<File Id="AWSSDK.SecurityToken.dll_P8" Name="AWSSDK.SecurityToken.dll" />
-		<File Id="AWSSDK.SecurityToken.pdb_P8" Name="AWSSDK.SecurityToken.pdb" />
-		<File Id="AWSSDK.SecurityToken.xml_P8" Name="AWSSDK.SecurityToken.xml" />
-		<File Id="Newtonsoft.Json.dll_P8" Name="Newtonsoft.Json.dll" />
-		<File Id="Newtonsoft.Json.xml_P8" Name="Newtonsoft.Json.xml" />
-     </Component>
+        <File Id="AWSSDK.Core.dll_P8" Name="AWSSDK.Core.dll" />
+        <File Id="AWSSDK.Core.pdb_P8" Name="AWSSDK.Core.pdb" />
+        <File Id="AWSSDK.Core.xml_P8" Name="AWSSDK.Core.xml" />
+        <File Id="AWSSDK.S3.dll_P8" Name="AWSSDK.S3.dll" />
+        <File Id="AWSSDK.S3.pdb_P8" Name="AWSSDK.S3.pdb" />
+        <File Id="AWSSDK.S3.xml_P8" Name="AWSSDK.S3.xml" />
+        <File Id="AWSSDK.SecurityToken.dll_P8" Name="AWSSDK.SecurityToken.dll" />
+        <File Id="AWSSDK.SecurityToken.pdb_P8" Name="AWSSDK.SecurityToken.pdb" />
+        <File Id="AWSSDK.SecurityToken.xml_P8" Name="AWSSDK.SecurityToken.xml" />
+        <File Id="Newtonsoft.Json.dll_P8" Name="Newtonsoft.Json.dll" />
+        <File Id="Newtonsoft.Json.xml_P8" Name="Newtonsoft.Json.xml" />
+      </Component>
     </ComponentGroup>
-
     <ComponentGroup Id="COMPONENTSFORP9PLUGIN" Directory="INSTALLDIR9" Source="$(var.PpmMain.TargetDir)">
       <Component Guid="{F3E676D6-68CE-4BBB-903D-CA3B26936A56}">
         <File Id="ParatextPluginManagerPlugin.dll_P9" KeyPath="yes" Name="ParatextPluginManagerPlugin.dll" />
-		<File Id="AWSSDK.Core.dll_P9" Name="AWSSDK.Core.dll"/>
-		<File Id="AWSSDK.Core.pdb_P9" Name="AWSSDK.Core.pdb"/>
-		<File Id="AWSSDK.Core.xml_P9" Name="AWSSDK.Core.xml" />
-		<File Id="AWSSDK.S3.dll_P9" Name="AWSSDK.S3.dll"/>
-		<File Id="AWSSDK.S3.pdb_P9" Name="AWSSDK.S3.pdb" />
-		<File Id="AWSSDK.S3.xml_P9" Name="AWSSDK.S3.xml" />
-		<File Id="AWSSDK.SecurityToken.dll_P9" Name="AWSSDK.SecurityToken.dll" />
-		<File Id="AWSSDK.SecurityToken.pdb_P9" Name="AWSSDK.SecurityToken.pdb" />
-		<File Id="AWSSDK.SecurityToken.xml_P9" Name="AWSSDK.SecurityToken.xml" />
-		<File Id="Newtonsoft.Json.dll_P9" Name="Newtonsoft.Json.dll" />
-		<File Id="Newtonsoft.Json.xml_P9" Name="Newtonsoft.Json.xml" />
+        <File Id="AWSSDK.Core.dll_P9" Name="AWSSDK.Core.dll" />
+        <File Id="AWSSDK.Core.pdb_P9" Name="AWSSDK.Core.pdb" />
+        <File Id="AWSSDK.Core.xml_P9" Name="AWSSDK.Core.xml" />
+        <File Id="AWSSDK.S3.dll_P9" Name="AWSSDK.S3.dll" />
+        <File Id="AWSSDK.S3.pdb_P9" Name="AWSSDK.S3.pdb" />
+        <File Id="AWSSDK.S3.xml_P9" Name="AWSSDK.S3.xml" />
+        <File Id="AWSSDK.SecurityToken.dll_P9" Name="AWSSDK.SecurityToken.dll" />
+        <File Id="AWSSDK.SecurityToken.pdb_P9" Name="AWSSDK.SecurityToken.pdb" />
+        <File Id="AWSSDK.SecurityToken.xml_P9" Name="AWSSDK.SecurityToken.xml" />
+        <File Id="Newtonsoft.Json.dll_P9" Name="Newtonsoft.Json.dll" />
+        <File Id="Newtonsoft.Json.xml_P9" Name="Newtonsoft.Json.xml" />
       </Component>
     </ComponentGroup>
-
     <Feature Id="PluginFeature_P8" Level="0" Title="Plugin for Paratext 8" AllowAdvertise="no">
       <Condition Level="1"><![CDATA[PARATEXT8 AND UPDATEP8PLUGINCACHE]]></Condition>
       <ComponentGroupRef Id="COMPONENTSFORP8PLUGIN" />
-	  <ComponentRef Id="PLUGINDIR8_Permission"/>
+      <ComponentRef Id="PLUGINDIR8_Permission" />
     </Feature>
-
     <Feature Id="PluginFeature_P9" Level="0" Title="Plugin for Paratext 9" AllowAdvertise="no">
       <Condition Level="1"><![CDATA[PARATEXT9 AND UPDATEP9PLUGINCACHE]]></Condition>
       <ComponentGroupRef Id="COMPONENTSFORP9PLUGIN" />
-	  <ComponentRef Id="PLUGINDIR9_Permission"/>
+      <ComponentRef Id="PLUGINDIR9_Permission" />
     </Feature>
-
     <UI Id="UserInterface">
       <Property Id="WIXUI_INSTALLDIR" Value="TARGETDIR" />
       <Property Id="WixUI_Mode" Value="Custom" />
-
       <TextStyle Id="WixUI_Font_Normal" FaceName="Tahoma" Size="8" />
       <TextStyle Id="WixUI_Font_Bigger" FaceName="Tahoma" Size="9" Bold="yes" />
-      <TextStyle Id="WixUI_Font_Title"  FaceName="Tahoma" Size="9" Bold="yes" />
-
+      <TextStyle Id="WixUI_Font_Title" FaceName="Tahoma" Size="9" Bold="yes" />
       <Property Id="DefaultUIFont" Value="WixUI_Font_Normal" />
-
       <DialogRef Id="ProgressDlg" />
       <DialogRef Id="ErrorDlg" />
       <DialogRef Id="FilesInUse" />
       <DialogRef Id="FatalError" />
       <DialogRef Id="UserExit" />
-
-      <Publish Dialog="WelcomeDlg" Control="Next" Event="NewDialog" Value="LicenseAgreementDlg" Order="2"></Publish>
+      <Publish Dialog="WelcomeDlg" Control="Next" Event="NewDialog" Value="LicenseAgreementDlg" Order="2" />
       <Publish Dialog="LicenseAgreementDlg" Control="Back" Event="NewDialog" Value="WelcomeDlg">1</Publish>
-      <Publish Dialog="LicenseAgreementDlg" Control="Next" Event="EndDialog" Value="Return"></Publish>
+      <Publish Dialog="LicenseAgreementDlg" Control="Next" Event="EndDialog" Value="Return" />
       <Publish Dialog="ExitDialog" Control="Finish" Event="EndDialog" Value="Return" Order="999">1</Publish>
-
     </UI>
     <UIRef Id="WixUI_Common" />
-
     <Media Id="1" Cabinet="product.cab" EmbedCab="yes" />
-
     <!-- Icon you see in add/remove programs control panel -->
     <Icon Id="PluginManager.ico" SourceFile="..\Resources\biblica-96x96.ico" />
     <Property Id="ARPPRODUCTICON" Value="PluginManager.ico" />
-	</Product>
+  </Product>
 </Wix>

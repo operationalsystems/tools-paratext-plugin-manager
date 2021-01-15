@@ -10,7 +10,7 @@
         /// <summary>
         /// The current plugin version.
         /// </summary>
-        public const string PluginVersion = "1.0.0.0";
+        public const string PluginVersion = "1.1.0.0";
 
         /// <summary>
         /// The publisher of the plugin.

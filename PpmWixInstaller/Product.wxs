@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- These variables define the Windows Installer product version, product code and upgrade code. They   -->
-<?define Property_ProductVersion = "1.1.0.0" ?>
+<?define Property_ProductVersion = "1.2.0.0" ?>
 <!-- * means auto-generate a new guid each time. This is "a unique identifier for the particular product release" -->
 <?define Property_ProductCode = "*" ?>
 <!--Don't even think of EVER changing this, despite the counter-intuitive name. What it is: "a shared identifier that represents multiple versions of an application" -->
@@ -84,6 +84,7 @@ http://blogs.msdn.com/robmen/archive/2003/10/04/56479.aspx -->
         <File Id="AWSSDK.SecurityToken.dll_P9_1" Name="AWSSDK.SecurityToken.dll" />
         <File Id="AWSSDK.SecurityToken.pdb_P9_1" Name="AWSSDK.SecurityToken.pdb" />
         <File Id="AWSSDK.SecurityToken.xml_P9_1" Name="AWSSDK.SecurityToken.xml" />
+        <File Id="BouncyCastle.Crypto.dll_P9_1" Name="BouncyCastle.Crypto.dll" />
         <File Id="Newtonsoft.Json.dll_P9_1" Name="Newtonsoft.Json.dll" />
         <File Id="Newtonsoft.Json.xml_P9_1" Name="Newtonsoft.Json.xml" />
       </Component>

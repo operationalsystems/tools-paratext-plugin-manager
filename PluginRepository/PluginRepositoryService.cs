@@ -32,6 +32,18 @@ namespace PpmMain.PluginRepository
         /// </summary>
         public Dictionary<PluginDescription, string> PluginDescriptionStore { get; private set; }
 
+        /// <summary>
+        /// Base constructor.
+        /// </summary>
+        public PluginRepositoryService()
+        {
+            // Create the temporary directory if it doesn't exist.
+            if (!TemporaryDownloadDirectory.Exists)
+            {
+                TemporaryDownloadDirectory.Create();
+            }
+        }
+
         public FileInfo DownloadPlugin(string pluginShortname, string pluginVersion, DirectoryInfo downloadDirectory = null)
         {
             // validate input

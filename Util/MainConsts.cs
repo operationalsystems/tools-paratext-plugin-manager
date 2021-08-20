@@ -82,5 +82,10 @@
         /// The text to display above the EULA.
         /// </summary>
         public const string LicenseFormDescription = "Press Page Down to see the rest of the agreement.";
+
+        /// <summary>
+        /// This is the URL to get support for the plugin.
+        /// </summary>
+        public const string SUPPORT_URL = "https://translationtools.biblica.com/en/support/home";
     }
 }

@@ -6,6 +6,7 @@ using PpmMain.Util;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Windows.Forms;
 
 namespace PpmMain
@@ -454,6 +455,18 @@ MessageBoxButtons.OK);
             ProgressLabel.Text = "";
             ProgressLabel.Visible = false;
             FormProgress.Visible = false;
+        }
+
+        /// <summary>
+        /// Opens a link to the support URL from the plugin
+        /// </summary>
+        /// <param name="sender">The control that sent this event</param>
+        /// <param name="e">The event information that triggered this call</param>
+        private void contactSupportToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            //Call the Process.Start method to open the default browser
+            //with a URL:
+            Process.Start(MainConsts.SUPPORT_URL);
         }
     }
 }

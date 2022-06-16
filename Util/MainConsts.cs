@@ -34,7 +34,7 @@ namespace PpmMain.Util
         /// <summary>
         /// The copyright information for the plugin.
         /// </summary>
-        public const string Copyright = "© 2020 Biblica, Inc.";
+        public const string Copyright = "© 2020-2022 Biblica, Inc.";
 
         /// <summary>
         /// The directory name for downloaded plugins.

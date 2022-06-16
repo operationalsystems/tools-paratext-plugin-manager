@@ -498,7 +498,7 @@ namespace PpmMain
             this.CopyrightLabel.Name = "CopyrightLabel";
             this.CopyrightLabel.Size = new System.Drawing.Size(101, 13);
             this.CopyrightLabel.TabIndex = 8;
-            this.CopyrightLabel.Text = "© 2020 Biblica, Inc.";
+            this.CopyrightLabel.Text = MainConsts.Copyright;
             // 
             // SearchText
             // 

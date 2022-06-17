@@ -203,7 +203,7 @@ namespace PpmMain.PluginRepository
             {
                 if (!response.IsSuccessStatusCode)
                 {
-                    var errorMessage = $"Unable to contact PPM server. Reason Phrase: '{response.ReasonPhrase}'";
+                    var errorMessage = $"Unable to contact PPM server. Reason: '{response.ReasonPhrase}'";
                     var additionalInfo = $"\n\n" +
                         $"\tStatus Code: {(int)response.StatusCode}\n";
                     HostUtil.Instance.LogLine(errorMessage + additionalInfo, true);

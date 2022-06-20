@@ -201,6 +201,16 @@ namespace PpmMain.PluginRepository
             // Request a list of files in the repo.
             HttpResponseMessage response = HttpClient.GetAsync(GetSignedUrl()).Result;
             {
+                if (!response.IsSuccessStatusCode)
+                {
+                    var errorMessage = $"Unable to contact PPM server. Reason: '{response.ReasonPhrase}'";
+                    var additionalInfo = $"\n\n" +
+                        $"\tStatus Code: {(int)response.StatusCode}\n";
+                    HostUtil.Instance.LogLine(errorMessage + additionalInfo, true);
+                    throw new Exception(errorMessage);
+
+                }
+
                 // Get the filenames from the returned XML.
                 var stream = response.Content.ReadAsStreamAsync().Result;
                 using XmlReader reader = XmlReader.Create(stream);

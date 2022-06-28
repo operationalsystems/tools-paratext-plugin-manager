@@ -12,27 +12,27 @@ namespace PpmApp.Util
     public static class MainConsts
     {
         /// <summary>
-        /// The name of the plugin.
+        /// The name of the application.
         /// </summary>
-        public const string PluginName = "Paratext Plugin Manager";
+        public const string ApplicationName = "Paratext Plugin Manager";
 
         /// <summary>
-        /// The current plugin version.
+        /// The current application version.
         /// </summary>
-        public const string PluginVersion = "1.2.0.0";
+        public const string ApplicationVersion = "1.2.0.0";
 
         /// <summary>
-        /// The publisher of the plugin.
+        /// The publisher of the application.
         /// </summary>
-        public const string PluginPublisher = "Biblica, Inc.";
+        public const string ApplicationPublisher = "Biblica, Inc.";
 
         /// <summary>
-        /// A description of the plugin.
+        /// A description of the application.
         /// </summary>
-        public const string PluginDescription = "Plugin for performing Paratext Plugin installation and version management.";
+        public const string PluginDescription = "Application for performing Paratext Plugin installation and version management.";
 
         /// <summary>
-        /// The copyright information for the plugin.
+        /// The copyright information for the application.
         /// </summary>
         public const string Copyright = "© 2020-2022 Biblica, Inc.";
 

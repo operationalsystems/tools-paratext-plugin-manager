@@ -7,6 +7,7 @@ The above copyright notice and this permission notice shall be included in all c
 
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
+using Microsoft.Win32;
 using System;
 using System.Windows.Forms;
 
@@ -17,6 +18,11 @@ namespace PpmApp.Util
     /// </summary>
     public class ParatextUtil
     {
+        public const string ParatextRegistryRoot = "HKEY_LOCAL_MACHINE";
+        public const string ParatextRegistryBaseKey = ParatextRegistryRoot + @"\SOFTWARE\Paratext\8";
+        public const string ParatextVersionKey = "ParatextVersion";
+        public const string ParatextInstallPathKey = "Paratext9_Full_Release_AppPath";
+
         /// <summary>
         /// Private singleton instance.
         /// </summary>
@@ -28,14 +34,24 @@ namespace PpmApp.Util
         public static ParatextUtil Instance => _instance;
 
         /// <summary>
-        /// The version of Paratext that is running the plugin.
+        /// The installed Paratext version; If not installed, return null.
         /// </summary>
         public string ParatextVersion
         {
             get
             {
-                // TODO replace with registry variable
-                return "TBD";
+                return (string)Registry.GetValue(ParatextRegistryBaseKey, ParatextVersionKey, null);
+            }
+        }
+
+        /// <summary>
+        /// The installed Paratext path; If not installed, return null.
+        /// </summary>
+        public string ParatextInstallPath
+        {
+            get
+            {
+                return (string)Registry.GetValue(ParatextRegistryBaseKey, ParatextInstallPathKey, null);
             }
         }
 

@@ -7,6 +7,7 @@ The above copyright notice and this permission notice shall be included in all c
 
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
+using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using PpmApp.Models;
 using PpmApp.Properties;
@@ -27,6 +28,11 @@ namespace PpmApp.PluginRepository
     public class PluginRepositoryService : IPluginRepository
     {
         /// <summary>
+        /// Type-specific logger (injected).
+        /// </summary>
+        private readonly ILogger _logger;
+
+        /// <summary>
         /// The HTTPClient to be used HTTP operations.
         /// </summary>
         public virtual HttpClient HttpClient { get; private set; } = new HttpClient();
@@ -44,8 +50,10 @@ namespace PpmApp.PluginRepository
         /// <summary>
         /// Base constructor.
         /// </summary>
-        public PluginRepositoryService()
+        public PluginRepositoryService(ILogger<PluginRepositoryService> logger)
         {
+            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+
             // Create the temporary directory if it doesn't exist.
             if (!TemporaryDownloadDirectory.Exists)
             {
@@ -107,9 +115,9 @@ namespace PpmApp.PluginRepository
         public List<PluginDescription> GetAvailablePlugins(bool latestOnly = true, bool compatibleOnly = true)
         {
 #if DEBUG
-            int currentPtVersion = 8;
+            int currentPtVersion = 9;
 #else
-            int currentPtVersion = new Version(HostUtil.Instance.ParatextVersion).Major;
+            int currentPtVersion = new Version(ParatextUtil.ParatextVersion).Major;
 #endif
 
             // Grab all the available plugin manifests.
@@ -206,9 +214,8 @@ namespace PpmApp.PluginRepository
                     var errorMessage = $"Unable to contact PPM server. Reason: '{response.ReasonPhrase}'";
                     var additionalInfo = $"\n\n" +
                         $"\tStatus Code: {(int)response.StatusCode}\n";
-                    ParatextUtil.LogLine(errorMessage + additionalInfo, true);
+                    _logger.LogError(errorMessage + additionalInfo);
                     throw new Exception(errorMessage);
-
                 }
 
                 // Get the filenames from the returned XML.

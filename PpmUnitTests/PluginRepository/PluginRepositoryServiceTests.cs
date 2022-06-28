@@ -7,6 +7,7 @@ The above copyright notice and this permission notice shall be included in all c
 
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
+using Microsoft.Extensions.Logging;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using PpmApp.PluginRepository;
@@ -40,8 +41,11 @@ namespace PpmUnitTests
         [DeploymentItem(@"Resources", "Resources")]
         public void TestSetup()
         {
-            // Mock: S3PluginRepositoryService
-            mockPluginRepositoryService = new Mock<PluginRepositoryService>();
+            // Mock: ILogger
+            var _mockLogger = new Mock<ILogger<PluginRepositoryService>>();
+
+            // Mock: PluginRepositoryService
+            mockPluginRepositoryService = new Mock<PluginRepositoryService>(_mockLogger.Object);
             mockPluginRepositoryService.Setup(pluginRepoService => pluginRepoService.TemporaryDownloadDirectory).Returns(TestTemporaryDownloadLocation);
 
             // set up expected return items.

@@ -7,6 +7,7 @@ The above copyright notice and this permission notice shall be included in all c
 
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
+using Microsoft.Extensions.Logging;
 using PpmApp.Controllers;
 using PpmApp.Forms;
 using PpmApp.Models;
@@ -23,12 +24,25 @@ namespace PpmApp
     public partial class PluginManagerMainForm : Form
     {
         /// <summary>
+        /// Type-specific logger (injected).
+        /// </summary>
+        private readonly ILogger _logger;
+
+        /// <summary>
         /// The controller that will handle business logic for this view.
         /// </summary>
-        PluginManagerMainFormController Controller { get; set; }
+        private readonly PluginManagerMainFormController _controller;
 
-        public PluginManagerMainForm()
+        /// <summary>
+        /// Basic constructor. Dependency Injected.
+        /// </summary>
+        /// <param name="logger">Class logger instance</param>
+        public PluginManagerMainForm(ILogger<PluginManagerMainForm> logger, PluginManagerMainFormController controller)
         {
+            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+            _controller = controller ?? throw new ArgumentNullException(nameof(controller));
+
+
             InitializeComponent();
             CopyrightLabel.Text = MainConsts.Copyright;
         }
@@ -40,7 +54,6 @@ namespace PpmApp
         /// <param name="e">The load event.</param>
         private void PluginManagerMainForm_Load(object sender, EventArgs e)
         {
-            Controller = new PluginManagerMainFormController();
             RefreshBindings();
         }
 
@@ -129,7 +142,7 @@ namespace PpmApp
         /// <param name="e">The click event.</param>
         private void Install_Click(object sender, EventArgs e)
         {
-            PluginDescription selectedPlugin = Controller.AvailablePlugins[AvailablePluginsList.CurrentCell.RowIndex];
+            PluginDescription selectedPlugin = _controller.AvailablePlugins[AvailablePluginsList.CurrentCell.RowIndex];
 
             /// Confirm that the user wishes to install the plugin.
             DialogResult confirmInstall = MessageBox.Show($"Are you sure you wish to install {selectedPlugin.Name} ({selectedPlugin.Version})?",
@@ -169,7 +182,7 @@ MessageBoxButtons.OK);
             BackgroundWorker backgroundworker = new BackgroundWorker();
             backgroundworker.DoWork += (sender, args) =>
             {
-                Controller.InstallPlugin(selectedPlugin);
+                _controller.InstallPlugin(selectedPlugin);
             };
             backgroundworker.RunWorkerCompleted += (sender, args) =>
             {
@@ -193,7 +206,7 @@ MessageBoxButtons.OK);
         /// <param name="e">The click event.</param>
         private void UpdateOne_Click(object sender, EventArgs e)
         {
-            OutdatedPlugin selectedPlugin = Controller.OutdatedPlugins[OutdatedPluginsList.CurrentCell.RowIndex];
+            OutdatedPlugin selectedPlugin = _controller.OutdatedPlugins[OutdatedPluginsList.CurrentCell.RowIndex];
             DialogResult confirmInstall = MessageBox.Show($"Are you sure you wish to update {selectedPlugin.Name} from version {selectedPlugin.InstalledVersion} to {selectedPlugin.Version}?",
                          $"Confirm Plugin Update",
                          MessageBoxButtons.YesNo);
@@ -232,7 +245,7 @@ MessageBoxButtons.OK);
             BackgroundWorker backgroundworker = new BackgroundWorker();
             backgroundworker.DoWork += (sender, args) =>
             {
-                Controller.InstallPlugin(selectedPlugin);
+                _controller.InstallPlugin(selectedPlugin);
             };
             backgroundworker.RunWorkerCompleted += (sender, args) =>
             {
@@ -266,9 +279,9 @@ MessageBoxButtons.OK);
                     installPlugin();
                 }
             }
-            for (int i = 0; i < Controller.OutdatedPlugins.Count; i++)
+            for (int i = 0; i < _controller.OutdatedPlugins.Count; i++)
             {
-                OutdatedPlugin selectedPlugin = Controller.OutdatedPlugins[i];
+                OutdatedPlugin selectedPlugin = _controller.OutdatedPlugins[i];
 
                 installationQueue.Enqueue(() =>
                 {
@@ -314,7 +327,7 @@ MessageBoxButtons.OK);
                     BackgroundWorker backgroundworker = new BackgroundWorker();
                     backgroundworker.DoWork += (sender, args) =>
                     {
-                        Controller.InstallPlugin(selectedPlugin);
+                        _controller.InstallPlugin(selectedPlugin);
                     };
                     backgroundworker.RunWorkerCompleted += (sender, args) =>
                     {
@@ -342,7 +355,7 @@ MessageBoxButtons.OK);
         /// <param name="e">The click event.</param>
         private void Uninstall_Click(object sender, EventArgs e)
         {
-            PluginDescription selectedPlugin = Controller.InstalledPlugins[InstalledPluginsList.CurrentCell.RowIndex];
+            PluginDescription selectedPlugin = _controller.InstalledPlugins[InstalledPluginsList.CurrentCell.RowIndex];
 
             /// Confirm that the user wishes to uninstall the plugin.
             DialogResult confirmUninstall = MessageBox.Show($"Are you sure you wish to uninstall {selectedPlugin.Name} ({selectedPlugin.Version})?",
@@ -355,7 +368,7 @@ MessageBoxButtons.OK);
             BackgroundWorker backgroundworker = new BackgroundWorker();
             backgroundworker.DoWork += (sender, args) =>
             {
-                Controller.UninstallPlugin(selectedPlugin);
+                _controller.UninstallPlugin(selectedPlugin);
             };
             backgroundworker.RunWorkerCompleted += (sender, args) =>
             {
@@ -428,10 +441,10 @@ MessageBoxButtons.OK);
         /// </summary>
         private void RefreshBindings()
         {
-            AvailablePluginsList.DataSource = Controller.AvailablePlugins;
-            OutdatedPluginsList.DataSource = Controller.OutdatedPlugins;
-            InstalledPluginsList.DataSource = Controller.InstalledPlugins;
-            UpdateAll.Enabled = (Controller.OutdatedPlugins.Count > 0);
+            AvailablePluginsList.DataSource = _controller.AvailablePlugins;
+            OutdatedPluginsList.DataSource = _controller.OutdatedPlugins;
+            InstalledPluginsList.DataSource = _controller.InstalledPlugins;
+            UpdateAll.Enabled = (_controller.OutdatedPlugins.Count > 0);
         }
 
         /// <summary>
@@ -439,7 +452,7 @@ MessageBoxButtons.OK);
         /// </summary>
         private void UpdateSearchFilter()
         {
-            Controller.FilterCriteria = SearchText.Text;
+            _controller.FilterCriteria = SearchText.Text;
             RefreshBindings();
         }
 

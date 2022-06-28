@@ -10,6 +10,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 using PpmApp.LocalInstaller;
 using PpmApp.Models;
 using PpmApp.PluginRepository;
+using PpmApp.Util;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -176,7 +177,7 @@ namespace PpmApp.Controllers
 
         public PluginManagerMainFormController()
         {
-            string installPath = Path.Combine(Directory.GetCurrentDirectory(), "plugins");
+            string installPath = Path.Combine(ParatextUtil.ParatextInstallPath, "plugins");
             var onlyLatestPlugins = true;
             var onlyCompatiblePlugins = true;
 

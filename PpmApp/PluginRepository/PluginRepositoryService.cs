@@ -206,7 +206,7 @@ namespace PpmApp.PluginRepository
                     var errorMessage = $"Unable to contact PPM server. Reason: '{response.ReasonPhrase}'";
                     var additionalInfo = $"\n\n" +
                         $"\tStatus Code: {(int)response.StatusCode}\n";
-                    ParatextUtil.Instance.LogLine(errorMessage + additionalInfo, true);
+                    ParatextUtil.LogLine(errorMessage + additionalInfo, true);
                     throw new Exception(errorMessage);
 
                 }

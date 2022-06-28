@@ -16,27 +16,18 @@ namespace PpmApp.Util
     /// <summary>
     /// Process-wide error utilities.
     /// </summary>
-    public class ParatextUtil
+    public static class ParatextUtil
     {
-        public const string ParatextRegistryRoot = "HKEY_LOCAL_MACHINE";
-        public const string ParatextRegistryBaseKey = ParatextRegistryRoot + @"\SOFTWARE\Paratext\8";
-        public const string ParatextVersionKey = "ParatextVersion";
-        public const string ParatextInstallPathKey = "Paratext9_Full_Release_AppPath";
-
-        /// <summary>
-        /// Private singleton instance.
-        /// </summary>
-        private static readonly ParatextUtil _instance = new ParatextUtil();
-
-        /// <summary>
-        /// Thread-safe singleton instance.
-        /// </summary>
-        public static ParatextUtil Instance => _instance;
+        // Paratext Registry key information variables
+        private const string ParatextRegistryRoot = "HKEY_LOCAL_MACHINE";
+        private const string ParatextRegistryBaseKey = ParatextRegistryRoot + @"\SOFTWARE\Paratext\8";
+        private const string ParatextVersionKey = "ParatextVersion";
+        private const string ParatextInstallPathKey = "Paratext9_Full_Release_AppPath";
 
         /// <summary>
         /// The installed Paratext version; If not installed, return null.
         /// </summary>
-        public string ParatextVersion
+        public static string ParatextVersion
         {
             get
             {
@@ -47,7 +38,7 @@ namespace PpmApp.Util
         /// <summary>
         /// The installed Paratext path; If not installed, return null.
         /// </summary>
-        public string ParatextInstallPath
+        public static string ParatextInstallPath
         {
             get
             {
@@ -62,7 +53,7 @@ namespace PpmApp.Util
         /// </summary>
         /// <param name="prefixText">Prefix text (optional, may be null; default used when null).</param>
         /// <param name="ex">Exception (optional, may be null).</param>
-        public void ReportError(string prefixText, Exception ex)
+        public static void ReportError(string prefixText, Exception ex)
         {
             if (prefixText == null && ex == null)
             {
@@ -83,7 +74,7 @@ namespace PpmApp.Util
         /// </summary>
         /// <param name="inputText">Input text (required).</param>
         /// <param name="isError">Error flag.</param>
-        public void LogLine(string inputText, bool isError)
+        public static void LogLine(string inputText, bool isError)
         {
             (isError ? Console.Error : Console.Out).WriteLine(inputText);
             // TODO replace with event logger

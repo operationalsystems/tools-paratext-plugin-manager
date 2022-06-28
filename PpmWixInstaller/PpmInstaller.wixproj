@@ -35,8 +35,8 @@
     </WixExtension>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\tools-paratext-plugin-manager\PpmMain.csproj">
-      <Name>PpmMain</Name>
+    <ProjectReference Include="..\..\tools-paratext-plugin-manager\PpmPlugin.csproj">
+      <Name>PpmPlugin</Name>
       <Project>{f3d8ca5a-b752-42dc-b2f4-b12ab527e6d9}</Project>
       <Private>True</Private>
       <DoNotHarvest>True</DoNotHarvest>

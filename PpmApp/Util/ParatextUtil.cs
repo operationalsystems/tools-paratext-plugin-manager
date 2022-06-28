@@ -7,46 +7,25 @@ The above copyright notice and this permission notice shall be included in all c
 
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
-using AddInSideViews;
 using System;
 using System.Windows.Forms;
 
-namespace PpmPlugin.Util
+namespace PpmApp.Util
 {
     /// <summary>
     /// Process-wide error utilities.
     /// </summary>
-    public class HostUtil
+    public class ParatextUtil
     {
         /// <summary>
         /// Private singleton instance.
         /// </summary>
-        private static readonly HostUtil _instance = new HostUtil();
+        private static readonly ParatextUtil _instance = new ParatextUtil();
 
         /// <summary>
         /// Thread-safe singleton instance.
         /// </summary>
-        public static HostUtil Instance => _instance;
-
-        /// <summary>
-        /// Global reference to plugin, to route logging.
-        /// </summary>
-        private ParatextPluginManagerPlugin _paratextPluginManagementPlugin;
-
-        /// <summary>
-        /// Global reference to host interface, providing Paratext services including logging.
-        /// </summary>
-        private IHost _host;
-
-        /// <summary>
-        /// Property for assignment from plugin entry method.
-        /// </summary>
-        public ParatextPluginManagerPlugin TypesettingPreviewPlugin { set => _paratextPluginManagementPlugin = value; }
-
-        /// <summary>
-        /// Property for assignment from plugin entry method.
-        /// </summary>
-        public IHost Host { set => _host = value; }
+        public static ParatextUtil Instance => _instance;
 
         /// <summary>
         /// The version of Paratext that is running the plugin.
@@ -55,7 +34,8 @@ namespace PpmPlugin.Util
         {
             get
             {
-                return _host.ApplicationVersion;
+                // TODO replace with registry variable
+                return "TBD";
             }
         }
 
@@ -90,7 +70,7 @@ namespace PpmPlugin.Util
         public void LogLine(string inputText, bool isError)
         {
             (isError ? Console.Error : Console.Out).WriteLine(inputText);
-            _host?.WriteLineToLog(_paratextPluginManagementPlugin, inputText);
+            // TODO replace with event logger
         }
     }
 }

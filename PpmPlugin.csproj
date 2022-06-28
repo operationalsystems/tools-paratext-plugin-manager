@@ -48,7 +48,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
     <ProjectGuid>{F3D8CA5A-B752-42DC-B2F4-B12AB527E6D9}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>PpmMain</RootNamespace>
+    <RootNamespace>PpmPlugin</RootNamespace>
     <AssemblyName>ParatextPluginManagerPlugin</AssemblyName>
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
@@ -85,27 +85,11 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
       <HintPath>AddInViews\AddInViews.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="AWSSDK.Core, Version=3.3.0.0, Culture=neutral, PublicKeyToken=885c28607f98e604, processorArchitecture=MSIL">
-      <HintPath>packages\AWSSDK.Core.3.3.107.35\lib\net45\AWSSDK.Core.dll</HintPath>
-    </Reference>
-    <Reference Include="AWSSDK.S3, Version=3.3.0.0, Culture=neutral, PublicKeyToken=885c28607f98e604, processorArchitecture=MSIL">
-      <HintPath>packages\AWSSDK.S3.3.3.111.36\lib\net45\AWSSDK.S3.dll</HintPath>
-    </Reference>
-    <Reference Include="AWSSDK.SecurityToken, Version=3.3.0.0, Culture=neutral, PublicKeyToken=885c28607f98e604, processorArchitecture=MSIL">
-      <HintPath>packages\AWSSDK.SecurityToken.3.3.105.38\lib\net45\AWSSDK.SecurityToken.dll</HintPath>
-    </Reference>
-    <Reference Include="BouncyCastle.Crypto, Version=1.8.6.0, Culture=neutral, PublicKeyToken=0e99375e54769942">
-      <HintPath>packages\BouncyCastle.1.8.6.1\lib\BouncyCastle.Crypto.dll</HintPath>
-    </Reference>
-    <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>packages\Newtonsoft.Json.12.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.AddIn" />
     <Reference Include="System.AddIn.Contract" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
-    <Reference Include="System.IO.Compression.FileSystem" />
     <Reference Include="System.Windows" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="Microsoft.CSharp" />
@@ -114,27 +98,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Controllers\IPluginManagerMainFormController.cs" />
-    <Compile Include="Controllers\PluginManagerMainFormController.cs" />
-    <Compile Include="Forms\LicenseForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\LicenseForm.Designer.cs">
-      <DependentUpon>LicenseForm.cs</DependentUpon>
-    </Compile>
-    <Compile Include="LocalInstaller\IInstallerService.cs" />
-    <Compile Include="LocalInstaller\LocalInstallerService.cs" />
-    <Compile Include="Models\OutdatedPlugin.cs" />
-    <Compile Include="Models\PluginDescription.cs" />
     <Compile Include="ParatextPluginManagerPlugin.cs" />
-    <Compile Include="Forms\PluginManagerMainForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\PluginManagerMainForm.Designer.cs">
-      <DependentUpon>PluginManagerMainForm.cs</DependentUpon>
-    </Compile>
-    <Compile Include="PluginRepository\PluginRepositoryService.cs" />
-    <Compile Include="PluginRepository\IPluginRepository.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -146,37 +110,22 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
   </ItemGroup>
   <ItemGroup>
     <Content Include="AddInViews\AddInViews.dll" />
-    <Content Include="Resources\biblica-16x16.ico" />
-    <Content Include="Resources\biblica-32x32.ico" />
-    <Content Include="Resources\biblica-96x96.ico" />
     <Content Include="LICENSE.txt" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Forms\LicenseForm.resx">
-      <DependentUpon>LicenseForm.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\PluginManagerMainForm.resx">
-      <DependentUpon>PluginManagerMainForm.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <None Include="Directory.Build.props" />
     <None Include="packages.config" />
-    <None Include="Properties\DataSources\PpmMain.Controllers.PluginManagerMainFormController.datasource" />
-    <None Include="Properties\DataSources\PpmMain.PluginRepository.S3PluginRepositoryService.datasource" />
+    <None Include="Properties\DataSources\PpmPlugin.Controllers.PluginManagerMainFormController.datasource" />
+    <None Include="Properties\DataSources\PpmPlugin.PluginRepository.S3PluginRepositoryService.datasource" />
     <None Include="README.md" />
-    <None Include="Resources\PPM_EULA.rtf" />
     <None Include="scripts\build_and_publish_ppm_installer.bat" />
-  </ItemGroup>
-  <ItemGroup>
-    <Analyzer Include="packages\AWSSDK.S3.3.3.111.36\analyzers\dotnet\cs\AWSSDK.S3.CodeAnalysis.dll" />
-    <Analyzer Include="packages\AWSSDK.SecurityToken.3.3.105.38\analyzers\dotnet\cs\AWSSDK.SecurityToken.CodeAnalysis.dll" />
   </ItemGroup>
   <ItemGroup>
     <WCFMetadata Include="Connected Services\" />

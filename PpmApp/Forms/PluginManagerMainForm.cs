@@ -7,18 +7,18 @@ The above copyright notice and this permission notice shall be included in all c
 
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
-using PpmMain.Controllers;
-using PpmMain.Forms;
-using PpmMain.Models;
-using PpmMain.Properties;
-using PpmMain.Util;
+using PpmApp.Controllers;
+using PpmApp.Forms;
+using PpmApp.Models;
+using PpmApp.Properties;
+using PpmApp.Util;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Windows.Forms;
 
-namespace PpmMain
+namespace PpmApp
 {
     public partial class PluginManagerMainForm : Form
     {

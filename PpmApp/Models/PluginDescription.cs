@@ -7,52 +7,54 @@ The above copyright notice and this permission notice shall be included in all c
 
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
-using PpmMain.Models;
+using Newtonsoft.Json;
 using System.Collections.Generic;
 
-namespace PpmMain.Controllers
+namespace PpmApp.Models
 {
     /// <summary>
-    /// This interface represents a controller that manages the state and interactions for the Plugin Manager Main Form.
+    /// The description of an installed plugin
     /// </summary>
-    interface IPluginManagerMainFormController
+    public class PluginDescription
     {
         /// <summary>
-        /// A list of plugins that are available to be installed.
+        /// The plugin name.
         /// </summary>
-        List<PluginDescription> AvailablePlugins { get; set; }
+        public string Name { get; set; }
 
         /// <summary>
-        /// A list of plugins that have been installed and for which there are available updates.
+        /// A unique shortname representing the plugin.
         /// </summary>
-        List<OutdatedPlugin> OutdatedPlugins { get; set; }
+        public string ShortName { get; set; }
 
         /// <summary>
-        /// A list of plugins that have been installed.
+        /// The version of the plugin.
         /// </summary>
-        List<PluginDescription> InstalledPlugins { get; set; }
+        public string Version { get; set; }
 
         /// <summary>
-        /// A <c>string</c> that limits the plugins that are displayed in a list.
+        /// A description of the plugin.
         /// </summary>
-        string FilterCriteria { get; set; }
+        public string Description { get; set; }
 
         /// <summary>
-        /// This method installs a given plugin.
+        /// A description of what has changed in this version of the plugin.
         /// </summary>
-        /// <param name="plugin">The plugin to install.</param>
-        public void InstallPlugin(PluginDescription plugin);
+        public string VersionDescription { get; set; }
 
         /// <summary>
-        /// This method uninstalls a given plugin.
+        /// The versions of ParaText that this plugin version is compatible with.
         /// </summary>
-        /// <param name="plugin">The plugin to uninstall.</param>
-        public void UninstallPlugin(PluginDescription plugin);
+        public List<string> PtVersions { get; set; }
 
         /// <summary>
-        /// This method updates a given list of installed plugins.
+        /// The license for this plugin.
         /// </summary>
-        /// <param name="plugins">A list of installed plugins to update.</param>
-        public void UpdatePlugins(List<OutdatedPlugin> plugins);
+        public string License { get; set; }
+
+        public override string ToString()
+        {
+            return JsonConvert.SerializeObject(this);
+        }
     }
 }

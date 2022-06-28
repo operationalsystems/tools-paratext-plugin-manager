@@ -9,8 +9,8 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 */
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
-using PpmMain.PluginRepository;
-using PpmMain.Util;
+using PpmApp.PluginRepository;
+using PpmApp.Util;
 using System.Collections.Generic;
 using System.IO;
 

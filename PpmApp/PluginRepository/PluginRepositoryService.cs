@@ -8,9 +8,9 @@ The above copyright notice and this permission notice shall be included in all c
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 using Newtonsoft.Json;
-using PpmMain.Models;
-using PpmMain.Properties;
-using PpmMain.Util;
+using PpmApp.Models;
+using PpmApp.Properties;
+using PpmApp.Util;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -19,7 +19,7 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using System.Xml;
 
-namespace PpmMain.PluginRepository
+namespace PpmApp.PluginRepository
 {
     /// <summary>
     /// This service implements an HTTP-based S3 repository for plugin management.
@@ -206,7 +206,7 @@ namespace PpmMain.PluginRepository
                     var errorMessage = $"Unable to contact PPM server. Reason: '{response.ReasonPhrase}'";
                     var additionalInfo = $"\n\n" +
                         $"\tStatus Code: {(int)response.StatusCode}\n";
-                    HostUtil.Instance.LogLine(errorMessage + additionalInfo, true);
+                    ParatextUtil.Instance.LogLine(errorMessage + additionalInfo, true);
                     throw new Exception(errorMessage);
 
                 }

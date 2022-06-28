@@ -7,54 +7,33 @@ The above copyright notice and this permission notice shall be included in all c
 
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
-using Newtonsoft.Json;
+using PpmApp.Models;
 using System.Collections.Generic;
+using System.IO;
 
-namespace PpmMain.Models
+namespace PpmApp.LocalInstaller
 {
     /// <summary>
-    /// The description of an installed plugin
+    /// This interface represents a service that handles management and installation of ParaText plugins.
     /// </summary>
-    public class PluginDescription
+    public interface IInstallerService
     {
         /// <summary>
-        /// The plugin name.
+        /// This function gets descriptions of the currently installed ParaText plugins.
         /// </summary>
-        public string Name { get; set; }
+        /// <returns>The currently installed plugins.</returns>
+        List<PluginDescription> GetInstalledPlugins();
 
         /// <summary>
-        /// A unique shortname representing the plugin.
+        /// This function installs a ParaText plugin.
         /// </summary>
-        public string ShortName { get; set; }
+        /// <param name="pluginArchive">The zip file containing the plugin data.</param>
+        void InstallPlugin(FileInfo pluginArchive);
 
         /// <summary>
-        /// The version of the plugin.
+        /// This function uninstalls a ParaText plugin.
         /// </summary>
-        public string Version { get; set; }
-
-        /// <summary>
-        /// A description of the plugin.
-        /// </summary>
-        public string Description { get; set; }
-
-        /// <summary>
-        /// A description of what has changed in this version of the plugin.
-        /// </summary>
-        public string VersionDescription { get; set; }
-
-        /// <summary>
-        /// The versions of ParaText that this plugin version is compatible with.
-        /// </summary>
-        public List<string> PtVersions { get; set; }
-
-        /// <summary>
-        /// The license for this plugin.
-        /// </summary>
-        public string License { get; set; }
-
-        public override string ToString()
-        {
-            return JsonConvert.SerializeObject(this);
-        }
+        /// <param name="plugin">The plugin to uninstall.</param>
+        void UninstallPlugin(PluginDescription plugin);
     }
 }

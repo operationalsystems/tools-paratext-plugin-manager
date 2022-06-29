@@ -8,6 +8,7 @@ The above copyright notice and this permission notice shall be included in all c
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 using Microsoft.Win32;
+using System;
 
 namespace PpmApp.Util
 {
@@ -22,6 +23,9 @@ namespace PpmApp.Util
         private const string ParatextVersionKey = "ParatextVersion";
         private const string ParatextInstallPathKey = "Paratext9_Full_Release_AppPath";
 
+        // Messages
+        private const string ParatextNotInstalledMessage = "Paratext is not installed.";
+
         /// <summary>
         /// The installed Paratext version; If not installed, return null.
         /// </summary>
@@ -29,18 +33,25 @@ namespace PpmApp.Util
         {
             get
             {
-                return (string)Registry.GetValue(ParatextRegistryBaseKey, ParatextVersionKey, null);
+                // grab and check the version from registry
+                var paratextVersion = Registry.GetValue(ParatextRegistryBaseKey, ParatextVersionKey, null);
+                _ = paratextVersion ?? throw new Exception(ParatextNotInstalledMessage);
+
+                return (string)paratextVersion;
             }
         }
 
         /// <summary>
-        /// The installed Paratext path; If not installed, return null.
+        /// The installed Paratext path; Throw an exception if Paratext not installed..
         /// </summary>
         public static string ParatextInstallPath
         {
             get
             {
-                return (string)Registry.GetValue(ParatextRegistryBaseKey, ParatextInstallPathKey, null);
+                var paratextPath = Registry.GetValue(ParatextRegistryBaseKey, ParatextInstallPathKey, null);
+                _ = paratextPath ?? throw new Exception(ParatextNotInstalledMessage);
+
+                return (string)paratextPath;
             }
         }
     }

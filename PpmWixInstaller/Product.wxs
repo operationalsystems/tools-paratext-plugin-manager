@@ -76,12 +76,14 @@ http://blogs.msdn.com/robmen/archive/2003/10/04/56479.aspx -->
                 <util:PermissionEx User="Users" GenericAll="yes" />
               </CreateFolder>
             </Component>
-            <Directory Id="INSTALLDIR9_1" Name="ParatextPluginManager" />
+            <Directory Id="PPM_PLUGIN_INSTALL_DIR_9_1" Name="ParatextPluginManager" />
           </Directory>
         </Directory>
+        <!-- PPM Standalone app install directory -->
+        <Directory Id="PPM_APP_INSTALL_DIR" Name="Paratext Plugin Manager" />
       </Directory>
     </Directory>
-    <ComponentGroup Id="COMPONENTSFORP9_1_PLUGIN" Directory="INSTALLDIR9_1" Source="$(var.PpmPlugin.TargetDir)">
+    <ComponentGroup Id="COMPONENTSFORP9_1_PLUGIN" Directory="PPM_PLUGIN_INSTALL_DIR_9_1" Source="$(var.PpmPlugin.TargetDir)">
       <Component Guid="{2C82527D-392A-480F-BF07-AE9F65336370}">
         <File Id="ParatextPluginManagerPlugin.dll_P9_1" KeyPath="yes" Name="ParatextPluginManagerPlugin.dll" />
         <!--<File Id="AWSSDK.Core.dll_P9_1" Name="AWSSDK.Core.dll" />
@@ -98,10 +100,102 @@ http://blogs.msdn.com/robmen/archive/2003/10/04/56479.aspx -->
         <File Id="Newtonsoft.Json.xml_P9_1" Name="Newtonsoft.Json.xml" />-->
       </Component>
     </ComponentGroup>
-    <Feature Id="PluginFeature_P9_1" Level="0" Title="Plugin for Paratext 9.1" AllowAdvertise="no">
+    <ComponentGroup Id="PPM_APP_COMPONENTS" Directory="PPM_APP_INSTALL_DIR" Source="$(var.PpmApp.TargetDir)">
+      <Component Guid="{2B651AF4-4C9C-449E-9171-D6ECA523581D}">
+        <File Id="ParatextPluginManagerApp.exe" KeyPath="yes" Name="ParatextPluginManagerApp.exe" />
+        <File Id="ParatextPluginManagerApp.exe.config" Name="ParatextPluginManagerApp.exe.config" />
+        <File Id="ParatextPluginManagerApp.pdb" Name="ParatextPluginManagerApp.pdb" />
+        <File Id="Microsoft.Extensions.Options.dll" Name="Microsoft.Extensions.Options.dll" />
+        <File Id="Microsoft.Extensions.Options.xml" Name="Microsoft.Extensions.Options.xml" />
+        <File Id="Microsoft.Extensions.Primitives.dll" Name="Microsoft.Extensions.Primitives.dll" />
+        <File Id="Microsoft.Extensions.Primitives.xml" Name="Microsoft.Extensions.Primitives.xml" />
+        <File Id="Newtonsoft.Json.dll" Name="Newtonsoft.Json.dll" />
+        <File Id="Newtonsoft.Json.xml" Name="Newtonsoft.Json.xml" />
+        <File Id="System.Buffers.dll" Name="System.Buffers.dll" />
+        <File Id="System.Buffers.xml" Name="System.Buffers.xml" />
+        <File Id="System.Diagnostics.DiagnosticSource.dll" Name="System.Diagnostics.DiagnosticSource.dll" />
+        <File Id="System.Diagnostics.DiagnosticSource.xml" Name="System.Diagnostics.DiagnosticSource.xml" />
+        <File Id="System.Memory.dll" Name="System.Memory.dll" />
+        <File Id="System.Memory.xml" Name="System.Memory.xml" />
+        <File Id="System.Numerics.Vectors.dll" Name="System.Numerics.Vectors.dll" />
+        <File Id="System.Numerics.Vectors.xml" Name="System.Numerics.Vectors.xml" />
+        <File Id="System.Runtime.CompilerServices.Unsafe.dll" Name="System.Runtime.CompilerServices.Unsafe.dll" />
+        <File Id="System.Runtime.CompilerServices.Unsafe.xml" Name="System.Runtime.CompilerServices.Unsafe.xml" />
+        <File Id="System.Text.Encodings.Web.dll" Name="System.Text.Encodings.Web.dll" />
+        <File Id="System.Text.Encodings.Web.xml" Name="System.Text.Encodings.Web.xml" />
+        <File Id="System.Text.Json.dll" Name="System.Text.Json.dll" />
+        <File Id="System.Text.Json.xml" Name="System.Text.Json.xml" />
+        <File Id="System.Threading.Tasks.Extensions.dll" Name="System.Threading.Tasks.Extensions.dll" />
+        <File Id="System.Threading.Tasks.Extensions.xml" Name="System.Threading.Tasks.Extensions.xml" />
+        <File Id="System.ValueTuple.dll" Name="System.ValueTuple.dll" />
+        <File Id="System.ValueTuple.xml" Name="System.ValueTuple.xml" />
+        <File Id="AWSSDK.Core.dll" Name="AWSSDK.Core.dll" />
+        <File Id="AWSSDK.Core.pdb" Name="AWSSDK.Core.pdb" />
+        <File Id="AWSSDK.Core.xml" Name="AWSSDK.Core.xml" />
+        <File Id="AWSSDK.S3.dll" Name="AWSSDK.S3.dll" />
+        <File Id="AWSSDK.S3.pdb" Name="AWSSDK.S3.pdb" />
+        <File Id="AWSSDK.S3.xml" Name="AWSSDK.S3.xml" />
+        <File Id="AWSSDK.SecurityToken.dll" Name="AWSSDK.SecurityToken.dll" />
+        <File Id="AWSSDK.SecurityToken.pdb" Name="AWSSDK.SecurityToken.pdb" />
+        <File Id="AWSSDK.SecurityToken.xml" Name="AWSSDK.SecurityToken.xml" />
+        <File Id="BouncyCastle.Crypto.dll" Name="BouncyCastle.Crypto.dll" />
+        <File Id="Microsoft.Bcl.AsyncInterfaces.dll" Name="Microsoft.Bcl.AsyncInterfaces.dll" />
+        <File Id="Microsoft.Bcl.AsyncInterfaces.xml" Name="Microsoft.Bcl.AsyncInterfaces.xml" />
+        <File Id="Microsoft.Extensions.Configuration.Abstractions.dll" Name="Microsoft.Extensions.Configuration.Abstractions.dll" />
+        <File Id="Microsoft.Extensions.Configuration.Abstractions.xml" Name="Microsoft.Extensions.Configuration.Abstractions.xml" />
+        <File Id="Microsoft.Extensions.Configuration.Binder.dll" Name="Microsoft.Extensions.Configuration.Binder.dll" />
+        <File Id="Microsoft.Extensions.Configuration.Binder.xml" Name="Microsoft.Extensions.Configuration.Binder.xml" />
+        <File Id="Microsoft.Extensions.Configuration.CommandLine.dll" Name="Microsoft.Extensions.Configuration.CommandLine.dll" />
+        <File Id="Microsoft.Extensions.Configuration.CommandLine.xml" Name="Microsoft.Extensions.Configuration.CommandLine.xml" />
+        <File Id="Microsoft.Extensions.Configuration.dll" Name="Microsoft.Extensions.Configuration.dll" />
+        <File Id="Microsoft.Extensions.Configuration.EnvironmentVariables.dll" Name="Microsoft.Extensions.Configuration.EnvironmentVariables.dll" />
+        <File Id="Microsoft.Extensions.Configuration.EnvironmentVariables.xml" Name="Microsoft.Extensions.Configuration.EnvironmentVariables.xml" />
+        <File Id="Microsoft.Extensions.Configuration.FileExtensions.dll" Name="Microsoft.Extensions.Configuration.FileExtensions.dll" />
+        <File Id="Microsoft.Extensions.Configuration.FileExtensions.xml" Name="Microsoft.Extensions.Configuration.FileExtensions.xml" />
+        <File Id="Microsoft.Extensions.Configuration.Json.dll" Name="Microsoft.Extensions.Configuration.Json.dll" />
+        <File Id="Microsoft.Extensions.Configuration.Json.xml" Name="Microsoft.Extensions.Configuration.Json.xml" />
+        <File Id="Microsoft.Extensions.Configuration.UserSecrets.dll" Name="Microsoft.Extensions.Configuration.UserSecrets.dll" />
+        <File Id="Microsoft.Extensions.Configuration.UserSecrets.xml" Name="Microsoft.Extensions.Configuration.UserSecrets.xml" />
+        <File Id="Microsoft.Extensions.Configuration.xml" Name="Microsoft.Extensions.Configuration.xml" />
+        <File Id="Microsoft.Extensions.DependencyInjection.Abstractions.dll" Name="Microsoft.Extensions.DependencyInjection.Abstractions.dll" />
+        <File Id="Microsoft.Extensions.DependencyInjection.Abstractions.xml" Name="Microsoft.Extensions.DependencyInjection.Abstractions.xml" />
+        <File Id="Microsoft.Extensions.DependencyInjection.dll" Name="Microsoft.Extensions.DependencyInjection.dll" />
+        <File Id="Microsoft.Extensions.DependencyInjection.xml" Name="Microsoft.Extensions.DependencyInjection.xml" />
+        <File Id="Microsoft.Extensions.FileProviders.Abstractions.dll" Name="Microsoft.Extensions.FileProviders.Abstractions.dll" />
+        <File Id="Microsoft.Extensions.FileProviders.Abstractions.xml" Name="Microsoft.Extensions.FileProviders.Abstractions.xml" />
+        <File Id="Microsoft.Extensions.FileProviders.Physical.dll" Name="Microsoft.Extensions.FileProviders.Physical.dll" />
+        <File Id="Microsoft.Extensions.FileProviders.Physical.xml" Name="Microsoft.Extensions.FileProviders.Physical.xml" />
+        <File Id="Microsoft.Extensions.FileSystemGlobbing.dll" Name="Microsoft.Extensions.FileSystemGlobbing.dll" />
+        <File Id="Microsoft.Extensions.FileSystemGlobbing.xml" Name="Microsoft.Extensions.FileSystemGlobbing.xml" />
+        <File Id="Microsoft.Extensions.Hosting.Abstractions.dll" Name="Microsoft.Extensions.Hosting.Abstractions.dll" />
+        <File Id="Microsoft.Extensions.Hosting.Abstractions.xml" Name="Microsoft.Extensions.Hosting.Abstractions.xml" />
+        <File Id="Microsoft.Extensions.Hosting.dll" Name="Microsoft.Extensions.Hosting.dll" />
+        <File Id="Microsoft.Extensions.Hosting.xml" Name="Microsoft.Extensions.Hosting.xml" />
+        <File Id="Microsoft.Extensions.Logging.Abstractions.dll" Name="Microsoft.Extensions.Logging.Abstractions.dll" />
+        <File Id="Microsoft.Extensions.Logging.Abstractions.xml" Name="Microsoft.Extensions.Logging.Abstractions.xml" />
+        <File Id="Microsoft.Extensions.Logging.Configuration.dll" Name="Microsoft.Extensions.Logging.Configuration.dll" />
+        <File Id="Microsoft.Extensions.Logging.Configuration.xml" Name="Microsoft.Extensions.Logging.Configuration.xml" />
+        <File Id="Microsoft.Extensions.Logging.Console.dll" Name="Microsoft.Extensions.Logging.Console.dll" />
+        <File Id="Microsoft.Extensions.Logging.Console.xml" Name="Microsoft.Extensions.Logging.Console.xml" />
+        <File Id="Microsoft.Extensions.Logging.Debug.dll" Name="Microsoft.Extensions.Logging.Debug.dll" />
+        <File Id="Microsoft.Extensions.Logging.Debug.xml" Name="Microsoft.Extensions.Logging.Debug.xml" />
+        <File Id="Microsoft.Extensions.Logging.dll" Name="Microsoft.Extensions.Logging.dll" />
+        <File Id="Microsoft.Extensions.Logging.EventLog.dll" Name="Microsoft.Extensions.Logging.EventLog.dll" />
+        <File Id="Microsoft.Extensions.Logging.EventLog.xml" Name="Microsoft.Extensions.Logging.EventLog.xml" />
+        <File Id="Microsoft.Extensions.Logging.EventSource.dll" Name="Microsoft.Extensions.Logging.EventSource.dll" />
+        <File Id="Microsoft.Extensions.Logging.EventSource.xml" Name="Microsoft.Extensions.Logging.EventSource.xml" />
+        <File Id="Microsoft.Extensions.Logging.xml" Name="Microsoft.Extensions.Logging.xml" />
+        <File Id="Microsoft.Extensions.Options.ConfigurationExtensions.dll" Name="Microsoft.Extensions.Options.ConfigurationExtensions.dll" />
+        <File Id="Microsoft.Extensions.Options.ConfigurationExtensions.xml" Name="Microsoft.Extensions.Options.ConfigurationExtensions.xml" />
+      </Component>
+    </ComponentGroup>
+    <Feature Id="PluginFeature_P9_1" Level="0" Title="Paratext Plugin Manager Plugin for Paratext 9.1" AllowAdvertise="no">
       <Condition Level="1"><![CDATA[PARATEXT9_1 AND UPDATEP9_1_PLUGINCACHE]]></Condition>
       <ComponentGroupRef Id="COMPONENTSFORP9_1_PLUGIN" />
       <ComponentRef Id="PLUGINDIR9_1_Permission" />
+    </Feature>
+    <Feature Id="AppFeature" Level="1" Title="Plugin for Paratext 9.1" AllowAdvertise="no">
+      <ComponentGroupRef Id="PPM_APP_COMPONENTS" />
     </Feature>
     <UI Id="UserInterface">
       <Property Id="WIXUI_INSTALLDIR" Value="TARGETDIR" />

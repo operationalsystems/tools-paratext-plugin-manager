@@ -30,6 +30,7 @@ http://blogs.msdn.com/robmen/archive/2003/10/04/56479.aspx -->
     <Package 
       InstallerVersion="200" 
       Compressed="yes" 
+      InstallScope="perMachine"
       
       Platform="x64"/>
     <MajorUpgrade Schedule="afterInstallInitialize"
@@ -66,7 +67,7 @@ http://blogs.msdn.com/robmen/archive/2003/10/04/56479.aspx -->
       (PARATEXT9_1 AND UPDATEP9_1_PLUGINCACHE)]]>
     </Condition>
     <!--because of bug, this needs to be 1 -->
-    <Property Id="ALLUSERS">1</Property>
+    <!--<Property Id="ALLUSERS">1</Property>-->
     <Directory Id="TARGETDIR" Name="SourceDir">
       <Directory Id="ProgramFiles64Folder">
         <Directory Id="PARATEXT9_1" Name="ParatextDir9_1">
@@ -92,30 +93,20 @@ http://blogs.msdn.com/robmen/archive/2003/10/04/56479.aspx -->
     <DirectoryRef Id="ApplicationProgramsFolder">
       <Component Id="ApplicationShortcut" Guid="D2A77D42-2970-48C9-ACA2-4A869A5AEBB8">
         <Shortcut Id="ApplicationStartMenuShortcut"
-             Name="$(var.Property_ProductName)"
-           Description="Paratext Plugin Manager will provide the ability to install, upgrade, and remove Paratext plugins."
-            Target="[#ParatextPluginManagerApp.exe]"
+                  Name="$(var.Property_ProductName)"
+                  Description="Paratext Plugin Manager will provide the ability to install, upgrade, and remove Paratext plugins."
+                  Target="[#ParatextPluginManagerApp.exe]"
                   WorkingDirectory="PPM_APP_INSTALL_DIR"/>
         <RemoveFolder Id="ApplicationProgramsFolder" On="uninstall"/>
-        <RegistryValue Root="HKCU" Key="Software\Biblica\$(var.Property_ProductName)" Name="installed" Type="integer" Value="1" KeyPath="yes"/>
+        <RegistryValue Root="HKCU" Key="Software\Biblica\$(var.Property_ProductName)" Name="Installed" Type="integer" Value="1" KeyPath="yes"/>
+        <!--So the PPM plugin knows where the PPM app is located and can start it-->
+        <RegistryValue Root="HKCU" Key="Software\Biblica\$(var.Property_ProductName)" Name="PpmAppInstallDir" Type="string" Value="[PPM_APP_INSTALL_DIR]"/>
       </Component>
     </DirectoryRef>
     
     <ComponentGroup Id="COMPONENTSFORP9_1_PLUGIN" Directory="PPM_PLUGIN_INSTALL_DIR_9_1" Source="$(var.PpmPlugin.TargetDir)">
       <Component Guid="{2C82527D-392A-480F-BF07-AE9F65336370}">
         <File Id="ParatextPluginManagerPlugin.dll_P9_1" KeyPath="yes" Name="ParatextPluginManagerPlugin.dll" />
-        <!--<File Id="AWSSDK.Core.dll_P9_1" Name="AWSSDK.Core.dll" />
-        <File Id="AWSSDK.Core.pdb_P9_1" Name="AWSSDK.Core.pdb" />
-        <File Id="AWSSDK.Core.xml_P9_1" Name="AWSSDK.Core.xml" />
-        <File Id="AWSSDK.S3.dll_P9_1" Name="AWSSDK.S3.dll" />
-        <File Id="AWSSDK.S3.pdb_P9_1" Name="AWSSDK.S3.pdb" />
-        <File Id="AWSSDK.S3.xml_P9_1" Name="AWSSDK.S3.xml" />
-        <File Id="AWSSDK.SecurityToken.dll_P9_1" Name="AWSSDK.SecurityToken.dll" />
-        <File Id="AWSSDK.SecurityToken.pdb_P9_1" Name="AWSSDK.SecurityToken.pdb" />
-        <File Id="AWSSDK.SecurityToken.xml_P9_1" Name="AWSSDK.SecurityToken.xml" />
-        <File Id="BouncyCastle.Crypto.dll_P9_1" Name="BouncyCastle.Crypto.dll" />
-        <File Id="Newtonsoft.Json.dll_P9_1" Name="Newtonsoft.Json.dll" />
-        <File Id="Newtonsoft.Json.xml_P9_1" Name="Newtonsoft.Json.xml" />-->
       </Component>
     </ComponentGroup>
     

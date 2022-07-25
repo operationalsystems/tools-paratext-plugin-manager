@@ -8,6 +8,7 @@ The above copyright notice and this permission notice shall be included in all c
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 using AddInSideViews;
+using Microsoft.Win32;
 using PpmPlugin.Util;
 using System;
 using System.AddIn;
@@ -30,6 +31,13 @@ namespace PpmPlugin
     [QualificationData(PluginMetaDataKeys.multipleInstances, CreateInstanceRule.always)]
     public class ParatextPluginManagerPlugin : IParatextAddIn2
     {
+        // Paratext Registry key information variables
+        private const string PpmRegistryRoot = "HKEY_CURRENT_USER";
+        private const string PpmRegistryBaseKey = PpmRegistryRoot + @"\SOFTWARE\Biblica\Paratext Plugin Manager";
+        private const string PpmAppInstallDirKey = "PpmAppInstallDir";
+
+        // Messages
+        private const string PpmAppNotInstalledMessage = "Paratext Plugin Manager is not installed.";
 
         /// <summary>
         /// No-op, to fulfill IParatextAddIn2 contract.
@@ -83,11 +91,6 @@ namespace PpmPlugin
 
                 try
                 {
-                    // TODO 1. Check if PPM App is already running
-                    // TODO 2. Get Program Files directory from Registry
-
-                    Process.Start(@"C:\Program Files\Paratext Plugin Manager\ParatextPluginManagerApp.exe");
-
                     // Create main thread & delegate
                     Application.EnableVisualStyles();
                     var uiThread = new Thread(() =>
@@ -101,8 +104,13 @@ namespace PpmPlugin
 
                         try
                         {
-                            MessageBox.Show(@$"Application name: '{host.ApplicationName}', version: '{host.ApplicationVersion}') has been installed.");
+                            // grab and check the install path from registry
+                            var ppmInstallAppDir = Registry.GetValue(PpmRegistryBaseKey, PpmAppInstallDirKey, null);
+                            _ = ppmInstallAppDir ?? throw new Exception(PpmAppNotInstalledMessage);
 
+
+                            HostUtil.Instance.LogLine(@$"Paratext running... Application name: '{host.ApplicationName}', version: '{host.ApplicationVersion}'.", false);
+                            Process.Start($"{ppmInstallAppDir}\\ParatextPluginManagerApp.exe");
                         }
                         catch (Exception ex)
                         {

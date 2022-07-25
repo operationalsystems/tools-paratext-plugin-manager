@@ -66,22 +66,17 @@ namespace PpmApp.Util
         /// <summary>
         /// The list of all running Paratext processes.
         /// </summary>
-        private static Process[] ParatextProcesses
+        private static Process[] ParatextProcesses()
         {
-            get {
-                return Process.GetProcessesByName(ParatextProcessName);
-            }
+            return Process.GetProcessesByName(ParatextProcessName);
         }
 
         /// <summary>
         /// Whether Paratext is running or not
         /// </summary>
-        public static Boolean IsParatextRunning
+        public static Boolean IsParatextRunning()
         {
-            get
-            {
-                return (ParatextProcesses.Length > 1);
-            }
+            return (ParatextProcesses().Length > 0);
         }
 
         /// <summary>
@@ -90,19 +85,19 @@ namespace PpmApp.Util
         public static void CloseParatext()
         {
             // initiate killing each Paratext process
-            foreach (Process ptProcess in ParatextProcesses)
+            foreach (Process ptProcess in ParatextProcesses())
             {
                 ptProcess.Kill();
             }
 
             // track if all the processes have successfully exited
-            var processesExitSuccess = new bool[ParatextProcesses.Length]; // bool defaults as false
+            var processesExitSuccess = new bool[ParatextProcesses().Length]; // bool defaults as false
 
             // wait for each process to exit
-            Parallel.For(0, ParatextProcesses.Length, new ParallelOptions { MaxDegreeOfParallelism = Environment.ProcessorCount }, proc =>
+            Parallel.For(0, ParatextProcesses().Length, new ParallelOptions { MaxDegreeOfParallelism = Environment.ProcessorCount }, proc =>
             {
                 // wait for the process to exit for a maximum alotted time. And track if successfully exited
-                processesExitSuccess[proc] = ParatextProcesses[proc].WaitForExit(MAX_PT_PROCESS_WAIT_TIME_MS);
+                processesExitSuccess[proc] = ParatextProcesses()[proc].WaitForExit(MAX_PT_PROCESS_WAIT_TIME_MS);
             });
 
             var allSucceeded = Array.TrueForAll(processesExitSuccess, (procExitSuccess) => { return procExitSuccess; });

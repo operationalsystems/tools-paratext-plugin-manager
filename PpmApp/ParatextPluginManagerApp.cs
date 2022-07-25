@@ -16,8 +16,6 @@ namespace PpmApp
         /// </summary>
         static void Main(string[] args)
         {
-            ParatextUtil.CloseParatext();
-
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
 

@@ -64,7 +64,7 @@ namespace PpmApp.Util
         /// <summary>
         /// The text to display when a plugin has been added, removed, or updated.
         /// </summary>
-        public const string PluginListChangedMessage = "Please restart Paratext for changes to take effect.";
+        public const string PluginListChangedMessage = "Please start Paratext to see your changes";
 
 
         /// <summary>

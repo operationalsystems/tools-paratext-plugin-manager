@@ -3,6 +3,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using PpmApp.Controllers;
 using PpmApp.PluginRepository;
+using PpmApp.Util;
 using System;
 using System.Windows.Forms;
 
@@ -15,6 +16,8 @@ namespace PpmApp
         /// </summary>
         static void Main(string[] args)
         {
+            ParatextUtil.CloseParatext();
+
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
 

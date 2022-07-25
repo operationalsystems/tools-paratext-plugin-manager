@@ -82,7 +82,25 @@ http://blogs.msdn.com/robmen/archive/2003/10/04/56479.aspx -->
         <!-- PPM Standalone app install directory -->
         <Directory Id="PPM_APP_INSTALL_DIR" Name="Paratext Plugin Manager" />
       </Directory>
+      <!-- Program Menu Folder entry -->
+      <Directory Id="ProgramMenuFolder">
+        <Directory Id="ApplicationProgramsFolder" Name="$(var.Property_ProductName)"/>
+      </Directory>
     </Directory>
+
+    <!-- Add the Program Menu shortcut to your installer package -->
+    <DirectoryRef Id="ApplicationProgramsFolder">
+      <Component Id="ApplicationShortcut" Guid="D2A77D42-2970-48C9-ACA2-4A869A5AEBB8">
+        <Shortcut Id="ApplicationStartMenuShortcut"
+             Name="$(var.Property_ProductName)"
+           Description="Paratext Plugin Manager will provide the ability to install, upgrade, and remove Paratext plugins."
+            Target="[#ParatextPluginManagerApp.exe]"
+                  WorkingDirectory="PPM_APP_INSTALL_DIR"/>
+        <RemoveFolder Id="ApplicationProgramsFolder" On="uninstall"/>
+        <RegistryValue Root="HKCU" Key="Software\Biblica\$(var.Property_ProductName)" Name="installed" Type="integer" Value="1" KeyPath="yes"/>
+      </Component>
+    </DirectoryRef>
+    
     <ComponentGroup Id="COMPONENTSFORP9_1_PLUGIN" Directory="PPM_PLUGIN_INSTALL_DIR_9_1" Source="$(var.PpmPlugin.TargetDir)">
       <Component Guid="{2C82527D-392A-480F-BF07-AE9F65336370}">
         <File Id="ParatextPluginManagerPlugin.dll_P9_1" KeyPath="yes" Name="ParatextPluginManagerPlugin.dll" />
@@ -100,6 +118,7 @@ http://blogs.msdn.com/robmen/archive/2003/10/04/56479.aspx -->
         <File Id="Newtonsoft.Json.xml_P9_1" Name="Newtonsoft.Json.xml" />-->
       </Component>
     </ComponentGroup>
+    
     <ComponentGroup Id="PPM_APP_COMPONENTS" Directory="PPM_APP_INSTALL_DIR" Source="$(var.PpmApp.TargetDir)">
       <Component Guid="{2B651AF4-4C9C-449E-9171-D6ECA523581D}">
         <File Id="ParatextPluginManagerApp.exe" KeyPath="yes" Name="ParatextPluginManagerApp.exe" />
@@ -189,14 +208,18 @@ http://blogs.msdn.com/robmen/archive/2003/10/04/56479.aspx -->
         <File Id="Microsoft.Extensions.Options.ConfigurationExtensions.xml" Name="Microsoft.Extensions.Options.ConfigurationExtensions.xml" />
       </Component>
     </ComponentGroup>
+    
     <Feature Id="PluginFeature_P9_1" Level="0" Title="Paratext Plugin Manager Plugin for Paratext 9.1" AllowAdvertise="no">
       <Condition Level="1"><![CDATA[PARATEXT9_1 AND UPDATEP9_1_PLUGINCACHE]]></Condition>
       <ComponentGroupRef Id="COMPONENTSFORP9_1_PLUGIN" />
       <ComponentRef Id="PLUGINDIR9_1_Permission" />
     </Feature>
+    
     <Feature Id="AppFeature" Level="1" Title="Plugin for Paratext 9.1" AllowAdvertise="no">
       <ComponentGroupRef Id="PPM_APP_COMPONENTS" />
+      <ComponentRef Id="ApplicationShortcut" />
     </Feature>
+    
     <UI Id="UserInterface">
       <Property Id="WIXUI_INSTALLDIR" Value="TARGETDIR" />
       <Property Id="WixUI_Mode" Value="Custom" />
@@ -214,7 +237,9 @@ http://blogs.msdn.com/robmen/archive/2003/10/04/56479.aspx -->
       <Publish Dialog="LicenseAgreementDlg" Control="Next" Event="EndDialog" Value="Return" />
       <Publish Dialog="ExitDialog" Control="Finish" Event="EndDialog" Value="Return" Order="999">1</Publish>
     </UI>
+    
     <UIRef Id="WixUI_Common" />
+    
     <Media Id="1" Cabinet="product.cab" EmbedCab="yes" />
     <!-- Icon you see in add/remove programs control panel -->
     <Icon Id="PluginManager.ico" SourceFile="..\PpmApp\Resources\biblica-96x96.ico" />

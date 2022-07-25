@@ -28,7 +28,6 @@ namespace PpmPlugin
     [QualificationData(PluginMetaDataKeys.insertAfterMenuName, "Tools|")]
     [QualificationData(PluginMetaDataKeys.enableWhen, WhenToEnable.always)]
     [QualificationData(PluginMetaDataKeys.multipleInstances, CreateInstanceRule.always)]
-
     public class ParatextPluginManagerPlugin : IParatextAddIn2
     {
 
@@ -84,6 +83,11 @@ namespace PpmPlugin
 
                 try
                 {
+                    // TODO 1. Check if PPM App is already running
+                    // TODO 2. Get Program Files directory from Registry
+
+                    Process.Start(@"C:\Program Files\Paratext Plugin Manager\ParatextPluginManagerApp.exe");
+
                     // Create main thread & delegate
                     Application.EnableVisualStyles();
                     var uiThread = new Thread(() =>

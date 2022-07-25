@@ -9,6 +9,8 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 */
 using Microsoft.Win32;
 using System;
+using System.Diagnostics;
+using System.Threading.Tasks;
 
 namespace PpmApp.Util
 {
@@ -17,11 +19,17 @@ namespace PpmApp.Util
     /// </summary>
     public static class ParatextUtil
     {
+        /// <summary>
+        /// Maximum amount of time in milliseconds to wait for a Paratext process to exit.
+        /// </summary>
+        const int MAX_PT_PROCESS_WAIT_TIME_MS = 30 * 1000; // 30 seconds
+
         // Paratext Registry key information variables
         private const string ParatextRegistryRoot = "HKEY_LOCAL_MACHINE";
         private const string ParatextRegistryBaseKey = ParatextRegistryRoot + @"\SOFTWARE\Paratext\8";
         private const string ParatextVersionKey = "ParatextVersion";
         private const string ParatextInstallPathKey = "Paratext9_Full_Release_AppPath";
+        private const string ParatextProcessName = "Paratext";
 
         // Messages
         private const string ParatextNotInstalledMessage = "Paratext is not installed.";
@@ -52,6 +60,56 @@ namespace PpmApp.Util
                 _ = paratextPath ?? throw new Exception(ParatextNotInstalledMessage);
 
                 return (string)paratextPath;
+            }
+        }
+
+        /// <summary>
+        /// The list of all running Paratext processes.
+        /// </summary>
+        private static Process[] ParatextProcesses
+        {
+            get {
+                return Process.GetProcessesByName(ParatextProcessName);
+            }
+        }
+
+        /// <summary>
+        /// Whether Paratext is running or not
+        /// </summary>
+        public static Boolean IsParatextRunning
+        {
+            get
+            {
+                return (ParatextProcesses.Length > 1);
+            }
+        }
+
+        /// <summary>
+        /// Utility for killing all running Paratext processes
+        /// </summary>
+        public static void CloseParatext()
+        {
+            // initiate killing each Paratext process
+            foreach (Process ptProcess in ParatextProcesses)
+            {
+                ptProcess.Kill();
+            }
+
+            // track if all the processes have successfully exited
+            var processesExitSuccess = new bool[ParatextProcesses.Length]; // bool defaults as false
+
+            // wait for each process to exit
+            Parallel.For(0, ParatextProcesses.Length, new ParallelOptions { MaxDegreeOfParallelism = Environment.ProcessorCount }, proc =>
+            {
+                // wait for the process to exit for a maximum alotted time. And track if successfully exited
+                processesExitSuccess[proc] = ParatextProcesses[proc].WaitForExit(MAX_PT_PROCESS_WAIT_TIME_MS);
+            });
+
+            var allSucceeded = Array.TrueForAll(processesExitSuccess, (procExitSuccess) => { return procExitSuccess; });
+
+            if (!allSucceeded)
+            {
+                throw new Exception("Paratext was not closed successfully");
             }
         }
     }

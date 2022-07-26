@@ -41,7 +41,7 @@ http://blogs.msdn.com/robmen/archive/2003/10/04/56479.aspx -->
     rest of the app the first time the icon is run.  If this is not behavior you
     are trying to support, you're better off using non-advertised shortcuts. "-->
     <WixVariable Id="WixUILicenseRtf" Value="$(var.SolutionDir)\PpmApp\Resources\PPM_EULA.rtf" />
-    <Property Id="PARATEXT9_1">
+    <Property Id="PARATEXT9_1" Secure="yes">
       <RegistrySearch
         Id="Paratext9_1"
         Root="HKLM"
@@ -51,8 +51,18 @@ http://blogs.msdn.com/robmen/archive/2003/10/04/56479.aspx -->
         Type="directory"
         />
     </Property>
+    <Property Id="PARATEXT9_3" Secure="yes">
+      <RegistrySearch
+        Id="Paratext9_3"
+        Root="HKLM"
+        Key="SOFTWARE\Paratext\8"
+        Name="Program_Files_Directory_Ptw91"
+        Win64="no"
+        Type="directory"
+        />
+    </Property>
     <Condition Message="Before you can install [ProductName], you need to install Paratext 9.1 or later.">
-      <![CDATA[Installed OR PARATEXT9_1]]>
+      <![CDATA[Installed OR PARATEXT9_1 OR PARATEXT9_3]]>
     </Condition>
 
     <Property Id="UPDATEP9_1_PLUGINCACHE" Secure="yes">
@@ -61,15 +71,24 @@ http://blogs.msdn.com/robmen/archive/2003/10/04/56479.aspx -->
       </DirectorySearch>
     </Property>
 
+    <Property Id="UPDATEP9_3_PLUGINCACHE" Secure="yes">
+      <DirectorySearch Id="Paratext9_3PluginCacheExeExists" Path="[PARATEXT9_3]">
+        <FileSearch Name="UpdateParatextPluginCache.exe" />
+      </DirectorySearch>
+    </Property>
+
     <!-- This is extremely unlikely... -->
     <Condition Message="Paratext is not installed properly. Missing required file: UpdateParatextPluginCache.exe. Re-run the Paratext Installer to repair the installation. Then re-run the [ProductName] Installer.">
       <![CDATA[Installed OR
-      (PARATEXT9_1 AND UPDATEP9_1_PLUGINCACHE)]]>
+      (PARATEXT9_1 AND UPDATEP9_1_PLUGINCACHE) OR (PARATEXT9_3 AND UPDATEP9_3_PLUGINCACHE)]]>
     </Condition>
+    
     <!--because of bug, this needs to be 1 -->
     <!--<Property Id="ALLUSERS">1</Property>-->
+    
     <Directory Id="TARGETDIR" Name="SourceDir">
       <Directory Id="ProgramFiles64Folder">
+        
         <Directory Id="PARATEXT9_1" Name="ParatextDir9_1">
           <Directory Id="PLUGINDIR9_1" Name="plugins">
             <Component Id="PLUGINDIR9_1_Permission" Guid="{19C713A6-8D72-4816-95AE-F3295C915CE9}">
@@ -80,9 +99,22 @@ http://blogs.msdn.com/robmen/archive/2003/10/04/56479.aspx -->
             <Directory Id="PPM_PLUGIN_INSTALL_DIR_9_1" Name="ParatextPluginManager" />
           </Directory>
         </Directory>
+        
+        <Directory Id="PARATEXT9_3" Name="ParatextDir9_3">
+          <Directory Id="PLUGINDIR9_3" Name="plugins">
+            <Component Id="PLUGINDIR9_3_Permission" Guid="{BA5C4BEE-11E8-4159-BD88-AB8682648199}">
+              <CreateFolder>
+                <util:PermissionEx User="Users" GenericAll="yes" />
+              </CreateFolder>
+            </Component>
+            <Directory Id="PPM_PLUGIN_INSTALL_DIR_9_3" Name="ParatextPluginManager" />
+          </Directory>
+        </Directory>
+
         <!-- PPM Standalone app install directory -->
         <Directory Id="PPM_APP_INSTALL_DIR" Name="Paratext Plugin Manager" />
       </Directory>
+      
       <!-- Program Menu Folder entry -->
       <Directory Id="ProgramMenuFolder">
         <Directory Id="ApplicationProgramsFolder" Name="$(var.Property_ProductName)"/>
@@ -107,6 +139,12 @@ http://blogs.msdn.com/robmen/archive/2003/10/04/56479.aspx -->
     <ComponentGroup Id="COMPONENTSFORP9_1_PLUGIN" Directory="PPM_PLUGIN_INSTALL_DIR_9_1" Source="$(var.PpmPlugin.TargetDir)">
       <Component Guid="{2C82527D-392A-480F-BF07-AE9F65336370}">
         <File Id="ParatextPluginManagerPlugin.dll_P9_1" KeyPath="yes" Name="ParatextPluginManagerPlugin.dll" />
+      </Component>
+    </ComponentGroup>
+    
+    <ComponentGroup Id="COMPONENTSFORP9_3_PLUGIN" Directory="PPM_PLUGIN_INSTALL_DIR_9_3" Source="$(var.PpmPlugin.TargetDir)">
+      <Component Guid="{7EBE8873-2231-4C59-8C32-0DC49D1CB1EE}">
+        <File Id="ParatextPluginManagerPlugin.dll_P9_3" KeyPath="yes" Name="ParatextPluginManagerPlugin.dll" />
       </Component>
     </ComponentGroup>
     
@@ -206,7 +244,13 @@ http://blogs.msdn.com/robmen/archive/2003/10/04/56479.aspx -->
       <ComponentRef Id="PLUGINDIR9_1_Permission" />
     </Feature>
     
-    <Feature Id="AppFeature" Level="1" Title="Plugin for Paratext 9.1" AllowAdvertise="no">
+    <Feature Id="PluginFeature_P9_3" Level="0" Title="Paratext Plugin Manager Plugin for Paratext 9.3" AllowAdvertise="no">
+      <Condition Level="1"><![CDATA[PARATEXT9_3 AND UPDATEP9_3_PLUGINCACHE]]></Condition>
+      <ComponentGroupRef Id="COMPONENTSFORP9_3_PLUGIN" />
+      <ComponentRef Id="PLUGINDIR9_3_Permission" />
+    </Feature>
+    
+    <Feature Id="AppFeature" Level="1" Title="Paratext Plugin Manager App" AllowAdvertise="no">
       <ComponentGroupRef Id="PPM_APP_COMPONENTS" />
       <ComponentRef Id="ApplicationShortcut" />
     </Feature>

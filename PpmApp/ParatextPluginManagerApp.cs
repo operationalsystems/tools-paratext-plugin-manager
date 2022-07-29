@@ -16,6 +16,13 @@ namespace PpmApp
         /// </summary>
         static void Main(string[] args)
         {
+            // only allow one instance of the current process
+            if (System.Diagnostics.Process.GetProcessesByName(System.IO.Path.GetFileNameWithoutExtension(System.Reflection.Assembly.GetEntryAssembly().Location)).Length > 1)
+            {
+                MessageBox.Show("Paratext Plugin Manager is already open.", "Notice...", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
 

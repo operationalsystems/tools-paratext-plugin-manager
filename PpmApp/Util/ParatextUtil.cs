@@ -22,7 +22,7 @@ namespace PpmApp.Util
         /// <summary>
         /// Maximum amount of time in milliseconds to wait for a Paratext process to exit.
         /// </summary>
-        const int MAX_PT_PROCESS_WAIT_TIME_MS = 30 * 1000; // 30 seconds
+        const int MAX_PT_PROCESS_WAIT_TIME_MS = 30000; // 30 seconds
 
         // Paratext Registry key information variables
         private const string ParatextRegistryRoot = "HKEY_LOCAL_MACHINE";

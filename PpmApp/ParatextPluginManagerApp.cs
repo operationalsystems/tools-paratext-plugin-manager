@@ -56,7 +56,7 @@ namespace PpmApp
             Host.CreateDefaultBuilder(args)
             .ConfigureServices((hostContext, services) =>
             {
-                services.AddSingleton<PluginRepositoryService>();
+                services.AddSingleton<IPluginRepository, PluginRepositoryService>();
                 services.AddSingleton<PluginManagerMainFormController>();
                 services.AddScoped<PluginManagerMainForm>();
                 services.AddLogging(configure =>

@@ -55,7 +55,7 @@ namespace PpmApp.Controllers
         private readonly IPluginRepository _pluginRepoService;
 
         /// <summary>
-        /// Remote Plugin repository (injected).
+        /// Local Installer Service (injected).
         /// </summary>
         private readonly IInstallerService _localInstallerService;
 
@@ -65,7 +65,7 @@ namespace PpmApp.Controllers
         /// Simple constructor
         /// </summary>
         /// <param name="pluginRepoService">Plugin Repository Service.</param>
-        public PluginManagerMainFormController(PluginRepositoryService pluginRepoService)
+        public PluginManagerMainFormController(IPluginRepository pluginRepoService)
         {
             string installPath = Path.Combine(ParatextUtil.ParatextInstallPath, "plugins");
             var onlyLatestPlugins = true;

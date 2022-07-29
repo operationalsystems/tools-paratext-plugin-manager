@@ -29,7 +29,7 @@ namespace PpmApp
         private readonly ILogger _logger;
 
         /// <summary>
-        /// The controller that will handle business logic for this view.
+        /// The controller that will handle business logic for this view (injected)
         /// </summary>
         private readonly PluginManagerMainFormController _controller;
 

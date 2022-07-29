@@ -16,7 +16,7 @@ namespace PpmApp.PluginRepository
     /// <summary>
     /// This Interface defines a service contract for a plugin repository.
     /// </summary>
-    interface IPluginRepository
+    public interface IPluginRepository
     {
         /// <summary>
         /// This function return a list of the available plugins.

@@ -45,17 +45,12 @@ namespace PpmApp.Controllers
     public class PluginManagerMainFormController : IPluginManagerMainFormController
     {
         /// <summary>
-        /// Type-specific logger (injected).
-        /// </summary>
-        private readonly ILogger _logger;
-
-        /// <summary>
-        /// Remote Plugin repository (injected).
+        /// Plugin repository service (injected).
         /// </summary>
         private readonly IPluginRepository _pluginRepoService;
 
         /// <summary>
-        /// Local Installer Service (injected).
+        /// Local Installer Service.
         /// </summary>
         private readonly IInstallerService _localInstallerService;
 

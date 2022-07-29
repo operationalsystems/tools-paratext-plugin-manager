@@ -1,5 +1,5 @@
 ﻿/*
-Copyright © 2021 by Biblica, Inc.
+Copyright © 2022 by Biblica, Inc.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
 
@@ -7,15 +7,16 @@ The above copyright notice and this permission notice shall be included in all c
 
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
-using PpmMain.LocalInstaller;
-using PpmMain.Models;
-using PpmMain.PluginRepository;
+using PpmApp.LocalInstaller;
+using PpmApp.Models;
+using PpmApp.PluginRepository;
+using PpmApp.Util;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
-namespace PpmMain.Controllers
+namespace PpmApp.Controllers
 {
     /// <summary>
     /// A custom comparer that determines whether two plugins are the same.
@@ -40,13 +41,37 @@ namespace PpmMain.Controllers
     /// <summary>
     /// A controller which handles business logic for the main Plugin Manager form.
     /// </summary>
-    class PluginManagerMainFormController : IPluginManagerMainFormController
+    public class PluginManagerMainFormController : IPluginManagerMainFormController
     {
-        IPluginRepository RemotePluginRepository { get; set; }
+        /// <summary>
+        /// Plugin repository service (injected).
+        /// </summary>
+        private readonly IPluginRepository _pluginRepoService;
 
-        IInstallerService LocalInstallerService { get; set; }
+        /// <summary>
+        /// Local Installer Service.
+        /// </summary>
+        private readonly IInstallerService _localInstallerService;
 
         public string FilterCriteria { get; set; }
+
+        /// <summary>
+        /// Simple constructor
+        /// </summary>
+        /// <param name="pluginRepoService">Plugin Repository Service.</param>
+        public PluginManagerMainFormController(IPluginRepository pluginRepoService)
+        {
+            string installPath = Path.Combine(ParatextUtil.ParatextInstallPath, "plugins");
+            var onlyLatestPlugins = true;
+            var onlyCompatiblePlugins = true;
+
+            _localInstallerService = new LocalInstallerService(installPath);
+            _pluginRepoService = pluginRepoService ?? throw new ArgumentNullException(nameof(pluginRepoService));
+
+            RemotePlugins = _pluginRepoService.GetAvailablePlugins(onlyLatestPlugins, onlyCompatiblePlugins);
+            RefreshInstalled();
+        }
+
 
         /// <summary>
         /// Determines whether a plugin should be displayed based on the filter criteria.
@@ -138,8 +163,8 @@ namespace PpmMain.Controllers
 
         public void InstallPlugin(PluginDescription plugin)
         {
-            FileInfo downloadedPlugin = RemotePluginRepository.DownloadPlugin(plugin);
-            LocalInstallerService.InstallPlugin(downloadedPlugin);
+            FileInfo downloadedPlugin = _pluginRepoService.DownloadPlugin(plugin);
+            _localInstallerService.InstallPlugin(downloadedPlugin);
             RefreshInstalled();
         }
 
@@ -164,8 +189,8 @@ namespace PpmMain.Controllers
             var onlyLatestPlugins = true;
             var onlyCompatiblePlugins = true;
 
-            LocalInstallerService.UninstallPlugin(plugin);
-            RemotePluginRepository.GetAvailablePlugins(onlyLatestPlugins, onlyCompatiblePlugins);
+            _localInstallerService.UninstallPlugin(plugin);
+            _pluginRepoService.GetAvailablePlugins(onlyLatestPlugins, onlyCompatiblePlugins);
             RefreshInstalled();
         }
 
@@ -174,24 +199,12 @@ namespace PpmMain.Controllers
             plugins.ForEach(plugin => InstallPlugin(plugin));
         }
 
-        public PluginManagerMainFormController()
-        {
-            string installPath = Path.Combine(Directory.GetCurrentDirectory(), "plugins");
-            var onlyLatestPlugins = true;
-            var onlyCompatiblePlugins = true;
-
-            RemotePluginRepository = new PluginRepositoryService();
-            LocalInstallerService = new LocalInstallerService(installPath);
-            RemotePlugins = RemotePluginRepository.GetAvailablePlugins(onlyLatestPlugins, onlyCompatiblePlugins);
-            RefreshInstalled();
-        }
-
         /// <summary>
         /// This method handles updating the list of installed plugins.
         /// </summary>
         private void RefreshInstalled()
         {
-            InstalledPlugins = LocalInstallerService.GetInstalledPlugins();
+            InstalledPlugins = _localInstallerService.GetInstalledPlugins();
         }
     }
 }

@@ -1,5 +1,5 @@
 ﻿/*
-Copyright © 2021 by Biblica, Inc.
+Copyright © 2022 by Biblica, Inc.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
 
@@ -7,28 +7,41 @@ The above copyright notice and this permission notice shall be included in all c
 
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
-using PpmMain.Controllers;
-using PpmMain.Forms;
-using PpmMain.Models;
-using PpmMain.Properties;
-using PpmMain.Util;
+using Microsoft.Extensions.Logging;
+using PpmApp.Controllers;
+using PpmApp.Forms;
+using PpmApp.Models;
+using PpmApp.Properties;
+using PpmApp.Util;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Windows.Forms;
 
-namespace PpmMain
+namespace PpmApp
 {
     public partial class PluginManagerMainForm : Form
     {
         /// <summary>
-        /// The controller that will handle business logic for this view.
+        /// Type-specific logger (injected).
         /// </summary>
-        PluginManagerMainFormController Controller { get; set; }
+        private readonly ILogger _logger;
 
-        public PluginManagerMainForm()
+        /// <summary>
+        /// The controller that will handle business logic for this view (injected)
+        /// </summary>
+        private readonly PluginManagerMainFormController _controller;
+
+        /// <summary>
+        /// Basic constructor. Dependency Injected.
+        /// </summary>
+        /// <param name="logger">Class logger instance</param>
+        public PluginManagerMainForm(ILogger<PluginManagerMainForm> logger, PluginManagerMainFormController controller)
         {
+            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+            _controller = controller ?? throw new ArgumentNullException(nameof(controller));
+
             InitializeComponent();
             CopyrightLabel.Text = MainConsts.Copyright;
         }
@@ -40,7 +53,6 @@ namespace PpmMain
         /// <param name="e">The load event.</param>
         private void PluginManagerMainForm_Load(object sender, EventArgs e)
         {
-            Controller = new PluginManagerMainFormController();
             RefreshBindings();
         }
 
@@ -129,7 +141,7 @@ namespace PpmMain
         /// <param name="e">The click event.</param>
         private void Install_Click(object sender, EventArgs e)
         {
-            PluginDescription selectedPlugin = Controller.AvailablePlugins[AvailablePluginsList.CurrentCell.RowIndex];
+            PluginDescription selectedPlugin = _controller.AvailablePlugins[AvailablePluginsList.CurrentCell.RowIndex];
 
             /// Confirm that the user wishes to install the plugin.
             DialogResult confirmInstall = MessageBox.Show($"Are you sure you wish to install {selectedPlugin.Name} ({selectedPlugin.Version})?",
@@ -158,18 +170,21 @@ namespace PpmMain
 
             if (DialogResult.Yes != eulaPrompt.DialogResult)
             {
-                MessageBox.Show("Installation cancelled.",
-$"Plugin Not Installed",
-MessageBoxButtons.OK);
+                MessageBox.Show("Installation cancelled.", "Plugin Not Installed", MessageBoxButtons.OK);
                 return;
             };
+
+            if (!CheckParatextAndPromptToProceed())
+            {
+                return;
+            }
 
             ShowProgressBar(MainConsts.ProgressBarInstalling);
 
             BackgroundWorker backgroundworker = new BackgroundWorker();
             backgroundworker.DoWork += (sender, args) =>
             {
-                Controller.InstallPlugin(selectedPlugin);
+                _controller.InstallPlugin(selectedPlugin);
             };
             backgroundworker.RunWorkerCompleted += (sender, args) =>
             {
@@ -193,7 +208,7 @@ MessageBoxButtons.OK);
         /// <param name="e">The click event.</param>
         private void UpdateOne_Click(object sender, EventArgs e)
         {
-            OutdatedPlugin selectedPlugin = Controller.OutdatedPlugins[OutdatedPluginsList.CurrentCell.RowIndex];
+            OutdatedPlugin selectedPlugin = _controller.OutdatedPlugins[OutdatedPluginsList.CurrentCell.RowIndex];
             DialogResult confirmInstall = MessageBox.Show($"Are you sure you wish to update {selectedPlugin.Name} from version {selectedPlugin.InstalledVersion} to {selectedPlugin.Version}?",
                          $"Confirm Plugin Update",
                          MessageBoxButtons.YesNo);
@@ -221,18 +236,21 @@ MessageBoxButtons.OK);
 
             if (DialogResult.Yes != eulaPrompt.DialogResult)
             {
-                MessageBox.Show("Update cancelled.",
-$"Plugin Not Updated",
-MessageBoxButtons.OK);
+                MessageBox.Show("Update cancelled.", "Plugin Not Updated", MessageBoxButtons.OK);
                 return;
             };
+
+            if (!CheckParatextAndPromptToProceed())
+            {
+                return;
+            }
 
             ShowProgressBar(MainConsts.ProgressBarUpdating);
 
             BackgroundWorker backgroundworker = new BackgroundWorker();
             backgroundworker.DoWork += (sender, args) =>
             {
-                Controller.InstallPlugin(selectedPlugin);
+                _controller.InstallPlugin(selectedPlugin);
             };
             backgroundworker.RunWorkerCompleted += (sender, args) =>
             {
@@ -244,7 +262,7 @@ MessageBoxButtons.OK);
 {selectedPlugin.Name} has been updated to version {selectedPlugin.Version}.
 
 {MainConsts.PluginListChangedMessage}",
-                  $"Plugin Updated",
+                  "Plugin Updated",
                   MessageBoxButtons.OK);
             };
             backgroundworker.RunWorkerAsync();
@@ -266,14 +284,14 @@ MessageBoxButtons.OK);
                     installPlugin();
                 }
             }
-            for (int i = 0; i < Controller.OutdatedPlugins.Count; i++)
+            for (int i = 0; i < _controller.OutdatedPlugins.Count; i++)
             {
-                OutdatedPlugin selectedPlugin = Controller.OutdatedPlugins[i];
+                OutdatedPlugin selectedPlugin = _controller.OutdatedPlugins[i];
 
                 installationQueue.Enqueue(() =>
                 {
                     DialogResult confirmInstall = MessageBox.Show($"Are you sure you wish to update {selectedPlugin.Name} from version {selectedPlugin.InstalledVersion} to {selectedPlugin.Version}?",
-                                 $"Confirm Plugin Update",
+                                 "Confirm Plugin Update",
                                  MessageBoxButtons.YesNo);
 
                     if (DialogResult.Yes != confirmInstall)
@@ -302,10 +320,14 @@ MessageBoxButtons.OK);
 
                     if (DialogResult.Yes != eulaPrompt.DialogResult)
                     {
-                        MessageBox.Show("Update cancelled.",
-$"Plugin Not Updated",
-MessageBoxButtons.OK);
+                        MessageBox.Show("Update cancelled.", "Plugin Not Updated", MessageBoxButtons.OK);
                         installNextPlugin();
+                        return;
+                    }
+
+                    // let's check Paratext on every plugin update, in case someone decides to start Paratext up again in between plugin installs
+                    if (!CheckParatextAndPromptToProceed())
+                    {
                         return;
                     }
 
@@ -314,7 +336,7 @@ MessageBoxButtons.OK);
                     BackgroundWorker backgroundworker = new BackgroundWorker();
                     backgroundworker.DoWork += (sender, args) =>
                     {
-                        Controller.InstallPlugin(selectedPlugin);
+                        _controller.InstallPlugin(selectedPlugin);
                     };
                     backgroundworker.RunWorkerCompleted += (sender, args) =>
                     {
@@ -342,20 +364,26 @@ MessageBoxButtons.OK);
         /// <param name="e">The click event.</param>
         private void Uninstall_Click(object sender, EventArgs e)
         {
-            PluginDescription selectedPlugin = Controller.InstalledPlugins[InstalledPluginsList.CurrentCell.RowIndex];
+            PluginDescription selectedPlugin = _controller.InstalledPlugins[InstalledPluginsList.CurrentCell.RowIndex];
 
             /// Confirm that the user wishes to uninstall the plugin.
-            DialogResult confirmUninstall = MessageBox.Show($"Are you sure you wish to uninstall {selectedPlugin.Name} ({selectedPlugin.Version})?",
-                                     $"Confirm Plugin Uninstall",
+            DialogResult confirmUninstall = MessageBox.Show(
+                $"Are you sure you wish to uninstall {selectedPlugin.Name} ({selectedPlugin.Version})?",
+                                     "Confirm Plugin Uninstall",
                                      MessageBoxButtons.YesNo);
             if (DialogResult.Yes != confirmUninstall) return;
+
+            if (!CheckParatextAndPromptToProceed())
+            {
+                return;
+            }
 
             ShowProgressBar(MainConsts.ProgressBarUninstalling);
 
             BackgroundWorker backgroundworker = new BackgroundWorker();
             backgroundworker.DoWork += (sender, args) =>
             {
-                Controller.UninstallPlugin(selectedPlugin);
+                _controller.UninstallPlugin(selectedPlugin);
             };
             backgroundworker.RunWorkerCompleted += (sender, args) =>
             {
@@ -367,7 +395,7 @@ MessageBoxButtons.OK);
 {selectedPlugin.Name} ({selectedPlugin.Version}) has been uninstalled.
 
 {MainConsts.PluginListChangedMessage}",
-                     $"Plugin Uninstalled",
+                     "Plugin Uninstalled",
                      MessageBoxButtons.OK);
             };
             backgroundworker.RunWorkerAsync();
@@ -428,10 +456,10 @@ MessageBoxButtons.OK);
         /// </summary>
         private void RefreshBindings()
         {
-            AvailablePluginsList.DataSource = Controller.AvailablePlugins;
-            OutdatedPluginsList.DataSource = Controller.OutdatedPlugins;
-            InstalledPluginsList.DataSource = Controller.InstalledPlugins;
-            UpdateAll.Enabled = (Controller.OutdatedPlugins.Count > 0);
+            AvailablePluginsList.DataSource = _controller.AvailablePlugins;
+            OutdatedPluginsList.DataSource = _controller.OutdatedPlugins;
+            InstalledPluginsList.DataSource = _controller.InstalledPlugins;
+            UpdateAll.Enabled = (_controller.OutdatedPlugins.Count > 0);
         }
 
         /// <summary>
@@ -439,7 +467,7 @@ MessageBoxButtons.OK);
         /// </summary>
         private void UpdateSearchFilter()
         {
-            Controller.FilterCriteria = SearchText.Text;
+            _controller.FilterCriteria = SearchText.Text;
             RefreshBindings();
         }
 
@@ -476,6 +504,31 @@ MessageBoxButtons.OK);
             //Call the Process.Start method to open the default browser
             //with a URL:
             Process.Start(MainConsts.SUPPORT_URL);
+        }
+
+        /// <summary>
+        /// This is a utility function for checking if Paratext is running. If it is, prompt if the user wants to close Paratext and proceed or to stop; Otherwise, if Paratext isn't running, indicate that we're OK to proceed.
+        /// </summary>
+        /// <returns>true: Paratext isn't running or was killed. false: Paratext was running and user doesn't want to kill and proceed.</returns>
+        private static bool CheckParatextAndPromptToProceed()
+        {
+            // make sure that Paratext isn't running first
+            if (ParatextUtil.IsParatextRunning())
+            {
+                var result = MessageBox.Show("Paratext is running. Would you like to close Paratext and proceed?", "Paratext is running", MessageBoxButtons.YesNo);
+
+                switch (result)
+                {
+                    case DialogResult.Yes:
+                        ParatextUtil.CloseParatext();
+                        return true;
+                    default:
+                        return false;
+                }
+            }
+
+            // Paratext isn't running. We're OK to proceed.
+            return true;
         }
     }
 }

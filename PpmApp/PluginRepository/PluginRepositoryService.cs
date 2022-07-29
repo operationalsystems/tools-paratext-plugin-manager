@@ -1,5 +1,5 @@
 ﻿/*
-Copyright © 2021 by Biblica, Inc.
+Copyright © 2022 by Biblica, Inc.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
 
@@ -7,10 +7,11 @@ The above copyright notice and this permission notice shall be included in all c
 
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
+using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
-using PpmMain.Models;
-using PpmMain.Properties;
-using PpmMain.Util;
+using PpmApp.Models;
+using PpmApp.Properties;
+using PpmApp.Util;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -19,13 +20,18 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using System.Xml;
 
-namespace PpmMain.PluginRepository
+namespace PpmApp.PluginRepository
 {
     /// <summary>
     /// This service implements an HTTP-based S3 repository for plugin management.
     /// </summary>
     public class PluginRepositoryService : IPluginRepository
     {
+        /// <summary>
+        /// Type-specific logger (injected).
+        /// </summary>
+        private readonly ILogger _logger;
+
         /// <summary>
         /// The HTTPClient to be used HTTP operations.
         /// </summary>
@@ -44,8 +50,10 @@ namespace PpmMain.PluginRepository
         /// <summary>
         /// Base constructor.
         /// </summary>
-        public PluginRepositoryService()
+        public PluginRepositoryService(ILogger<PluginRepositoryService> logger)
         {
+            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+
             // Create the temporary directory if it doesn't exist.
             if (!TemporaryDownloadDirectory.Exists)
             {
@@ -107,9 +115,9 @@ namespace PpmMain.PluginRepository
         public List<PluginDescription> GetAvailablePlugins(bool latestOnly = true, bool compatibleOnly = true)
         {
 #if DEBUG
-            int currentPtVersion = 8;
+            int currentPtVersion = 9;
 #else
-            int currentPtVersion = new Version(HostUtil.Instance.ParatextVersion).Major;
+            int currentPtVersion = new Version(ParatextUtil.ParatextVersion).Major;
 #endif
 
             // Grab all the available plugin manifests.
@@ -206,9 +214,8 @@ namespace PpmMain.PluginRepository
                     var errorMessage = $"Unable to contact PPM server. Reason: '{response.ReasonPhrase}'";
                     var additionalInfo = $"\n\n" +
                         $"\tStatus Code: {(int)response.StatusCode}\n";
-                    HostUtil.Instance.LogLine(errorMessage + additionalInfo, true);
+                    _logger.LogError(errorMessage + additionalInfo);
                     throw new Exception(errorMessage);
-
                 }
 
                 // Get the filenames from the returned XML.

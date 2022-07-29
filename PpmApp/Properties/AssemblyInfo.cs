@@ -7,18 +7,18 @@ The above copyright notice and this permission notice shall be included in all c
 
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
-using PpmPlugin.Util;
+using PpmApp.Util;
 using System.Reflection;
 using System.Runtime.InteropServices;
 
 // General Information about an assembly is controlled through the following
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle(MainConsts.PluginName)]
-[assembly: AssemblyDescription(MainConsts.PluginDescription)]
+[assembly: AssemblyTitle(MainConsts.ApplicationName)]
+[assembly: AssemblyDescription(MainConsts.ApplicationDescription)]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany(MainConsts.PluginPublisher)]
-[assembly: AssemblyProduct(MainConsts.PluginName)]
+[assembly: AssemblyCompany(MainConsts.ApplicationPublisher)]
+[assembly: AssemblyProduct(MainConsts.ApplicationName)]
 [assembly: AssemblyCopyright(MainConsts.Copyright)]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
@@ -29,7 +29,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("f3d8ca5a-b752-42dc-b2f4-b12ab527e6d9")]
+[assembly: Guid("a1eea69e-9fb9-4e78-b549-712c34de51b6")]
 
 // Version information for an assembly consists of the following four values:
 //
@@ -41,5 +41,5 @@ using System.Runtime.InteropServices;
 // You can specify all the values or you can default the Build and Revision Numbers
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion(MainConsts.PluginVersion)]
-[assembly: AssemblyFileVersion(MainConsts.PluginVersion)]
+[assembly: AssemblyVersion(MainConsts.ApplicationVersion)]
+[assembly: AssemblyFileVersion(MainConsts.ApplicationVersion)]

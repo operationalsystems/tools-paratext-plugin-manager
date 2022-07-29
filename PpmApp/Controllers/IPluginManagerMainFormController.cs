@@ -1,5 +1,5 @@
 ﻿/*
-Copyright © 2021 by Biblica, Inc.
+Copyright © 2022 by Biblica, Inc.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
 
@@ -7,54 +7,52 @@ The above copyright notice and this permission notice shall be included in all c
 
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
-using Newtonsoft.Json;
+using PpmApp.Models;
 using System.Collections.Generic;
 
-namespace PpmMain.Models
+namespace PpmApp.Controllers
 {
     /// <summary>
-    /// The description of an installed plugin
+    /// This interface represents a controller that manages the state and interactions for the Plugin Manager Main Form.
     /// </summary>
-    public class PluginDescription
+    interface IPluginManagerMainFormController
     {
         /// <summary>
-        /// The plugin name.
+        /// A list of plugins that are available to be installed.
         /// </summary>
-        public string Name { get; set; }
+        List<PluginDescription> AvailablePlugins { get; set; }
 
         /// <summary>
-        /// A unique shortname representing the plugin.
+        /// A list of plugins that have been installed and for which there are available updates.
         /// </summary>
-        public string ShortName { get; set; }
+        List<OutdatedPlugin> OutdatedPlugins { get; set; }
 
         /// <summary>
-        /// The version of the plugin.
+        /// A list of plugins that have been installed.
         /// </summary>
-        public string Version { get; set; }
+        List<PluginDescription> InstalledPlugins { get; set; }
 
         /// <summary>
-        /// A description of the plugin.
+        /// A <c>string</c> that limits the plugins that are displayed in a list.
         /// </summary>
-        public string Description { get; set; }
+        string FilterCriteria { get; set; }
 
         /// <summary>
-        /// A description of what has changed in this version of the plugin.
+        /// This method installs a given plugin.
         /// </summary>
-        public string VersionDescription { get; set; }
+        /// <param name="plugin">The plugin to install.</param>
+        public void InstallPlugin(PluginDescription plugin);
 
         /// <summary>
-        /// The versions of ParaText that this plugin version is compatible with.
+        /// This method uninstalls a given plugin.
         /// </summary>
-        public List<string> PtVersions { get; set; }
+        /// <param name="plugin">The plugin to uninstall.</param>
+        public void UninstallPlugin(PluginDescription plugin);
 
         /// <summary>
-        /// The license for this plugin.
+        /// This method updates a given list of installed plugins.
         /// </summary>
-        public string License { get; set; }
-
-        public override string ToString()
-        {
-            return JsonConvert.SerializeObject(this);
-        }
+        /// <param name="plugins">A list of installed plugins to update.</param>
+        public void UpdatePlugins(List<OutdatedPlugin> plugins);
     }
 }

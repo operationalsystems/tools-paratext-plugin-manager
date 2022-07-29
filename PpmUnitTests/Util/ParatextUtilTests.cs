@@ -7,22 +7,31 @@ The above copyright notice and this permission notice shall be included in all c
 
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
-using System.Reflection;
-using System.Runtime.InteropServices;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using PpmApp.Util;
+using System;
 
-[assembly: AssemblyTitle("PpmUnitTests")]
-[assembly: AssemblyDescription("")]
-[assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("PpmUnitTests")]
-[assembly: AssemblyCopyright("Copyright ©  2020")]
-[assembly: AssemblyTrademark("")]
-[assembly: AssemblyCulture("")]
+namespace PpmUnitTests
+{
+    [TestClass]
+    public class ParatextUtilTests
+    {
+        [TestMethod]
+        public void TestParatextVersion()
+        {
+            // make sure that we can get the installed Paratext version
+            var paratextVersion = ParatextUtil.ParatextVersion;
+            Assert.IsNotNull(paratextVersion, "Cannot determine Paratext's version.");
+            Console.WriteLine($"The installed Paratext version is: '{paratextVersion}'");
+        }
 
-[assembly: ComVisible(false)]
-
-[assembly: Guid("fded165f-a4ce-4ae5-91d2-b200da4acd7b")]
-
-// [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("1.1.0.0")]
-[assembly: AssemblyFileVersion("1.1.0.0")]
+        [TestMethod]
+        public void TestParatextInstallPath()
+        {
+            // make sure that we can get the installed Paratext version
+            var paratextInstallPath = ParatextUtil.ParatextInstallPath;
+            Assert.IsNotNull(paratextInstallPath, "Cannot determine Paratext's install path.");
+            Console.WriteLine($"The installed Paratext path is: '{paratextInstallPath}'");
+        }
+    }
+}

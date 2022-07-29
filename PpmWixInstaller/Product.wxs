@@ -18,6 +18,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 <?define Property_ProductName = "Paratext Plugin Manager" ?>
 <!-- good intro to the component vs. file thing, and why each file here is a separate component:
 http://blogs.msdn.com/robmen/archive/2003/10/04/56479.aspx -->
+
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi" xmlns:util="http://schemas.microsoft.com/wix/UtilExtension">
   <Product
     Id="$(var.Property_ProductCode)"
@@ -25,14 +26,14 @@ http://blogs.msdn.com/robmen/archive/2003/10/04/56479.aspx -->
     Version="$(var.Property_ProductVersion)"
     Language="1033"
     Manufacturer="$(var.Property_Manufacturer)"
-    UpgradeCode="cbbbc849-b94e-4663-9a94-88462c5ad22b">
+    UpgradeCode="$(var.Property_UpgradeCode)">
 
     <Package 
       InstallerVersion="200" 
       Compressed="yes" 
       InstallScope="perMachine"
-      
       Platform="x64"/>
+
     <MajorUpgrade Schedule="afterInstallInitialize"
                   DowngradeErrorMessage="A later version of [ProductName] is already installed. If you really want to downgrade, first uninstall [ProductName], then do this install again." />
     <!-- 

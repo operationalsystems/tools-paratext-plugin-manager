@@ -11,6 +11,7 @@ using Newtonsoft.Json;
 using PpmApp.Models;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
@@ -26,6 +27,11 @@ namespace PpmApp.LocalInstaller
         /// The directory name where ParaText plugins are installed.
         /// </summary>
         private string PtInstalledPluginsPath { get; set; }
+
+        /// <summary>
+        /// The directory name where 3rd party installers are put while we execute them.
+        /// </summary>
+        private string TempExecutablePath { get; } = Path.Combine(Path.GetTempPath(), "PpmTempExecutableDirectory");
 
         public LocalInstallerService(string ptInstalledPluginsPath)
         {
@@ -63,20 +69,67 @@ namespace PpmApp.LocalInstaller
         /// <summary>
         /// This function installs a ParaText plugin.
         /// </summary>
+        /// <param name="plugin">The plugin to uninstall.</param>
         /// <param name="pluginArchive">The zip file containing the plugin data.</param>
-        public void InstallPlugin(FileInfo pluginArchive)
+        public void InstallPlugin(PluginDescription plugin, FileInfo pluginArchive)
         {
             string zipFilePath = pluginArchive.FullName;
             string jsonFilePath = Path.ChangeExtension(zipFilePath, "json");
-            PluginDescription plugin = GetPluginDescription(jsonFilePath);
             string pluginDirectory = plugin.ShortName.ToUpper();
             string pluginInstallPath = Path.Combine(PtInstalledPluginsPath, pluginDirectory);
             /// If this is an upgrade, or a re-install, uninstall the plugin before extracting
             if (Directory.Exists(pluginInstallPath))
+            {
                 UninstallPlugin(plugin);
-            ZipFile.ExtractToDirectory(pluginArchive.FullName, pluginInstallPath);
+            }
+
+            // create/recreate the directory, if removed
+            if (!Directory.Exists(pluginInstallPath))
+            {
+                Directory.CreateDirectory(pluginInstallPath);
+            }
+
+            switch (plugin.InstallType)
+            {
+                case PluginInstallTypeEnum.Executable:
+                    // clean temp plugin executable if still around
+                    var tempExeInstallDir = new DirectoryInfo(Path.Combine(TempExecutablePath, plugin.ShortName));
+                    if (tempExeInstallDir.Exists)
+                    {
+                        tempExeInstallDir.Delete(true);
+                    }
+                    // create the temp dir
+                    tempExeInstallDir.Create();
+
+                    // Extract executable to temp location
+                    ZipFile.ExtractToDirectory(pluginArchive.FullName, tempExeInstallDir.FullName);
+                    // Execute the installer
+
+                    ProcessStartInfo processStartInfo = new ProcessStartInfo()
+                    {
+                        UseShellExecute = false,
+                        WorkingDirectory = tempExeInstallDir.FullName,
+                        FileName = plugin.InstallExecutableFilename,
+                        Arguments = plugin?.InstallExecutableArgs != null ? plugin.InstallExecutableArgs : ""
+                    };
+
+                    var exeProcess = Process.Start(processStartInfo);
+                    exeProcess.WaitForExit();
+
+                    // assess if successful or not
+                    if (exeProcess.ExitCode != 0)
+                    {
+                        throw new Exception($"The plugin installer did not succeed. Exit Code: {exeProcess.ExitCode}");
+                    }
+                    break;
+                default: // presume plugin install type. This supports legacy defaults if not specified
+                    ZipFile.ExtractToDirectory(pluginArchive.FullName, pluginInstallPath);
+                    break;
+            }
             string targetJsonFilePath = Path.Combine(pluginInstallPath, Path.GetFileName(jsonFilePath));
             File.Move(jsonFilePath, targetJsonFilePath);
+
+            // cleanup
             File.Delete(pluginArchive.FullName);
         }
 
@@ -87,8 +140,35 @@ namespace PpmApp.LocalInstaller
         public void UninstallPlugin(PluginDescription plugin)
         {
             string pluginInstallPath = Path.Combine(PtInstalledPluginsPath, plugin.ShortName.ToUpper());
+
+            switch (plugin.InstallType)
+            {
+                case PluginInstallTypeEnum.Executable:
+                    ProcessStartInfo processStartInfo = new ProcessStartInfo()
+                    {
+                        UseShellExecute = false,
+                        WorkingDirectory = pluginInstallPath,
+                        FileName = plugin.UninstallExecutableFilename,
+                        Arguments = plugin?.UninstallExecutableArgs != null ? plugin.InstallExecutableArgs : ""
+                    };
+
+                    var exeProcess = Process.Start(processStartInfo);
+                    exeProcess.WaitForExit();
+
+                    // assess if successful or not
+                    if (exeProcess.ExitCode != 0)
+                    {
+                        throw new Exception($"The plugin installer did not succeed. Exit Code: {exeProcess.ExitCode}");
+                    }
+                    break;
+                default: // presume plugin install type. This supports legacy defaults if not specified
+                    break;
+            }
+
             if (Directory.Exists(pluginInstallPath))
+            {
                 Directory.Delete(pluginInstallPath, true);
+            }
         }
 
         /// <summary>
@@ -102,6 +182,25 @@ namespace PpmApp.LocalInstaller
             PluginDescription pluginDescription = JsonConvert.DeserializeObject<PluginDescription>(rawPluginDescription);
 
             return pluginDescription;
+        }
+
+        /// <summary>
+        /// Determine if a plugin is installed.
+        /// </summary>
+        /// <param name="pluginDescription">Description of the plugin to check installation status of.</param>
+        /// <returns>true: plugin is installed; false: plugin is not installed.</returns>
+        public bool IsPluginInstalled(PluginDescription pluginDescription)
+        {
+            var installedPlugins = GetInstalledPlugins();
+            var foundTargetPlugin = false;
+            installedPlugins.ForEach(pluginDescription => {
+                if (pluginDescription.ShortName.Equals(pluginDescription.ShortName))
+                {
+                    foundTargetPlugin = true;
+                }
+            });
+
+            return foundTargetPlugin;
         }
     }
 }

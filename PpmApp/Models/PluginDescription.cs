@@ -43,6 +43,31 @@ namespace PpmApp.Models
         public string VersionDescription { get; set; }
 
         /// <summary>
+        /// The plugin installation type.
+        /// </summary>
+        public PluginInstallTypeEnum InstallType { get; set; } = PluginInstallTypeEnum.Archive;
+
+        /// <summary>
+        /// The name of the 3rd party installer executable. Used when InstallType is Executable.
+        /// </summary>
+        public string InstallExecutableFilename { get; set; }
+
+        /// <summary>
+        /// Arguments for the 3rd party installer executable. Used when InstallType is Executable.
+        /// </summary>
+        public string InstallExecutableArgs { get; set; }
+
+        /// <summary>
+        /// The name of the 3rd party installer uninstall command. Used when InstallType is Executable.
+        /// </summary>
+        public string UninstallExecutableFilename { get; set; }
+
+        /// <summary>
+        /// Arguments for the 3rd party uninstallation command. Used when InstallType is Executable.
+        /// </summary>
+        public string UninstallExecutableArgs { get; set; }
+
+        /// <summary>
         /// The versions of ParaText that this plugin version is compatible with.
         /// </summary>
         public List<string> PtVersions { get; set; }

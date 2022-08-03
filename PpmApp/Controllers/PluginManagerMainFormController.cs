@@ -164,7 +164,7 @@ namespace PpmApp.Controllers
         public void InstallPlugin(PluginDescription plugin)
         {
             FileInfo downloadedPlugin = _pluginRepoService.DownloadPlugin(plugin);
-            _localInstallerService.InstallPlugin(downloadedPlugin);
+            _localInstallerService.InstallPlugin(plugin, downloadedPlugin);
             RefreshInstalled();
         }
 

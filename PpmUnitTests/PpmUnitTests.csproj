@@ -86,6 +86,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="PluginRepository\PluginRepositoryServiceTestsUtil.cs" />
     <Compile Include="PluginRepository\PluginRepositoryServiceTests.cs" />
     <Compile Include="LocalInstallerService\LocalInstallerServiceTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -97,6 +98,12 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
     </Content>
     <None Include="app.config" />
     <None Include="packages.config" />
+    <Content Include="Resources\TestExePlugin-1.0.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <None Include="Resources\TestExePlugin-1.0.zip">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="Resources\testplugin-1.0.zip" />
   </ItemGroup>
   <ItemGroup>

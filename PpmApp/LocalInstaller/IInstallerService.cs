@@ -27,13 +27,22 @@ namespace PpmApp.LocalInstaller
         /// <summary>
         /// This function installs a ParaText plugin.
         /// </summary>
+        /// <param name="plugin">The plugin to install.</param>
         /// <param name="pluginArchive">The zip file containing the plugin data.</param>
-        void InstallPlugin(FileInfo pluginArchive);
+        void InstallPlugin(PluginDescription plugin, FileInfo pluginArchive);
 
         /// <summary>
         /// This function uninstalls a ParaText plugin.
         /// </summary>
         /// <param name="plugin">The plugin to uninstall.</param>
         void UninstallPlugin(PluginDescription plugin);
+
+        /// <summary>
+        /// Determine if a plugin is installed.
+        /// </summary>
+        /// <param name="pluginDescription">Description of the plugin to check installation status of.</param>
+        /// <returns>true: plugin is installed; false: plugin is not installed.</returns>
+        bool IsPluginInstalled(PluginDescription pluginDescription);
+
     }
 }

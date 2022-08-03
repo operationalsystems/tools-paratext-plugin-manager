@@ -41,48 +41,14 @@ namespace PpmUnitTests
         [DeploymentItem(@"Resources", "Resources")]
         public void TestSetup()
         {
-            // Mock: ILogger
-            var _mockLogger = new Mock<ILogger<PluginRepositoryService>>();
+            var pluginFilenames = new List<string>()
+            {
+                $"testplugin-{TEST_PLUGIN_VERSION_1}",
+                $"testplugin-{TEST_PLUGIN_VERSION_2}",
+            };
 
             // Mock: PluginRepositoryService
-            mockPluginRepositoryService = new Mock<PluginRepositoryService>(_mockLogger.Object);
-            mockPluginRepositoryService.Setup(pluginRepoService => pluginRepoService.TemporaryDownloadDirectory).Returns(TestTemporaryDownloadLocation);
-
-            // set up expected return items.
-            var repoJsonFilename1 = $"testplugin-{TEST_PLUGIN_VERSION_1}.json";
-            var repoJsonFilename2 = $"testplugin-{TEST_PLUGIN_VERSION_2}.json";
-            var returnRepoPluginDescriptionJsonList = new List<string>() {
-                repoJsonFilename1,
-                repoJsonFilename2
-            };
-            var downloadedJsonFilename1 = new FileInfo(Path.Combine(Directory.GetCurrentDirectory(), $@"Resources\testplugin-{TEST_PLUGIN_VERSION_1}.json")).FullName;
-            var downloadedJsonFilename2 = new FileInfo(Path.Combine(Directory.GetCurrentDirectory(), $@"Resources\testplugin-{TEST_PLUGIN_VERSION_2}.json")).FullName;
-            var returnDownloadedPluginDescriptionJsonList = new List<string>() {
-                downloadedJsonFilename1,
-                downloadedJsonFilename2
-            };
-
-            /// set up service under test
-            // Return a fake list of plugins.
-            mockPluginRepositoryService
-                .Setup(pluginRepoService => pluginRepoService.GetPluginFilesByExtension(MainConsts.PluginManifestExtension))
-                .Returns(returnRepoPluginDescriptionJsonList);
-            // Download the locally available test JSON files.
-            mockPluginRepositoryService
-                .Setup(pluginRepoService =>
-                    pluginRepoService.DownloadFiles(
-                        returnRepoPluginDescriptionJsonList,
-                        It.IsAny<Dictionary<string, string>>()
-                        )
-                    )
-                .Callback<List<string>, Dictionary<string, string>>((l, d) =>
-                {
-                    // set up the outputToInputMap
-                    d.Add(downloadedJsonFilename1, Path.GetFileNameWithoutExtension(repoJsonFilename1));
-                    d.Add(downloadedJsonFilename2, Path.GetFileNameWithoutExtension(repoJsonFilename2));
-                })
-                .Returns(returnDownloadedPluginDescriptionJsonList);
-
+            mockPluginRepositoryService = PluginRepositoryServiceTestsUtil.SetupPluginRepositoryToDownloadTestPlugins(pluginFilenames);
         }
 
         /// <summary>

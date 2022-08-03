@@ -232,6 +232,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
     <Compile Include="LocalInstaller\LocalInstallerService.cs" />
     <Compile Include="Models\OutdatedPlugin.cs" />
     <Compile Include="Models\PluginDescription.cs" />
+    <Compile Include="Models\PluginInstallTypeEnum.cs" />
     <Compile Include="PluginRepository\IPluginRepository.cs" />
     <Compile Include="PluginRepository\PluginRepositoryService.cs" />
     <Compile Include="ParatextPluginManagerApp.cs" />

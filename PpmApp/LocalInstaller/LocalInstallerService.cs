@@ -107,10 +107,9 @@ namespace PpmApp.LocalInstaller
 
                     ProcessStartInfo processStartInfo = new ProcessStartInfo()
                     {
-                        UseShellExecute = false,
                         WorkingDirectory = tempExeInstallDir.FullName,
-                        FileName = plugin.InstallExecutableFilename,
-                        Arguments = plugin?.InstallExecutableArgs != null ? plugin.InstallExecutableArgs : ""
+                        FileName = plugin?.InstallExecutableFilename,
+                        Arguments = plugin?.InstallExecutableArgs
                     };
 
                     var exeProcess = Process.Start(processStartInfo);
@@ -123,9 +122,9 @@ namespace PpmApp.LocalInstaller
                     }
                     break;
                 default: // presume plugin install type. This supports legacy defaults if not specified
-                    ZipFile.ExtractToDirectory(pluginArchive.FullName, pluginInstallPath);
                     break;
             }
+            ZipFile.ExtractToDirectory(pluginArchive.FullName, pluginInstallPath);
             string targetJsonFilePath = Path.Combine(pluginInstallPath, Path.GetFileName(jsonFilePath));
             File.Move(jsonFilePath, targetJsonFilePath);
 
@@ -146,10 +145,9 @@ namespace PpmApp.LocalInstaller
                 case PluginInstallTypeEnum.Executable:
                     ProcessStartInfo processStartInfo = new ProcessStartInfo()
                     {
-                        UseShellExecute = false,
                         WorkingDirectory = pluginInstallPath,
-                        FileName = plugin.UninstallExecutableFilename,
-                        Arguments = plugin?.UninstallExecutableArgs != null ? plugin.InstallExecutableArgs : ""
+                        FileName = plugin?.UninstallExecutableFilename,
+                        Arguments = plugin?.UninstallExecutableArgs != null ? plugin.UninstallExecutableArgs : ""
                     };
 
                     var exeProcess = Process.Start(processStartInfo);

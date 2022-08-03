@@ -3,7 +3,6 @@
   "shortName": "TestExePlugin",
   "version": "1.0",
   "installType": "Executable",
-  //"executableFilename": "TransceleratorInstaller.3.1.1.msi",
   "installExecutableFilename": "cmd.exe",
   "installExecutableArgs": "/C exit 0",
   "uninstallExecutableFilename": "cmd.exe",

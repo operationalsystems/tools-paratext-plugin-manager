@@ -83,12 +83,6 @@ namespace PpmApp.LocalInstaller
                 UninstallPlugin(plugin);
             }
 
-            // create/recreate the directory, if removed
-            if (!Directory.Exists(pluginInstallPath))
-            {
-                Directory.CreateDirectory(pluginInstallPath);
-            }
-
             switch (plugin.InstallType)
             {
                 case PluginInstallTypeEnum.Executable:
@@ -124,6 +118,12 @@ namespace PpmApp.LocalInstaller
                 default: // presume plugin install type. This supports legacy defaults if not specified
                     break;
             }
+            // create/recreate the directory, if removed
+            if (!Directory.Exists(pluginInstallPath))
+            {
+                Directory.CreateDirectory(pluginInstallPath);
+            }
+
             ZipFile.ExtractToDirectory(pluginArchive.FullName, pluginInstallPath);
             string targetJsonFilePath = Path.Combine(pluginInstallPath, Path.GetFileName(jsonFilePath));
             File.Move(jsonFilePath, targetJsonFilePath);

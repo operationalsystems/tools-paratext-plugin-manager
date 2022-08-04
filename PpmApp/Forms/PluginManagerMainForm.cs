@@ -186,17 +186,28 @@ namespace PpmApp
             {
                 _controller.InstallPlugin(selectedPlugin);
             };
-            backgroundworker.RunWorkerCompleted += (sender, args) =>
+            backgroundworker.RunWorkerCompleted += (sender, e) =>
             {
                 RefreshBindings();
                 HideProgressBar();
 
-                MessageBox.Show(@$"
-{selectedPlugin.Name} ({selectedPlugin.Version}) has been installed.
+                // handle success/failure
+                if (e.Error == null)
+                {
+                    MessageBox.Show(
+                        @$"{selectedPlugin.Name} ({selectedPlugin.Version}) has been installed.
 
-{MainConsts.PluginListChangedMessage}",
-                                 $"Plugin Installed",
-                                 MessageBoxButtons.OK);
+{MainConsts.PluginListChangedMessage}", 
+                        "Plugin Installed", 
+                        MessageBoxButtons.OK);
+                }
+                else
+                {
+                    MessageBox.Show(
+                        $"There was an error installing {selectedPlugin.Name} ({selectedPlugin.Version}): {e.Error}",
+                        "Plugin Failed to Install",
+                        MessageBoxButtons.OK);
+                }
             };
             backgroundworker.RunWorkerAsync();
         }
@@ -252,18 +263,27 @@ namespace PpmApp
             {
                 _controller.InstallPlugin(selectedPlugin);
             };
-            backgroundworker.RunWorkerCompleted += (sender, args) =>
+            backgroundworker.RunWorkerCompleted += (sender, e) =>
             {
                 RefreshBindings();
-
                 HideProgressBar();
 
-                MessageBox.Show(@$"
-{selectedPlugin.Name} has been updated to version {selectedPlugin.Version}.
+                if (e.Error == null)
+                {
+                    MessageBox.Show(
+                        @$"{selectedPlugin.Name} has been updated to version {selectedPlugin.Version}.
 
 {MainConsts.PluginListChangedMessage}",
-                  "Plugin Updated",
-                  MessageBoxButtons.OK);
+                        "Plugin Updated",
+                        MessageBoxButtons.OK);
+                }
+                else
+                {
+                    MessageBox.Show(
+                        $"There was an error updating {selectedPlugin.Name} ({selectedPlugin.Version}): {e.Error}",
+                        "Plugin Failed to Update",
+                        MessageBoxButtons.OK);
+                }
             };
             backgroundworker.RunWorkerAsync();
         }
@@ -338,18 +358,29 @@ namespace PpmApp
                     {
                         _controller.InstallPlugin(selectedPlugin);
                     };
-                    backgroundworker.RunWorkerCompleted += (sender, args) =>
+                    backgroundworker.RunWorkerCompleted += (sender, e) =>
                     {
                         RefreshBindings();
                         HideProgressBar();
 
-                        MessageBox.Show(@$"
-{selectedPlugin.Name} has been updated to version {selectedPlugin.Version}.
+                        if (e.Error == null)
+                        {
+                            MessageBox.Show(
+                                @$"{selectedPlugin.Name} has been updated to version {selectedPlugin.Version}.
 
 {MainConsts.PluginListChangedMessage}",
-                          $"Plugin Updated",
-                          MessageBoxButtons.OK);
-                        installNextPlugin();
+                                $"Plugin Updated",
+                                MessageBoxButtons.OK);
+
+                            installNextPlugin();
+                        }
+                        else
+                        {
+                            MessageBox.Show(
+                                $"There was an error updating {selectedPlugin.Name} ({selectedPlugin.Version}): {e.Error}",
+                                "Plugin Failed to Update",
+                                MessageBoxButtons.OK);
+                        }
                     };
                     backgroundworker.RunWorkerAsync();
                 });
@@ -385,18 +416,27 @@ namespace PpmApp
             {
                 _controller.UninstallPlugin(selectedPlugin);
             };
-            backgroundworker.RunWorkerCompleted += (sender, args) =>
+            backgroundworker.RunWorkerCompleted += (sender, e) =>
             {
                 RefreshBindings();
-
                 HideProgressBar();
 
-                MessageBox.Show(@$"
-{selectedPlugin.Name} ({selectedPlugin.Version}) has been uninstalled.
+                if (e.Error == null)
+                {
+                    MessageBox.Show(
+                        @$"{selectedPlugin.Name} ({selectedPlugin.Version}) has been uninstalled.
 
 {MainConsts.PluginListChangedMessage}",
-                     "Plugin Uninstalled",
-                     MessageBoxButtons.OK);
+                        "Plugin Uninstalled",
+                        MessageBoxButtons.OK);
+                }
+                else
+                {
+                    MessageBox.Show(
+                        $"There was an error uninstalling {selectedPlugin.Name} ({selectedPlugin.Version}): {e.Error}",
+                        "Plugin Failed to Uninstall",
+                        MessageBoxButtons.OK);
+                }
             };
             backgroundworker.RunWorkerAsync();
         }

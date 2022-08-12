@@ -1,5 +1,15 @@
-﻿using AddInSideViews;
-using PpmMain.Util;
+﻿/*
+Copyright © 2022 by Biblica, Inc.
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+*/
+using AddInSideViews;
+using Microsoft.Win32;
+using PpmPlugin.Util;
 using System;
 using System.AddIn;
 using System.AddIn.Pipeline;
@@ -9,7 +19,7 @@ using System.Text;
 using System.Threading;
 using System.Windows.Forms;
 
-namespace PpmMain
+namespace PpmPlugin
 {
     /// <summary>
     /// Paratext Plugin Manager plugin root class.
@@ -19,9 +29,15 @@ namespace PpmMain
     [QualificationData(PluginMetaDataKeys.insertAfterMenuName, "Tools|")]
     [QualificationData(PluginMetaDataKeys.enableWhen, WhenToEnable.always)]
     [QualificationData(PluginMetaDataKeys.multipleInstances, CreateInstanceRule.always)]
-
     public class ParatextPluginManagerPlugin : IParatextAddIn2
     {
+        // Paratext Registry key information variables
+        private const string PpmRegistryRoot = "HKEY_CURRENT_USER";
+        private const string PpmRegistryBaseKey = PpmRegistryRoot + @"\SOFTWARE\Biblica\Paratext Plugin Manager";
+        private const string PpmAppInstallDirKey = "PpmAppInstallDir";
+
+        // Messages
+        private const string PpmAppNotInstalledMessage = "Paratext Plugin Manager is not installed.";
 
         /// <summary>
         /// No-op, to fulfill IParatextAddIn2 contract.
@@ -88,12 +104,18 @@ namespace PpmMain
 
                         try
                         {
-                            Application.Run(new PluginManagerMainForm());
+                            // grab and check the install path from registry
+                            var ppmInstallAppDir = Registry.GetValue(PpmRegistryBaseKey, PpmAppInstallDirKey, null);
+                            _ = ppmInstallAppDir ?? throw new Exception(PpmAppNotInstalledMessage);
+
+
+                            HostUtil.Instance.LogLine(@$"Paratext running... Application name: '{host.ApplicationName}', version: '{host.ApplicationVersion}'.", false);
+                            Process.Start($"{ppmInstallAppDir}\\ParatextPluginManagerApp.exe");
                         }
                         catch (Exception ex)
                         {
                             // Variables for tracking error information.
-                            IDictionary<string, string> errorDetails = new Dictionary<string, string>();
+                            var errorDetails = new Dictionary<string, string>();
                             string message = ex.Message;
 
                             // Report the error

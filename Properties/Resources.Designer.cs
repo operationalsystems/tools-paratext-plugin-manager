@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace PpmMain.Properties {
+namespace PpmPlugin.Properties {
     using System;
     
     
@@ -39,7 +39,7 @@ namespace PpmMain.Properties {
         internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("PpmMain.Properties.Resources", typeof(Resources).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("PpmPlugin.Properties.Resources", typeof(Resources).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -57,58 +57,6 @@ namespace PpmMain.Properties {
             }
             set {
                 resourceCulture = value;
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to .
-        /// </summary>
-        internal static string cloudfront_base_url {
-            get {
-                return ResourceManager.GetString("cloudfront-base-url", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to .
-        /// </summary>
-        internal static string cloudfront_keypair_id {
-            get {
-                return ResourceManager.GetString("cloudfront-keypair-id", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to .
-        /// </summary>
-        internal static string cloudfront_policy_document_base64 {
-            get {
-                return ResourceManager.GetString("cloudfront-policy-document_base64", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to .
-        /// </summary>
-        internal static string cloudfront_policy_document_signed {
-            get {
-                return ResourceManager.GetString("cloudfront-policy-document_signed", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to {\rtf1\ansi\ansicpg1252\deff0\nouicompat\deflang1033{\fonttbl{\f0\fnil\fcharset0 Times New Roman;}{\f1\fnil\fcharset0 Calibri;}}
-        ///{\colortbl ;\red255\green255\blue0;\red0\green0\blue255;}
-        ///{\*\generator Riched20 10.0.19041}\viewkind4\uc1 
-        ///\pard\sb100\sa100\b\f0\fs48\lang9 Plugin Software License Agreement\par
-        ///
-        ///\pard\b0\f1\fs24 Last modified: August 3, 2020 \par
-        ///\par
-        ///This Plugin Software License Agreement (\ldblquote Agreement\rdblquote ) for use of the Software (as defined below) is entered into betwee [rest of string was truncated]&quot;;.
-        /// </summary>
-        internal static string PPM_EULA {
-            get {
-                return ResourceManager.GetString("PPM_EULA", resourceCulture);
             }
         }
     }

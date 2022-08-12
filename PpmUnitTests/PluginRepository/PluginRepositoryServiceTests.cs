@@ -1,5 +1,5 @@
 ﻿/*
-Copyright © 2021 by Biblica, Inc.
+Copyright © 2022 by Biblica, Inc.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
 
@@ -7,10 +7,11 @@ The above copyright notice and this permission notice shall be included in all c
 
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
+using Microsoft.Extensions.Logging;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
-using PpmMain.PluginRepository;
-using PpmMain.Util;
+using PpmApp.PluginRepository;
+using PpmApp.Util;
 using System.Collections.Generic;
 using System.IO;
 
@@ -40,45 +41,14 @@ namespace PpmUnitTests
         [DeploymentItem(@"Resources", "Resources")]
         public void TestSetup()
         {
-            // Mock: S3PluginRepositoryService
-            mockPluginRepositoryService = new Mock<PluginRepositoryService>();
-            mockPluginRepositoryService.Setup(pluginRepoService => pluginRepoService.TemporaryDownloadDirectory).Returns(TestTemporaryDownloadLocation);
-
-            // set up expected return items.
-            var repoJsonFilename1 = $"testplugin-{TEST_PLUGIN_VERSION_1}.json";
-            var repoJsonFilename2 = $"testplugin-{TEST_PLUGIN_VERSION_2}.json";
-            var returnRepoPluginDescriptionJsonList = new List<string>() {
-                repoJsonFilename1,
-                repoJsonFilename2
-            };
-            var downloadedJsonFilename1 = new FileInfo(Path.Combine(Directory.GetCurrentDirectory(), $@"Resources\testplugin-{TEST_PLUGIN_VERSION_1}.json")).FullName;
-            var downloadedJsonFilename2 = new FileInfo(Path.Combine(Directory.GetCurrentDirectory(), $@"Resources\testplugin-{TEST_PLUGIN_VERSION_2}.json")).FullName;
-            var returnDownloadedPluginDescriptionJsonList = new List<string>() {
-                downloadedJsonFilename1,
-                downloadedJsonFilename2
+            var pluginFilenames = new List<string>()
+            {
+                $"testplugin-{TEST_PLUGIN_VERSION_1}",
+                $"testplugin-{TEST_PLUGIN_VERSION_2}",
             };
 
-            /// set up service under test
-            // Return a fake list of plugins.
-            mockPluginRepositoryService
-                .Setup(pluginRepoService => pluginRepoService.GetPluginFilesByExtension(MainConsts.PluginManifestExtension))
-                .Returns(returnRepoPluginDescriptionJsonList);
-            // Download the locally available test JSON files.
-            mockPluginRepositoryService
-                .Setup(pluginRepoService =>
-                    pluginRepoService.DownloadFiles(
-                        returnRepoPluginDescriptionJsonList,
-                        It.IsAny<Dictionary<string, string>>()
-                        )
-                    )
-                .Callback<List<string>, Dictionary<string, string>>((l, d) =>
-                {
-                    // set up the outputToInputMap
-                    d.Add(downloadedJsonFilename1, Path.GetFileNameWithoutExtension(repoJsonFilename1));
-                    d.Add(downloadedJsonFilename2, Path.GetFileNameWithoutExtension(repoJsonFilename2));
-                })
-                .Returns(returnDownloadedPluginDescriptionJsonList);
-
+            // Mock: PluginRepositoryService
+            mockPluginRepositoryService = PluginRepositoryServiceTestsUtil.SetupPluginRepositoryToDownloadTestPlugins(pluginFilenames);
         }
 
         /// <summary>

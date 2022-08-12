@@ -1,0 +1,16 @@
+{
+  "name": "Test Exe Plugin",
+  "shortName": "TestExePlugin",
+  "version": "1.0",
+  "installType": "Executable",
+  "installExecutableFilename": "cmd.exe",
+  "installExecutableArgs": "/C exit 0",
+  "uninstallExecutableFilename": "cmd.exe",
+  "uninstallExecutableArgs": "/C exit 0",
+  "description": "This is a pretend 3rd-party installer plugin v1.0 for testing purposes.",
+  "versionDescription": "",
+  "ptVersions": [
+    "9"
+  ],
+  "license": ""
+}

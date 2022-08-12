@@ -125,7 +125,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
     <None Include="Properties\DataSources\PpmPlugin.Controllers.PluginManagerMainFormController.datasource" />
     <None Include="Properties\DataSources\PpmPlugin.PluginRepository.S3PluginRepositoryService.datasource" />
     <None Include="README.md" />
-    <None Include="scripts\build_and_publish_ppm_installer.bat" />
+    <None Include="scripts\sign_ppm_installer.bat" />
   </ItemGroup>
   <ItemGroup>
     <WCFMetadata Include="Connected Services\" />

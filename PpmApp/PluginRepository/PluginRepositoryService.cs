@@ -347,10 +347,10 @@ namespace PpmApp.PluginRepository
         /// <returns>The signed URL.</returns>
         public virtual string GetSignedUrl(string resource = "")
         {
-            string baseUrl = Resources.cloudfront_base_url;
-            string policy = Resources.cloudfront_policy_document_base64;
-            string signature = Resources.cloudfront_policy_document_signed;
-            string keyId = Resources.cloudfront_keypair_id;
+            string baseUrl = PpmRepoConfig.PPM_REPO_CLOUDFRONT_BASE_URL;
+            string policy = PpmRepoConfig.PPM_REPO_CLOUDFRONT_POLICY_DOCUMENT_BASE64;
+            string signature = PpmRepoConfig.PPM_REPO_CLOUDFRONT_POLICY_DOCUMENT_SIGNED;
+            string keyId = PpmRepoConfig.PPM_REPO_CLOUDFRONT_KEYPAIR_ID;
 
             return $"{baseUrl}/{resource}?Policy={policy}&Signature={signature}&Key-Pair-Id={keyId}";
         }

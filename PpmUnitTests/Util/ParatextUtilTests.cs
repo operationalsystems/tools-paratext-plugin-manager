@@ -22,7 +22,7 @@ namespace PpmUnitTests
             // make sure that we can get the installed Paratext version
             var paratextVersion = ParatextUtil.ParatextVersion;
             Assert.IsNotNull(paratextVersion, "Cannot determine Paratext's version.");
-            Console.WriteLine($"The installed Paratext version is: '{paratextVersion}'");
+            Console.WriteLine($@"The installed Paratext version is: '{paratextVersion}'");
         }
 
         [TestMethod]
@@ -31,7 +31,7 @@ namespace PpmUnitTests
             // make sure that we can get the installed Paratext version
             var paratextInstallPath = ParatextUtil.ParatextInstallPath;
             Assert.IsNotNull(paratextInstallPath, "Cannot determine Paratext's install path.");
-            Console.WriteLine($"The installed Paratext path is: '{paratextInstallPath}'");
+            Console.WriteLine($@"The installed Paratext path is: '{paratextInstallPath}'");
         }
     }
 }

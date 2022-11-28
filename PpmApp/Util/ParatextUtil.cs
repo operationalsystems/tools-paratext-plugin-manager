@@ -28,9 +28,7 @@ namespace PpmApp.Util
         private const string ParatextRegistryRoot = "HKEY_LOCAL_MACHINE";
         private const string ParatextRegistryBaseKey = ParatextRegistryRoot + @"\SOFTWARE\Paratext\8";
         private const string ParatextVersionKey = "ParatextVersion";
-        private const string Paratext9_1InstallPathKey = "Paratext9_Full_Release_AppPath"; // Paratext 9.1 - 9.2
-        private const string Paratext9_3InstallPathKey = "Program_Files_Directory_Ptw91"; // Paratext 9.3 +
-        private static readonly Version Paratext9_3BaseVersion = new Version("9.3");
+        private const string Paratext9_1InstallPathKey = "Paratext9_Full_Release_AppPath"; // Paratext 9.1+
         private const string ParatextProcessName = "Paratext";
 
         // Messages
@@ -58,18 +56,8 @@ namespace PpmApp.Util
         {
             get
             {
-                var paratextVersion = new Version(ParatextVersion);
-
                 // load the correct Paratext install path based on the registry key. Unfortunately, we've seen the registry key name change with new Paratext versions
-                string paratextPath;
-                if (paratextVersion >= Paratext9_3BaseVersion)
-                {
-                    paratextPath = (string) Registry.GetValue(ParatextRegistryBaseKey, Paratext9_3InstallPathKey, null);
-                }
-                else
-                {
-                    paratextPath = (string) Registry.GetValue(ParatextRegistryBaseKey, Paratext9_1InstallPathKey, null);
-                }
+                string paratextPath = (string) Registry.GetValue(ParatextRegistryBaseKey, Paratext9_1InstallPathKey, null);
 
                 _ = paratextPath ?? throw new Exception(ParatextNotInstalledMessage);
 

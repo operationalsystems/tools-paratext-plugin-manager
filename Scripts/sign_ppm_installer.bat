@@ -17,6 +17,7 @@ REM Sign the Installer
 signtool.exe sign ^
 	/debug^
 	/f "%PPM_PFX_PATH%"^
+	/fd SHA256^
 	/t http://timestamp.sectigo.com^
 	/p "%PPM_PFX_PASSWORD%"^
 	"%SOLUTON_DIR%\PpmWixInstaller\bin\Release\Paratext Plugin Manager Installer.msi"

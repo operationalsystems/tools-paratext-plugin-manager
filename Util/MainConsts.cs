@@ -19,7 +19,7 @@ namespace PpmPlugin.Util
         /// <summary>
         /// The current plugin version.
         /// </summary>
-        public const string PluginVersion = "1.3.0.0";
+        public const string PluginVersion = "1.3.1.0";
 
         /// <summary>
         /// The publisher of the plugin.
@@ -34,6 +34,6 @@ namespace PpmPlugin.Util
         /// <summary>
         /// The copyright information for the plugin.
         /// </summary>
-        public const string Copyright = "© 2020-2022 Biblica, Inc.";
+        public const string Copyright = "© 2020-2023 Biblica, Inc.";
     }
 }

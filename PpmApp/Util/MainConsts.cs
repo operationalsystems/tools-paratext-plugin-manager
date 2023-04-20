@@ -19,7 +19,7 @@ namespace PpmApp.Util
         /// <summary>
         /// The current application version.
         /// </summary>
-        public const string ApplicationVersion = "1.3.0.0";
+        public const string ApplicationVersion = "1.3.1.0";
 
         /// <summary>
         /// The publisher of the application.
@@ -34,7 +34,7 @@ namespace PpmApp.Util
         /// <summary>
         /// The copyright information for the application.
         /// </summary>
-        public const string Copyright = "© 2020-2022 Biblica, Inc.";
+        public const string Copyright = "© 2020-2023 Biblica, Inc.";
 
         /// <summary>
         /// The directory name for downloaded plugins.
